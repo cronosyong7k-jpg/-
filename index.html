@@ -3,546 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>成渝行指南 - 相册与行程</title>
+  <title>成渝 2 日精选游</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb' }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
 
   <!-- Header -->
-  <header class="sticky top-0 z-30 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-4 py-2.5 shadow-sm">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-      
-      <div class="flex items-center justify-between w-full sm:w-auto">
-        <div class="flex items-center space-x-2">
-          <div class="bg-gradient-to-tr from-red-500 to-amber-500 text-white p-2 rounded-xl shadow-md">
-            <i class="fa-solid fa-map-location-dot text-base"></i>
-          </div>
-          <div>
-            <h1 class="font-bold text-base leading-tight">成渝行指南</h1>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400">景点相册与行程路线</p>
-          </div>
+  <header class="sticky top-0 z-30 bg-white shadow-sm border-b px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="bg-red-500 text-white p-2 rounded-xl">
+          <i class="fa-solid fa-route"></i>
         </div>
-
-        <div class="flex items-center gap-2 sm:hidden">
-          <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-            <i class="fa-solid fa-moon dark:hidden"></i>
-            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-          </button>
-          <button onclick="openJsonModal()" class="p-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900">
-            <i class="fa-solid fa-code"></i>
-          </button>
+        <div>
+          <h1 class="font-bold text-base leading-tight">成渝 2 日精选游</h1>
+          <p class="text-[11px] text-slate-500">5大景点 + 2天行程</p>
         </div>
       </div>
-
-      <!-- Navigation Tabs -->
-      <div class="flex items-center justify-between w-full sm:w-auto gap-4">
-        <nav class="flex items-center bg-slate-100 dark:bg-slate-700/70 p-1 rounded-xl w-full sm:w-auto">
-          <button id="tabLocations" onclick="switchTab('locations')" class="flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-red-500 shadow-sm">
-            <i class="fa-solid fa-images"></i>
-            <span>景点相册</span>
-          </button>
-          <button id="tabItinerary" onclick="switchTab('itinerary')" class="flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400">
-            <i class="fa-solid fa-route"></i>
-            <span>行程路线</span>
-          </button>
-        </nav>
-
-        <div class="hidden sm:flex items-center gap-2">
-          <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-            <i class="fa-solid fa-moon dark:hidden"></i>
-            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-          </button>
-          <button onclick="openJsonModal()" class="px-3 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-medium text-xs shadow">
-            <i class="fa-solid fa-code mr-1"></i> JSON 设置
-          </button>
-        </div>
-      </div>
-
+      <button onclick="clearAndReload()" class="px-2.5 py-1 text-xs bg-red-50 text-red-600 border border-red-200 rounded-lg">
+        <i class="fa-solid fa-rotate-right mr-1"></i>重置
+      </button>
     </div>
   </header>
 
-  <!-- Page 1: Locations Gallery View -->
-  <main id="locationsPage" class="flex-grow max-w-5xl w-full mx-auto px-4 py-4 space-y-4">
-    <!-- Filters Card -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200/80 dark:border-slate-700/80 space-y-3">
-      <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-        <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="搜索景点或描述..." class="w-full pl-10 pr-10 py-2 bg-slate-100 dark:bg-slate-700/60 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-red-500">
-      </div>
-
-      <div class="flex items-center gap-2 pt-1">
-        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0"><i class="fa-solid fa-city mr-1"></i>城市:</span>
-        <div id="cityFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
-      </div>
-
-      <div class="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-700/50">
-        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"><i class="fa-solid fa-tags mr-1"></i>分类:</span>
-        <div id="categoryFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1"></div>
-      </div>
-    </div>
-
-    <!-- Status Bar -->
-    <div class="flex items-center justify-between text-xs text-slate-500 px-1">
-      <div>共找到 <span id="locationCount" class="font-bold text-red-600 dark:text-red-400">0</span> 个景点</div>
-      <button onclick="forceResetData()" class="text-xs text-red-500 hover:underline flex items-center gap-1">
-        <i class="fa-solid fa-rotate-right"></i> 强制重置数据
+  <!-- Navigation Tabs -->
+  <div class="bg-white border-b sticky top-[57px] z-20">
+    <div class="max-w-md mx-auto flex">
+      <button id="tabLocBtn" onclick="switchTab('locations')" class="flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-500 text-red-600">
+        <i class="fa-solid fa-location-dot mr-1"></i>景点相册
       </button>
-    </div>
-
-    <!-- Grid -->
-    <div id="locationGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </main>
-
-  <!-- Page 2: Itinerary Timeline View -->
-  <main id="itineraryPage" class="hidden flex-grow max-w-4xl w-full mx-auto px-4 py-4 space-y-6">
-    <div class="bg-gradient-to-r from-red-500 to-amber-500 rounded-2xl p-4 text-white shadow-md">
-      <h2 class="font-bold text-lg flex items-center gap-2">
-        <i class="fa-solid fa-calendar-days"></i> 成渝10日游推荐行程 (11月7日 - 11月16日)
-      </h2>
-      <p class="text-xs text-white/90 mt-1">跟着每日路线游玩，点击带有相机图标的项可直接查看景点照片。</p>
-    </div>
-
-    <div id="itineraryTimeline" class="space-y-6"></div>
-  </main>
-
-  <!-- Lightbox Modal -->
-  <div id="lightboxModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <button onclick="closeLightbox()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center">
-      <i class="fa-solid fa-xmark text-xl"></i>
-    </button>
-    <button onclick="navigateImage(-1)" class="absolute left-3 z-20 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/20">
-      <i class="fa-solid fa-chevron-left text-lg"></i>
-    </button>
-    <button onclick="navigateImage(1)" class="absolute right-3 z-20 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/20">
-      <i class="fa-solid fa-chevron-right text-lg"></i>
-    </button>
-
-    <div class="max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center space-y-3">
-      <img id="lightboxImage" src="" class="max-h-[72vh] w-auto max-w-full rounded-lg object-contain shadow-2xl">
-      <div class="text-center text-white space-y-1">
-        <div class="flex items-center justify-center gap-2">
-          <h3 id="lightboxTitle" class="font-bold text-base"></h3>
-          <span id="lightboxCounter" class="bg-white/20 text-xs px-2 py-0.5 rounded-full">1/1</span>
-        </div>
-      </div>
+      <button id="tabItinBtn" onclick="switchTab('itinerary')" class="flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent">
+        <i class="fa-solid fa-calendar-days mr-1"></i>2日行程安排
+      </button>
     </div>
   </div>
 
-  <!-- JSON Config Modal -->
-  <div id="jsonModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-        <h2 class="font-bold text-sm">编辑 JSON 数据</h2>
-        <button onclick="closeJsonModal()" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <div class="p-4 flex-grow overflow-y-auto space-y-3">
-        <textarea id="jsonTextArea" rows="12" class="w-full p-3 bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl focus:outline-none"></textarea>
-      </div>
-      <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-        <button onclick="forceResetData()" class="text-xs text-slate-500 hover:text-red-500">恢复默认</button>
-        <button onclick="saveJsonModal()" class="px-4 py-1.5 bg-red-500 text-white text-xs font-medium rounded-xl shadow">保存应用</button>
-      </div>
+  <!-- Main Container -->
+  <main class="flex-grow max-w-md w-full mx-auto p-4 space-y-4">
+
+    <!-- View 1: Locations -->
+    <div id="locationsView" class="space-y-4">
+      <div class="flex gap-2 overflow-x-auto py-1" id="cityFilter"></div>
+      <div id="locationList" class="space-y-4"></div>
+    </div>
+
+    <!-- View 2: Itinerary -->
+    <div id="itineraryView" class="space-y-4 hidden">
+      <div id="itineraryList" class="space-y-6"></div>
+    </div>
+
+  </main>
+
+  <!-- Photo Lightbox Modal -->
+  <div id="photoModal" class="fixed inset-0 z-50 bg-black/90 hidden flex flex-col justify-between p-4" onclick="closeModal()">
+    <div class="flex justify-end">
+      <button onclick="closeModal()" class="text-white text-2xl p-2"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="flex-grow flex items-center justify-center">
+      <img id="modalImg" src="" class="max-h-[75vh] w-auto max-w-full rounded-lg object-contain">
+    </div>
+    <div class="text-center text-white pb-6 space-y-1">
+      <h3 id="modalTitle" class="font-bold text-base"></h3>
+      <p id="modalDesc" class="text-xs text-slate-300 px-4 line-clamp-2"></p>
     </div>
   </div>
 
   <script>
-    const FULL_DEFAULT_DATA = {
+    // Embedded backup data ensures the app NEVER renders empty
+    const DEFAULT_DATA = {
       "locations": [
-        {
-          "id": "1",
-          "name": "洪崖洞民俗风貌区",
-          "city": "重庆",
-          "category": "热门地标",
-          "description": "具有浓郁巴渝传统建筑特色的吊脚楼建筑群，夜晚华灯初上时金碧辉煌。",
-          "images": ["https://images.unsplash.com/photo-1548013146-72479768bada"],
-          "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
-        },
-        {
-          "id": "2",
-          "name": "李子坝轻轨穿楼",
-          "city": "重庆",
-          "category": "奇观景点",
-          "description": "重庆轨道交通2号线李子坝站，轻轨列车直接穿过19层居民楼。",
-          "images": ["https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png"],
-          "mapsUrl": "https://maps.google.com/?q=Liziba+Station"
-        },
-        {
-          "id": "3",
-          "name": "十八梯传统风貌区",
-          "city": "重庆",
-          "category": "历史街区",
-          "description": "老重庆山城步道与吊脚楼建筑特色，夜景尤为精美。",
-          "images": ["https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600"],
-          "mapsUrl": "https://maps.google.com/?q=Shibati+Chongqing"
-        },
-        {
-          "id": "4",
-          "name": "磁器口古镇",
-          "city": "重庆",
-          "category": "古镇风情",
-          "description": "嘉陵江畔的千年古镇，古色古香的石板路与地道小吃。",
-          "images": ["https://images.unsplash.com/photo-1528164344705-47542687990d"],
-          "mapsUrl": "https://maps.google.com/?q=Ciqikou+Ancient+Town"
-        },
-        {
-          "id": "5",
-          "name": "解放碑与八一好吃街",
-          "city": "重庆",
-          "category": "美食购物",
-          "description": "重庆核心商圈，八一好吃街汇聚酸辣粉、重庆小面等美食。",
-          "images": ["https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"],
-          "mapsUrl": "https://maps.google.com/?q=Jiefangbei+Chongqing"
-        },
-        {
-          "id": "6",
-          "name": "成都大熊猫繁育研究基地",
-          "city": "成都",
-          "category": "自然动物",
-          "description": "享誉全球的大熊猫庇护与繁育基地，近距离观赏大熊猫。",
-          "images": ["https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg"],
-          "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
-        },
-        {
-          "id": "7",
-          "name": "武侯祠",
-          "city": "成都",
-          "category": "历史古迹",
-          "description": "中国唯一的君臣合祀祠堂及三国遗迹博物馆，包含网红红墙竹影。",
-          "images": ["https://images.unsplash.com/photo-1508804185872-d7badad00f7d"],
-          "mapsUrl": "https://maps.google.com/?q=Wuhou+Shrine+Chengdu"
-        },
-        {
-          "id": "8",
-          "name": "锦里古街",
-          "city": "成都",
-          "category": "民俗美食",
-          "description": "紧邻武侯祠的三国文化主题古街，古色古香，汇聚四川特色小吃。",
-          "images": ["https://images.unsplash.com/photo-1528164344705-47542687990d"],
-          "mapsUrl": "https://maps.google.com/?q=Jinli+Ancient+Street"
-        },
-        {
-          "id": "9",
-          "name": "三星堆博物馆",
-          "city": "成都周边",
-          "category": "博物馆",
-          "description": "位于广汉，展出古蜀文明青铜大立人与黄金面具，神秘壮观。",
-          "images": ["https://images.unsplash.com/photo-1548013146-72479768bada"],
-          "mapsUrl": "https://maps.google.com/?q=Sanxingdui+Museum"
-        },
-        {
-          "id": "10",
-          "name": "都江堰水利工程",
-          "city": "成都周边",
-          "category": "世界遗产",
-          "description": "公元前256年建成的宏伟水利工程，至今仍在发挥防洪灌溉作用。",
-          "images": ["https://images.unsplash.com/photo-1508804185872-d7badad00f7d"],
-          "mapsUrl": "https://maps.google.com/?q=Dujiangyan+Irrigation+System"
-        },
-        {
-          "id": "11",
-          "name": "人民公园与鹤鸣茶社",
-          "city": "成都",
-          "category": "休闲茶馆",
-          "description": "百年老茶馆，体验最正宗成都闲适生活，喝盖碗茶与采耳。",
-          "images": ["https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"],
-          "mapsUrl": "https://maps.google.com/?q=People's+Park+Chengdu"
-        },
-        {
-          "id": "12",
-          "name": "宽窄巷子",
-          "city": "成都",
-          "category": "历史街区",
-          "description": "由宽巷子、窄巷子和井巷子组成的清末民初古建筑群。",
-          "images": ["https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"],
-          "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley"
-        }
+        { "id": "1", "name": "洪崖洞民俗风貌区", "city": "重庆", "category": "热门地标", "description": "最具代表性的巴渝吊脚楼建筑群，夜景极其震撼。", "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada", "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing" },
+        { "id": "2", "name": "李子坝轻轨穿楼", "city": "重庆", "category": "奇观景点", "description": "轻轨列车直接穿过19层高层居民楼。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png", "mapsUrl": "https://maps.google.com/?q=Liziba+Station" },
+        { "id": "3", "name": "解放碑步行街", "city": "重庆", "category": "城市商业", "description": "重庆繁华核心商圈，集美食与地标于一体。", "imageUrl": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d", "mapsUrl": "https://maps.google.com/?q=Jiefangbei+Chongqing" },
+        { "id": "4", "name": "成都大熊猫繁育研究基地", "city": "成都", "category": "自然动物", "description": "全球最大的大熊猫保护与繁育基地。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg", "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base" },
+        { "id": "5", "name": "宽窄巷子", "city": "成都", "category": "休闲街区", "description": "清末民初古街，体验慢生活与盖碗茶。", "imageUrl": "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f", "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley" }
       ],
       "itinerary": [
         {
-          "day": 1,
-          "title": "Day 1 (11月7日): 抵达重庆 & 步道初探",
-          "items": [
-            { "time": "14:00", "activity": "抵达重庆并入住酒店", "type": "Transport", "notes": "入住渝中区靠近轨道交通站酒店" },
-            { "time": "16:30", "activity": "十八梯传统风貌区", "type": "POI", "locationId": "3", "notes": "体验山城步道" },
-            { "time": "19:00", "activity": "解放碑 & 八一好吃街", "type": "Food", "locationId": "5", "notes": "品尝酸辣粉与重庆火锅" }
+          "day": "Day 1", "title": "重庆魔幻山城一日游", "city": "重庆",
+          "steps": [
+            { "time": "09:30 AM", "locationId": "2", "activity": "观看李子坝轻轨穿楼奇观" },
+            { "time": "01:00 PM", "locationId": "3", "activity": "逛解放碑步行街，享用午餐" },
+            { "time": "07:00 PM", "locationId": "1", "activity": "游览洪崖洞夜景" }
           ]
         },
         {
-          "day": 2,
-          "title": "Day 2 (11月8日): 魔幻轻轨与洪崖洞夜景",
-          "items": [
-            { "time": "09:30", "activity": "李子坝轻轨穿楼", "type": "POI", "locationId": "2", "notes": "打卡轻轨穿楼奇观" },
-            { "time": "14:00", "activity": "磁器口古镇", "type": "POI", "locationId": "4", "notes": "漫步古镇选购特产" },
-            { "time": "19:30", "activity": "洪崖洞民俗风貌区", "type": "POI", "locationId": "1", "notes": "20:00开灯最佳视角" }
-          ]
-        },
-        {
-          "day": 3,
-          "title": "Day 3 (11月9日): 特产选购与山城夜景",
-          "items": [
-            { "time": "10:00", "activity": "选购火锅底料与川味香肠", "type": "Food", "notes": "超市采购真空特产" },
-            { "time": "15:00", "activity": "南山一棵树或长江索道", "type": "POI", "notes": "俯瞰重庆两江夜景" }
-          ]
-        },
-        {
-          "day": 4,
-          "title": "Day 4 (11月10日): 高铁前往成都 & 三国文化",
-          "items": [
-            { "time": "09:00", "activity": "乘坐高铁前往成都", "type": "Transport", "notes": "车程约 1.5 小时" },
-            { "time": "13:30", "activity": "武侯祠", "type": "POI", "locationId": "7", "notes": "打卡网红红墙竹影" },
-            { "time": "16:30", "activity": "锦里古街", "type": "Food", "locationId": "8", "notes": "体验夜景与特色小吃" }
-          ]
-        },
-        {
-          "day": 5,
-          "title": "Day 5 (11月11日): 大熊猫与慢生活",
-          "items": [
-            { "time": "08:00", "activity": "成都大熊猫繁育研究基地", "type": "POI", "locationId": "6", "notes": "清早观赏活跃的熊猫" },
-            { "time": "14:00", "activity": "人民公园 鹤鸣茶社", "type": "Food", "locationId": "11", "notes": "体验盖碗茶与采耳" }
-          ]
-        },
-        {
-          "day": 6,
-          "title": "Day 6 (11月12日): 三星堆古蜀文明",
-          "items": [
-            { "time": "09:00", "activity": "前往三星堆博物馆", "type": "POI", "locationId": "9", "notes": "观赏青铜神树与黄金面具" }
-          ]
-        },
-        {
-          "day": 7,
-          "title": "Day 7 (11月13日): 都江堰水利奇观",
-          "items": [
-            { "time": "09:00", "activity": "都江堰景区", "type": "POI", "locationId": "10", "notes": "游览鱼嘴与宝瓶口" }
-          ]
-        },
-        {
-          "day": 8,
-          "title": "Day 8 (11月14日): 街区漫步",
-          "items": [
-            { "time": "10:00", "activity": "宽窄巷子", "type": "POI", "locationId": "12", "notes": "品茶与购买川茶礼盒" }
-          ]
-        },
-        {
-          "day": 9,
-          "title": "Day 9 (11月15日): 选购特产",
-          "items": [
-            { "time": "10:30", "activity": "选购竹叶青茶与张飞牛肉", "type": "Food", "notes": "收拾行李" }
-          ]
-        },
-        {
-          "day": 10,
-          "title": "Day 10 (11月16日): 返程",
-          "items": [
-            { "time": "10:00", "activity": "返程", "type": "Transport", "notes": "结束美好行程" }
+          "day": "Day 2", "title": "成都慢生活熊猫一日游", "city": "成都",
+          "steps": [
+            { "time": "08:30 AM", "locationId": "4", "activity": "早上前往大熊猫基地看大熊猫" },
+            { "time": "02:30 PM", "locationId": "5", "activity": "漫步宽窄巷子，品盖碗茶" }
           ]
         }
       ]
     };
 
-    let appData = FULL_DEFAULT_DATA;
+    let appData = DEFAULT_DATA;
     let selectedCity = '全部';
-    let selectedCategories = new Set();
-    let searchQuery = '';
 
-    let activeImages = [];
-    let activeImageIndex = 0;
-    let activeTitle = '';
+    async function init() {
+      if (window.location.search.includes('reset=true')) {
+        localStorage.clear();
+      }
 
-    function init() {
-      // Force reset key v5 to bypass bad empty browser cache
-      const stored = localStorage.getItem('chengdu_chongqing_v5');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (parsed && Array.isArray(parsed.locations) && parsed.locations.length > 0) {
-            appData = parsed;
-          } else {
-            appData = FULL_DEFAULT_DATA;
+      try {
+        const res = await fetch('./locations.json?t=' + Date.now());
+        if (res.ok) {
+          const json = await res.json();
+          if (json.locations && json.locations.length > 0) {
+            appData = json;
           }
-        } catch (e) {
-          appData = FULL_DEFAULT_DATA;
         }
-      } else {
-        appData = FULL_DEFAULT_DATA;
+      } catch (e) {
+        console.log('Loaded embedded default data');
       }
 
-      saveData();
-      renderAll();
-    }
-
-    function saveData() {
-      localStorage.setItem('chengdu_chongqing_v5', JSON.stringify(appData));
-    }
-
-    function forceResetData() {
-      localStorage.removeItem('chengdu_chongqing_v5');
-      appData = FULL_DEFAULT_DATA;
-      selectedCity = '全部';
-      selectedCategories.clear();
-      searchQuery = '';
-      saveData();
-      closeJsonModal();
-      renderAll();
-    }
-
-    function toggleDarkMode() {
-      document.documentElement.classList.toggle('dark');
-    }
-
-    function switchTab(tabName) {
-      const locPage = document.getElementById('locationsPage');
-      const itiPage = document.getElementById('itineraryPage');
-      const tabLoc = document.getElementById('tabLocations');
-      const tabIti = document.getElementById('tabItinerary');
-
-      if (tabName === 'locations') {
-        locPage.classList.remove('hidden');
-        itiPage.classList.add('hidden');
-        tabLoc.className = 'flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-red-500 shadow-sm';
-        tabIti.className = 'flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400';
-      } else {
-        locPage.classList.add('hidden');
-        itiPage.classList.remove('hidden');
-        tabIti.className = 'flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-red-500 shadow-sm';
-        tabLoc.className = 'flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400';
-      }
-    }
-
-    function handleSearch(val) {
-      searchQuery = val.trim().toLowerCase();
-      renderLocations();
-    }
-
-    function renderAll() {
-      renderFilters();
+      renderCityFilter();
       renderLocations();
       renderItinerary();
     }
 
-    function renderFilters() {
-      const locs = appData.locations || [];
-      const cities = ['全部', ...new Set(locs.map(i => i.city || '其他'))];
-      const cityBox = document.getElementById('cityFilterContainer');
-      cityBox.innerHTML = cities.map(c => `
-        <button onclick="setCity('${c}')" class="px-3 py-1 rounded-lg text-xs font-medium border shrink-0 ${selectedCity === c ? 'bg-red-500 text-white border-red-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-transparent'}">${c}</button>
-      `).join('');
+    function switchTab(tab) {
+      const locView = document.getElementById('locationsView');
+      const itinView = document.getElementById('itineraryView');
+      const locBtn = document.getElementById('tabLocBtn');
+      const itinBtn = document.getElementById('tabItinBtn');
 
-      const categories = [...new Set(locs.map(i => i.category || '未分类'))];
-      const catBox = document.getElementById('categoryFilterContainer');
-      catBox.innerHTML = categories.map(cat => {
-        const isSel = selectedCategories.has(cat);
-        return `
-          <button onclick="toggleCat('${cat}')" class="px-3 py-1 rounded-xl text-xs font-medium border shrink-0 ${isSel ? 'bg-amber-500 text-white border-amber-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'}">
-            <i class="fa-solid ${isSel ? 'fa-square-check' : 'fa-square'} mr-1"></i>${cat}
-          </button>
-        `;
-      }).join('');
+      if (tab === 'locations') {
+        locView.classList.remove('hidden');
+        itinView.classList.add('hidden');
+        locBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-500 text-red-600';
+        itinBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent';
+      } else {
+        locView.classList.add('hidden');
+        itinView.classList.remove('hidden');
+        itinBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-500 text-red-600';
+        locBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent';
+      }
     }
 
-    function setCity(c) { selectedCity = c; renderFilters(); renderLocations(); }
-    function toggleCat(cat) {
-      if (selectedCategories.has(cat)) selectedCategories.delete(cat);
-      else selectedCategories.add(cat);
-      renderFilters(); renderLocations();
+    function renderCityFilter() {
+      const cities = ['全部', ...new Set(appData.locations.map(i => i.city))];
+      document.getElementById('cityFilter').innerHTML = cities.map(c => `
+        <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium shrink-0 ${selectedCity === c ? 'bg-red-500 text-white' : 'bg-white text-slate-600 border'}">
+          ${c}
+        </button>
+      `).join('');
+    }
+
+    function filterCity(city) {
+      selectedCity = city;
+      renderCityFilter();
+      renderLocations();
     }
 
     function renderLocations() {
-      const locs = appData.locations || [];
-      const filtered = locs.filter(loc => {
-        const matchesCity = selectedCity === '全部' || (loc.city || '其他') === selectedCity;
-        const matchesCat = selectedCategories.size === 0 || selectedCategories.has(loc.category || '未分类');
-        const matchesSearch = searchQuery === '' || (loc.name && loc.name.toLowerCase().includes(searchQuery)) || (loc.description && loc.description.toLowerCase().includes(searchQuery));
-        return matchesCity && matchesCat && matchesSearch;
-      });
-
-      document.getElementById('locationCount').textContent = filtered.length;
-      const grid = document.getElementById('locationGrid');
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full text-center py-12 space-y-3">
-            <p class="text-xs text-slate-400">未找到相关景点。</p>
-            <button onclick="forceResetData()" class="px-4 py-1.5 bg-red-500 text-white text-xs rounded-xl shadow">重置数据</button>
+      const filtered = appData.locations.filter(i => selectedCity === '全部' || i.city === selectedCity);
+      document.getElementById('locationList').innerHTML = filtered.map(item => `
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+          <div class="relative h-44 bg-slate-100 cursor-pointer" onclick="openModal('${item.imageUrl}', '${item.name}', '${item.description}')">
+            <img src="${item.imageUrl}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada'">
+            <span class="absolute top-3 left-3 px-2 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">${item.city}</span>
           </div>
-        `;
-        return;
-      }
-
-      grid.innerHTML = filtered.map(item => {
-        const imgs = item.images && item.images.length > 0 ? item.images : ['https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600'];
-        return `
-          <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
-            <div class="relative h-44 bg-slate-100 cursor-pointer group" onclick="openPhotoById('${item.id}')">
-              <img src="${imgs[0]}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-              <div class="absolute top-3 left-3 flex gap-1">
-                ${item.city ? `<span class="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded">${item.city}</span>` : ''}
-                ${item.category ? `<span class="px-2 py-0.5 bg-black/50 text-white text-[10px] rounded">${item.category}</span>` : ''}
-              </div>
-              <div class="absolute bottom-3 left-3 text-white font-bold drop-shadow">${item.name}</div>
-            </div>
-            <div class="p-3 text-xs flex-grow flex flex-col justify-between space-y-2">
-              <p class="text-slate-600 dark:text-slate-300 line-clamp-3">${item.description || ''}</p>
-              <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700">
-                <button onclick="openPhotoById('${item.id}')" class="text-xs text-red-500 font-medium">查看相册 (${imgs.length})</button>
-                ${item.mapsUrl ? `<a href="${item.mapsUrl}" target="_blank" class="text-xs text-slate-500 hover:text-red-500">地图导航 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>` : ''}
-              </div>
+          <div class="p-3.5 space-y-2">
+            <h3 class="font-bold text-sm text-slate-800">${item.name}</h3>
+            <p class="text-xs text-slate-500 line-clamp-2">${item.description}</p>
+            <div class="pt-2 border-t flex justify-between items-center text-xs">
+              <button onclick="openModal('${item.imageUrl}', '${item.name}', '${item.description}')" class="text-red-500 font-semibold">
+                <i class="fa-solid fa-image mr-1"></i>看大图
+              </button>
+              ${item.mapsUrl ? `<a href="${item.mapsUrl}" target="_blank" class="text-slate-400 hover:text-red-500">地图导航 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>` : ''}
             </div>
           </div>
-        `;
-      }).join('');
+        </div>
+      `).join('');
     }
 
     function renderItinerary() {
-      const container = document.getElementById('itineraryTimeline');
-      if (!appData.itinerary || appData.itinerary.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-8">暂无行程安排数据</p>';
-        return;
-      }
-
-      const typePills = {
-        'POI': 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
-        'Food': 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300',
-        'Transport': 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
-      };
-
-      container.innerHTML = appData.itinerary.map(day => `
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 space-y-3">
-          <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-2">${day.title}</h3>
-          <div class="space-y-3">
-            ${day.items.map(item => {
-              const linkedLoc = item.locationId ? (appData.locations || []).find(l => l.id === item.locationId) : null;
+      const itinList = document.getElementById('itineraryList');
+      itinList.innerHTML = appData.itinerary.map(dayPlan => `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between border-b pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded">${dayPlan.day}</span>
+              <h2 class="font-bold text-sm text-slate-800">${dayPlan.title}</h2>
+            </div>
+            <span class="text-[10px] text-slate-400 font-medium">${dayPlan.city}</span>
+          </div>
+          <div class="space-y-3 relative pl-4 border-l-2 border-red-200 ml-1">
+            ${dayPlan.steps.map(step => {
+              const loc = appData.locations.find(l => l.id === step.locationId) || {};
               return `
-                <div class="flex items-start gap-3 text-xs">
-                  <span class="font-mono text-slate-400 shrink-0 mt-0.5">${item.time}</span>
-                  <div class="flex-grow space-y-1">
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <span class="font-medium text-slate-800 dark:text-slate-200">${item.activity}</span>
-                      <span class="px-2 py-0.5 rounded text-[10px] ${typePills[item.type] \vert{}\vert{} 'bg-slate-100 text-slate-600'}">${item.type}</span>
-                    </div>
-                    ${item.notes ? `<p class="text-slate-500 text-[11px]">${item.notes}</p>` : ''}
+                <div class="relative space-y-1">
+                  <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white"></div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">${step.time}</span>
+                    <span class="text-xs font-semibold text-slate-700">${loc.name || ''}</span>
                   </div>
-                  ${linkedLoc ? `
-                    <button onclick="openPhotoById('${linkedLoc.id}')" class="shrink-0 px-2 py-1 bg-red-50 dark:bg-red-950/50 text-red-500 rounded border border-red-100 dark:border-red-900 text-[11px] flex items-center gap-1">
-                      <i class="fa-solid fa-camera"></i> 相册
-                    </button>
-                  ` : ''}
+                  <p class="text-xs text-slate-500 pl-1">${step.activity}</p>
                 </div>
               `;
             }).join('')}
@@ -551,50 +209,19 @@
       `).join('');
     }
 
-    function openPhotoById(locId) {
-      const loc = (appData.locations || []).find(l => l.id === locId);
-      if (!loc) return;
-      activeImages = loc.images && loc.images.length > 0 ? loc.images : [];
-      activeImageIndex = 0;
-      activeTitle = loc.name;
-      updateLightbox();
-      document.getElementById('lightboxModal').classList.remove('hidden');
+    function openModal(img, title, desc) {
+      document.getElementById('modalImg').src = img;
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalDesc').textContent = desc;
+      document.getElementById('photoModal').classList.remove('hidden');
     }
 
-    function closeLightbox() {
-      document.getElementById('lightboxModal').classList.add('hidden');
+    function closeModal() {
+      document.getElementById('photoModal').classList.add('hidden');
     }
 
-    function navigateImage(dir) {
-      if (activeImages.length <= 1) return;
-      activeImageIndex = (activeImageIndex + dir + activeImages.length) % activeImages.length;
-      updateLightbox();
-    }
-
-    function updateLightbox() {
-      document.getElementById('lightboxImage').src = activeImages[activeImageIndex] || '';
-      document.getElementById('lightboxTitle').textContent = activeTitle;
-      document.getElementById('lightboxCounter').textContent = `${activeImageIndex + 1}/${activeImages.length}`;
-    }
-
-    function openJsonModal() {
-      document.getElementById('jsonTextArea').value = JSON.stringify(appData, null, 2);
-      document.getElementById('jsonModal').classList.remove('hidden');
-    }
-
-    function closeJsonModal() {
-      document.getElementById('jsonModal').classList.add('hidden');
-    }
-
-    function saveJsonModal() {
-      try {
-        appData = JSON.parse(document.getElementById('jsonTextArea').value);
-        saveData();
-        closeJsonModal();
-        renderAll();
-      } catch (e) {
-        alert('JSON 格式错误: ' + e.message);
-      }
+    function clearAndReload() {
+      window.location.href = window.location.pathname + '?reset=true&t=' + Date.now();
     }
 
     document.addEventListener('DOMContentLoaded', init);
