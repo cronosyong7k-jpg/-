@@ -1,21 +1,62 @@
 [
   {
     "id": "1",
-    "name": "Chengdu Research Base",
-    "category": "Landmark",
-    "address": "Chengdu, Sichuan",
-    "description": "Famous giant panda breeding center and park.",
-    "imageUrl": "images/chengdu.jpg",
-    "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
+    "name": "洪崖洞民俗风貌区",
+    "city": "重庆",
+    "category": "热门地标",
+    "description": "具有浓郁巴渝传统建筑特色的吊脚楼建筑群，夜晚华灯初上时金碧辉煌，犹如置身于《千与千寻》的梦幻世界。",
+    "images": [
+      "https://images.unsplash.com/photo-1548013146-72479768bada",
+      "https://images.unsplash.com/photo-1508804185872-d7badad00f7d",
+      "https://images.unsplash.com/photo-1528164344705-47542687990d"
+    ],
+    "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
   },
   {
     "id": "2",
-    "name": "Hongyadong Chongqing",
-    "category": "City",
-    "address": "Yuzhong District, Chongqing",
-    "description": "Stunning 11-story stilt house complex lit up at night.",
-    "imageUrl": "images/chongqing.jpg",
-    "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
+    "name": "李子坝轻轨穿楼",
+    "city": "重庆",
+    "category": "奇观景点",
+    "description": "重庆轨道交通2号线李子坝站，轻轨列车直接穿过19层居民楼，是著名的网红打卡奇观。",
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png"
+    ],
+    "mapsUrl": "https://maps.google.com/?q=Liziba+Station"
+  },
+  {
+    "id": "3",
+    "name": "成都大熊猫繁育研究基地",
+    "city": "成都",
+    "category": "动物园与公园",
+    "description": "享誉全球的大熊猫庇护与繁育基地，可以近距离观察可爱的大熊猫和红熊猫在竹林间嬉戏、吃竹子。",
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg",
+      "https://images.unsplash.com/photo-1564349683136-77e08dba1ef9"
+    ],
+    "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
+  },
+  {
+    "id": "4",
+    "name": "宽窄巷子",
+    "city": "成都",
+    "category": "历史街区",
+    "description": "由宽巷子、窄巷子和井巷子组成的清末民初古建筑群，是体验成都传统采耳、喝盖碗茶和慢生活的绝佳去处。",
+    "images": [
+      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f",
+      "https://images.unsplash.com/photo-1528164344705-47542687990d"
+    ],
+    "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley+Chengdu"
+  },
+  {
+    "id": "5",
+    "name": "锦里古街",
+    "city": "成都",
+    "category": "民俗美食街",
+    "description": "依托三国文化打造的历史商业街，古色古香的街道两旁红灯笼高挂，汇聚了三大炮、糖油果子等各种四川地道特色小吃。",
+    "images": [
+      "https://images.unsplash.com/photo-1528164344705-47542687990d",
+      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"
+    ],
+    "mapsUrl": "https://maps.google.com/?q=Jinli+Ancient+Street+Chengdu"
   }
 ]
-
