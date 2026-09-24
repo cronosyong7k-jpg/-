@@ -18,17 +18,17 @@
         </div>
         <div>
           <h1 class="font-bold text-base leading-tight">成渝 2 日精选游</h1>
-          <p class="text-[11px] text-slate-500">5大景点 + 2天行程</p>
+          <p class="text-[11px] text-slate-500">5大景点 + 2天行程（点击可查详情）</p>
         </div>
       </div>
-      <button onclick="clearAndReload()" class="px-2.5 py-1 text-xs bg-red-50 text-red-600 border border-red-200 rounded-lg">
+      <button onclick="clearAndReload()" class="px-2.5 py-1 text-xs bg-red-50 text-red-600 border border-red-200 rounded-lg active:scale-95 transition">
         <i class="fa-solid fa-rotate-right mr-1"></i>重置
       </button>
     </div>
   </header>
 
   <!-- Navigation Tabs -->
-  <div class="bg-white border-b sticky top-[57px] z-20">
+  <div class="bg-white border-b sticky top-[57px] z-20 shadow-xs">
     <div class="max-w-md mx-auto flex">
       <button id="tabLocBtn" onclick="switchTab('locations')" class="flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-500 text-red-600">
         <i class="fa-solid fa-location-dot mr-1"></i>景点相册
@@ -55,44 +55,59 @@
 
   </main>
 
-  <!-- Photo Lightbox Modal -->
-  <div id="photoModal" class="fixed inset-0 z-50 bg-black/90 hidden flex flex-col justify-between p-4" onclick="closeModal()">
-    <div class="flex justify-end">
-      <button onclick="closeModal()" class="text-white text-2xl p-2"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="flex-grow flex items-center justify-center">
-      <img id="modalImg" src="" class="max-h-[75vh] w-auto max-w-full rounded-lg object-contain">
-    </div>
-    <div class="text-center text-white pb-6 space-y-1">
-      <h3 id="modalTitle" class="font-bold text-base"></h3>
-      <p id="modalDesc" class="text-xs text-slate-300 px-4 line-clamp-2"></p>
+  <!-- Photo & Detail Modal -->
+  <div id="photoModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="handleBackdropClick(event)">
+    <div class="bg-slate-900 text-white w-full max-w-md rounded-t-2xl sm:rounded-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-800 shadow-2xl animate-in slide-in-from-bottom duration-200">
+      
+      <!-- Image Header -->
+      <div class="relative bg-black h-60 flex items-center justify-center">
+        <img id="modalImg" src="" class="w-full h-full object-cover">
+        <span id="modalCityTag" class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"></span>
+        <button onclick="closeModal()" class="absolute top-3 right-3 bg-black/60 hover:bg-black/90 text-white w-8 h-8 rounded-full flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Detail Content -->
+      <div class="p-5 overflow-y-auto space-y-3">
+        <h2 id="modalTitle" class="text-xl font-bold leading-tight"></h2>
+        <p id="modalAddress" class="text-xs text-slate-400 flex items-center gap-1.5 hidden">
+          <i class="fa-solid fa-location-dot text-red-400"></i>
+          <span></span>
+        </p>
+        <p id="modalDesc" class="text-sm text-slate-300 leading-relaxed"></p>
+
+        <a id="modalMapBtn" href="#" target="_blank" rel="noopener" class="mt-4 flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-500 text-white font-medium py-2.5 rounded-xl text-sm transition">
+          <i class="fa-solid fa-map-location-dot"></i> 打开地图导航
+        </a>
+      </div>
     </div>
   </div>
 
   <script>
-    // Embedded backup data ensures the app NEVER renders empty
+    // Embedded backup data
     const DEFAULT_DATA = {
       "locations": [
-        { "id": "1", "name": "洪崖洞民俗风貌区", "city": "重庆", "category": "热门地标", "description": "最具代表性的巴渝吊脚楼建筑群，夜景极其震撼。", "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada", "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing" },
-        { "id": "2", "name": "李子坝轻轨穿楼", "city": "重庆", "category": "奇观景点", "description": "轻轨列车直接穿过19层高层居民楼。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png", "mapsUrl": "https://maps.google.com/?q=Liziba+Station" },
-        { "id": "3", "name": "解放碑步行街", "city": "重庆", "category": "城市商业", "description": "重庆繁华核心商圈，集美食与地标于一体。", "imageUrl": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d", "mapsUrl": "https://maps.google.com/?q=Jiefangbei+Chongqing" },
-        { "id": "4", "name": "成都大熊猫繁育研究基地", "city": "成都", "category": "自然动物", "description": "全球最大的大熊猫保护与繁育基地。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg", "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base" },
-        { "id": "5", "name": "宽窄巷子", "city": "成都", "category": "休闲街区", "description": "清末民初古街，体验慢生活与盖碗茶。", "imageUrl": "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f", "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley" }
+        { "id": "1", "name": "洪崖洞民俗风貌区", "city": "重庆", "category": "热门地标", "address": "重庆市渝中区嘉陵江滨江路88号", "description": "最具代表性的巴渝吊脚楼建筑群，夜景极其震撼，仿佛《千与千寻》现实版。", "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada", "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing" },
+        { "id": "2", "name": "李子坝轻轨穿楼", "city": "重庆", "category": "奇观景点", "address": "重庆市渝中区李子坝正街", "description": "重庆轨道交通2号线独有奇观，轻轨列车直接穿过19层高层居民楼。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png", "mapsUrl": "https://maps.google.com/?q=Liziba+Station" },
+        { "id": "3", "name": "解放碑步行街", "city": "重庆", "category": "城市商业", "address": "重庆市渝中区民族路", "description": "重庆繁华核心商圈，集美食、购物与地标建筑于一体。", "imageUrl": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d", "mapsUrl": "https://maps.google.com/?q=Jiefangbei+Chongqing" },
+        { "id": "4", "name": "成都大熊猫繁育研究基地", "city": "成都", "category": "自然动物", "address": "成都市成华区熊猫大道1375号", "description": "全球最大的大熊猫保护与繁育基地，近距离观看活泼的大熊猫。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg", "mapsUrl": "https://maps.google.com/?q=Chengdu_Research_Base_of_Giant_Panda_Breeding" },
+        { "id": "5", "name": "宽窄巷子", "city": "成都", "category": "休闲街区", "address": "成都市青羊区长顺上街", "description": "由宽巷子、窄巷子组成的清末民初古街，体验慢生活与盖碗茶文化。", "imageUrl": "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f", "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley" }
       ],
       "itinerary": [
         {
           "day": "Day 1", "title": "重庆魔幻山城一日游", "city": "重庆",
           "steps": [
-            { "time": "09:30 AM", "locationId": "2", "activity": "观看李子坝轻轨穿楼奇观" },
-            { "time": "01:00 PM", "locationId": "3", "activity": "逛解放碑步行街，享用午餐" },
-            { "time": "07:00 PM", "locationId": "1", "activity": "游览洪崖洞夜景" }
+            { "time": "09:30 AM", "locationId": "2", "activity": "观看李子坝轻轨穿楼奇观并拍照打卡" },
+            { "time": "01:00 PM", "locationId": "3", "activity": "逛解放碑步行街，品尝重庆火锅与酸辣粉" },
+            { "time": "07:00 PM", "locationId": "1", "activity": "游览洪崖洞夜景，欣赏嘉陵江夜色" }
           ]
         },
         {
           "day": "Day 2", "title": "成都慢生活熊猫一日游", "city": "成都",
           "steps": [
-            { "time": "08:30 AM", "locationId": "4", "activity": "早上前往大熊猫基地看大熊猫" },
-            { "time": "02:30 PM", "locationId": "5", "activity": "漫步宽窄巷子，品盖碗茶" }
+            { "time": "08:30 AM", "locationId": "4", "activity": "早上前往大熊猫基地，观看大熊猫进食与活动" },
+            { "time": "02:30 PM", "locationId": "5", "activity": "漫步宽窄巷子，体验成都川剧变脸与盖碗茶" }
           ]
         }
       ]
@@ -115,7 +130,7 @@
           }
         }
       } catch (e) {
-        console.log('Loaded embedded default data');
+        console.log('Loaded default embedded data');
       }
 
       renderCityFilter();
@@ -145,7 +160,7 @@
     function renderCityFilter() {
       const cities = ['全部', ...new Set(appData.locations.map(i => i.city))];
       document.getElementById('cityFilter').innerHTML = cities.map(c => `
-        <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium shrink-0 ${selectedCity === c ? 'bg-red-500 text-white' : 'bg-white text-slate-600 border'}">
+        <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium shrink-0 transition ${selectedCity === c ? 'bg-red-500 text-white shadow-xs' : 'bg-white text-slate-600 border border-slate-200'}">
           ${c}
         </button>
       `).join('');
@@ -160,8 +175,8 @@
     function renderLocations() {
       const filtered = appData.locations.filter(i => selectedCity === '全部' || i.city === selectedCity);
       document.getElementById('locationList').innerHTML = filtered.map(item => `
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200">
-          <div class="relative h-44 bg-slate-100 cursor-pointer" onclick="openModal('${item.imageUrl}', '${item.name}', '${item.description}')">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-xs border border-slate-200">
+          <div class="relative h-44 bg-slate-100 cursor-pointer" onclick="openModalForLocation('${item.id}')">
             <img src="${item.imageUrl}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada'">
             <span class="absolute top-3 left-3 px-2 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">${item.city}</span>
           </div>
@@ -169,10 +184,10 @@
             <h3 class="font-bold text-sm text-slate-800">${item.name}</h3>
             <p class="text-xs text-slate-500 line-clamp-2">${item.description}</p>
             <div class="pt-2 border-t flex justify-between items-center text-xs">
-              <button onclick="openModal('${item.imageUrl}', '${item.name}', '${item.description}')" class="text-red-500 font-semibold">
-                <i class="fa-solid fa-image mr-1"></i>看大图
+              <button onclick="openModalForLocation('${item.id}')" class="text-red-500 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-circle-info"></i> 查看详情
               </button>
-              ${item.mapsUrl ? `<a href="${item.mapsUrl}" target="_blank" class="text-slate-400 hover:text-red-500">地图导航 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>` : ''}
+              ${item.mapsUrl ? `<a href="${item.mapsUrl}" target="_blank" class="text-slate-400 hover:text-red-500 flex items-center gap-1">地图导航 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>` : ''}
             </div>
           </div>
         </div>
@@ -182,7 +197,7 @@
     function renderItinerary() {
       const itinList = document.getElementById('itineraryList');
       itinList.innerHTML = appData.itinerary.map(dayPlan => `
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-200 space-y-3">
           <div class="flex items-center justify-between border-b pb-2">
             <div class="flex items-center space-x-2">
               <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded">${dayPlan.day}</span>
@@ -190,17 +205,19 @@
             </div>
             <span class="text-[10px] text-slate-400 font-medium">${dayPlan.city}</span>
           </div>
-          <div class="space-y-3 relative pl-4 border-l-2 border-red-200 ml-1">
+          
+          <div class="space-y-2.5 relative pl-3 border-l-2 border-red-200 ml-1">
             ${dayPlan.steps.map(step => {
-              const loc = appData.locations.find(l => l.id === step.locationId) || {};
+              const loc = appData.locations.find(l => String(l.id) === String(step.locationId)) || {};
               return `
-                <div class="relative space-y-1">
-                  <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white"></div>
+                <div onclick="openModalForLocation('${step.locationId}')" class="bg-slate-50 hover:bg-red-50/50 p-2.5 rounded-xl border border-slate-100 hover:border-red-200 cursor-pointer transition active:scale-[0.98] space-y-1">
                   <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">${step.time}</span>
-                    <span class="text-xs font-semibold text-slate-700">${loc.name || ''}</span>
+                    <span class="text-[10px] font-bold text-red-500 bg-red-100/80 px-2 py-0.5 rounded-md">${step.time}</span>
+                    <span class="text-xs font-bold text-red-600 flex items-center gap-1">
+                      ${loc.name || '详细景点'} <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </span>
                   </div>
-                  <p class="text-xs text-slate-500 pl-1">${step.activity}</p>
+                  <p class="text-xs text-slate-600 font-medium">${step.activity}</p>
                 </div>
               `;
             }).join('')}
@@ -209,15 +226,42 @@
       `).join('');
     }
 
-    function openModal(img, title, desc) {
-      document.getElementById('modalImg').src = img;
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalDesc').textContent = desc;
+    function openModalForLocation(id) {
+      const item = appData.locations.find(l => String(l.id) === String(id));
+      if (!item) return;
+
+      document.getElementById('modalImg').src = item.imageUrl;
+      document.getElementById('modalTitle').textContent = item.name;
+      document.getElementById('modalCityTag').textContent = item.city || '景点';
+      document.getElementById('modalDesc').textContent = item.description || '暂无详细介绍';
+      
+      const addrEl = document.getElementById('modalAddress');
+      if (item.address) {
+        addrEl.querySelector('span').textContent = item.address;
+        addrEl.classList.remove('hidden');
+      } else {
+        addrEl.classList.add('hidden');
+      }
+
+      const mapBtn = document.getElementById('modalMapBtn');
+      if (item.mapsUrl) {
+        mapBtn.href = item.mapsUrl;
+        mapBtn.classList.remove('hidden');
+      } else {
+        mapBtn.classList.add('hidden');
+      }
+
       document.getElementById('photoModal').classList.remove('hidden');
     }
 
     function closeModal() {
       document.getElementById('photoModal').classList.add('hidden');
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'photoModal') {
+        closeModal();
+      }
     }
 
     function clearAndReload() {
