@@ -1,62 +1,344 @@
-[
-  {
-    "id": "1",
-    "name": "洪崖洞民俗风貌区",
-    "city": "重庆",
-    "category": "热门地标",
-    "description": "具有浓郁巴渝传统建筑特色的吊脚楼建筑群，夜晚华灯初上时金碧辉煌，犹如置身于《千与千寻》的梦幻世界。",
-    "images": [
-      "https://images.unsplash.com/photo-1548013146-72479768bada",
-      "https://images.unsplash.com/photo-1508804185872-d7badad00f7d",
-      "https://images.unsplash.com/photo-1528164344705-47542687990d"
-    ],
-    "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
-  },
-  {
-    "id": "2",
-    "name": "李子坝轻轨穿楼",
-    "city": "重庆",
-    "category": "奇观景点",
-    "description": "重庆轨道交通2号线李子坝站，轻轨列车直接穿过19层居民楼，是著名的网红打卡奇观。",
-    "images": [
-      "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png"
-    ],
-    "mapsUrl": "https://maps.google.com/?q=Liziba+Station"
-  },
-  {
-    "id": "3",
-    "name": "成都大熊猫繁育研究基地",
-    "city": "成都",
-    "category": "动物园与公园",
-    "description": "享誉全球的大熊猫庇护与繁育基地，可以近距离观察可爱的大熊猫和红熊猫在竹林间嬉戏、吃竹子。",
-    "images": [
-      "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg",
-      "https://images.unsplash.com/photo-1564349683136-77e08dba1ef9"
-    ],
-    "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
-  },
-  {
-    "id": "4",
-    "name": "宽窄巷子",
-    "city": "成都",
-    "category": "历史街区",
-    "description": "由宽巷子、窄巷子和井巷子组成的清末民初古建筑群，是体验成都传统采耳、喝盖碗茶和慢生活的绝佳去处。",
-    "images": [
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f",
-      "https://images.unsplash.com/photo-1528164344705-47542687990d"
-    ],
-    "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley+Chengdu"
-  },
-  {
-    "id": "5",
-    "name": "锦里古街",
-    "city": "成都",
-    "category": "民俗美食街",
-    "description": "依托三国文化打造的历史商业街，古色古香的街道两旁红灯笼高挂，汇聚了三大炮、糖油果子等各种四川地道特色小吃。",
-    "images": [
-      "https://images.unsplash.com/photo-1528164344705-47542687990d",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"
-    ],
-    "mapsUrl": "https://maps.google.com/?q=Jinli+Ancient+Street+Chengdu"
-  }
-]
+{
+  "locations": [
+    {
+      "id": "1",
+      "name": "洪崖洞民俗风貌区",
+      "city": "重庆",
+      "category": "热门地标",
+      "description": "具有浓郁巴渝传统建筑特色的吊脚楼建筑群，夜晚华灯初上时金碧辉煌，犹如置身于《千与千寻》的梦幻世界。",
+      "images": [
+        "https://images.unsplash.com/photo-1548013146-72479768bada",
+        "https://images.unsplash.com/photo-1508804185872-d7badad00f7d"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
+    },
+    {
+      "id": "2",
+      "name": "李子坝轻轨穿楼",
+      "city": "重庆",
+      "category": "奇观景点",
+      "description": "重庆轨道交通2号线李子坝站，轻轨列车直接穿过19层居民楼，是著名的网红打卡奇观。",
+      "images": [
+        "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Liziba+Station"
+    },
+    {
+      "id": "3",
+      "name": "十八梯传统风貌区",
+      "city": "重庆",
+      "category": "历史街区",
+      "description": "连接重庆上半城与下半城的石梯步道，保留了老重庆山城步道与吊脚楼建筑特色，夜景尤为精美。",
+      "images": [
+        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Shibati+Chongqing"
+    },
+    {
+      "id": "4",
+      "name": "磁器口古镇",
+      "city": "重庆",
+      "category": "古镇风情",
+      "description": "嘉陵江畔的千年古镇，以古色古香的石板路、巴渝民居和麻辣麻花等地道美食小吃闻名。",
+      "images": [
+        "https://images.unsplash.com/photo-1528164344705-47542687990d"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Ciqikou+Ancient+Town"
+    },
+    {
+      "id": "5",
+      "name": "解放碑与八一好吃街",
+      "city": "重庆",
+      "category": "美食购物",
+      "description": "重庆核心商圈，解放碑抗战胜利纪功碑矗立中央，旁边的八一好吃街汇聚酸辣粉、重庆小面、山城小汤圆等特色美食。",
+      "images": [
+        "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Jiefangbei+Chongqing"
+    },
+    {
+      "id": "6",
+      "name": "成都大熊猫繁育研究基地",
+      "city": "成都",
+      "category": "自然动物",
+      "description": "享誉全球的大熊猫庇护与繁育基地，可以近距离观察大熊猫和红熊猫在竹林间嬉戏与进食。",
+      "images": [
+        "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg",
+        "https://images.unsplash.com/photo-1564349683136-77e08dba1ef9"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
+    },
+    {
+      "id": "7",
+      "name": "武侯祠",
+      "city": "成都",
+      "category": "历史古迹",
+      "description": "中国唯一的君臣合祀祠堂及最负盛名的三国遗迹博物馆，包含著名的红墙竹影红墙夹道。",
+      "images": [
+        "https://images.unsplash.com/photo-1508804185872-d7badad00f7d"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Wuhou+Shrine+Chengdu"
+    },
+    {
+      "id": "8",
+      "name": "锦里古街",
+      "city": "成都",
+      "category": "民俗美食",
+      "description": "紧邻武侯祠的三国文化主题古街，古色古香，红灯笼高挂，汇聚糖油果子、三大炮等成都地道小吃。",
+      "images": [
+        "https://images.unsplash.com/photo-1528164344705-47542687990d"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Jinli+Ancient+Street"
+    },
+    {
+      "id": "9",
+      "name": "三星堆博物馆",
+      "city": "成都周边",
+      "category": "博物馆",
+      "description": "位于广汉，展出距今约3000-5000年的古蜀文明青铜大立人、青铜面具与黄金面具，造型独特神秘。",
+      "images": [
+        "https://images.unsplash.com/photo-1548013146-72479768bada"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Sanxingdui+Museum"
+    },
+    {
+      "id": "10",
+      "name": "都江堰水利工程",
+      "city": "成都周边",
+      "category": "世界遗产",
+      "description": "公元前256年左右建成的宏伟水利工程，至今仍在发挥防洪灌溉作用，包含鱼嘴分水堤、飞沙堰与宝瓶口。",
+      "images": [
+        "https://images.unsplash.com/photo-1508804185872-d7badad00f7d"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Dujiangyan+Irrigation+System"
+    },
+    {
+      "id": "11",
+      "name": "人民公园与鹤鸣茶社",
+      "city": "成都",
+      "category": "休闲茶馆",
+      "description": "百年老茶馆，体验最正宗成都闲适生活的好去处，竹椅木桌，喝盖碗茶、体验采耳文化。",
+      "images": [
+        "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=People's+Park+Chengdu"
+    },
+    {
+      "id": "12",
+      "name": "宽窄巷子",
+      "city": "成都",
+      "category": "历史街区",
+      "description": "由宽巷子、窄巷子和井巷子组成的清末民初古建筑群，适合慢漫步、喝茶品小吃。",
+      "images": [
+        "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"
+      ],
+      "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley"
+    }
+  ],
+  "itinerary": [
+    {
+      "day": 1,
+      "title": "Day 1 (11月7日): 抵达重庆 & 步道初探",
+      "items": [
+        {
+          "time": "14:00",
+          "activity": "抵达重庆并入住酒店",
+          "type": "Transport",
+          "notes": "建议入住渝中区靠近轨道交通站酒店，方便出行"
+        },
+        {
+          "time": "16:30",
+          "activity": "十八梯传统风貌区",
+          "type": "POI",
+          "locationId": "3",
+          "notes": "体验山城步道，游览传统吊脚楼建筑"
+        },
+        {
+          "time": "19:00",
+          "activity": "解放碑 & 八一好吃街",
+          "type": "Food",
+          "locationId": "5",
+          "notes": "品尝九宫格九村烤脑花、酸辣粉及重庆老火锅"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2 (11月8日): 魔幻高空轻轨与夜景",
+      "items": [
+        {
+          "time": "09:30",
+          "activity": "李子坝轻轨穿楼",
+          "type": "POI",
+          "locationId": "2",
+          "notes": "在一楼观景平台拍摄轻轨穿过19层居民楼奇观"
+        },
+        {
+          "time": "14:00",
+          "activity": "磁器口古镇",
+          "type": "POI",
+          "locationId": "4",
+          "notes": "漫步古镇石板路，选购陈麻花等地道特产"
+        },
+        {
+          "time": "19:30",
+          "activity": "洪崖洞民俗风貌区夜景",
+          "type": "POI",
+          "locationId": "1",
+          "notes": "约 20:00 开灯，千厮门大桥上是最佳拍摄机位"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3 (11月9日): 山城美食巡礼与特产选购",
+      "items": [
+        {
+          "time": "10:00",
+          "activity": "重庆老街区与地道火锅底料市场",
+          "type": "Food",
+          "notes": "采购真空包装老火锅底料、川味香肠腊肉"
+        },
+        {
+          "time": "15:00",
+          "activity": "南山一棵树或长江索道",
+          "type": "POI",
+          "notes": "俯瞰重庆“两江交汇”山城夜景"
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Day 4 (11月10日): 高铁前往成都 & 三国文化",
+      "items": [
+        {
+          "time": "09:00",
+          "activity": "乘坐高铁前往成都 (重庆北 -> 成都东)",
+          "type": "Transport",
+          "notes": "车程约 1.5 小时"
+        },
+        {
+          "time": "13:30",
+          "activity": "武侯祠",
+          "type": "POI",
+          "locationId": "7",
+          "notes": "游览三国历史遗迹，打卡网红红墙竹影"
+        },
+        {
+          "time": "16:30",
+          "activity": "锦里古街",
+          "type": "Food",
+          "locationId": "8",
+          "notes": "体验古街晚景与四川小吃"
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Day 5 (11月11日): 国宝大熊猫与慢生活茶馆",
+      "items": [
+        {
+          "time": "08:00",
+          "activity": "成都大熊猫繁育研究基地",
+          "type": "POI",
+          "locationId": "6",
+          "notes": "清早前往，大熊猫在早晨最活跃，可观赏进食与嬉戏"
+        },
+        {
+          "time": "14:00",
+          "activity": "人民公园 鹤鸣茶社",
+          "type": "Food",
+          "locationId": "11",
+          "notes": "体验竹椅盖碗茶、舒压采耳，享受成都慢生活"
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "Day 6 (11月12日): 古蜀文明神秘金面具",
+      "items": [
+        {
+          "time": "09:00",
+          "activity": "前往三星堆博物馆 (广汉)",
+          "type": "Transport",
+          "notes": "可乘直通车或高铁至广汉北站"
+        },
+        {
+          "time": "10:30",
+          "activity": "参观三星堆新馆",
+          "type": "POI",
+          "locationId": "9",
+          "notes": "重点观赏青铜神树、大立人像与黄金面具"
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Day 7 (11月13日): 都江堰千古水利奇观",
+      "items": [
+        {
+          "time": "09:00",
+          "activity": "前往都江堰景区",
+          "type": "POI",
+          "locationId": "10",
+          "notes": "游览鱼嘴分水堤、飞沙堰与宝瓶口，感受古人水利智慧"
+        },
+        {
+          "time": "18:00",
+          "activity": "灌县古城与仰天窝广场",
+          "type": "POI",
+          "notes": "打卡自拍大熊猫雕塑与古城夜景"
+        }
+      ]
+    },
+    {
+      "day": 8,
+      "title": "Day 8 (11月14日): 街区漫步与盖碗茶文化",
+      "items": [
+        {
+          "time": "10:00",
+          "activity": "宽窄巷子",
+          "type": "POI",
+          "locationId": "12",
+          "notes": "漫步清末民初古建筑群，购买盖碗茶叶与川茶礼盒"
+        },
+        {
+          "time": "15:00",
+          "activity": "太古里与春熙路",
+          "type": "Food",
+          "notes": "打卡爬墙大熊猫雕塑，享用成都川菜或翘脚牛肉"
+        }
+      ]
+    },
+    {
+      "day": 9,
+      "title": "Day 9 (11月15日): 特产选购与休闲整理",
+      "items": [
+        {
+          "time": "10:30",
+          "activity": "选购特产与纪念品",
+          "type": "Food",
+          "notes": "采购竹叶青茶、张飞牛肉、蜀绣纪念品"
+        },
+        {
+          "time": "16:00",
+          "activity": "市区休闲漫步与晚餐",
+          "type": "Rest",
+          "notes": "收拾行李，整理相册与行程回忆"
+        }
+      ]
+    },
+    {
+      "day": 10,
+      "title": "Day 10 (11月16日): 返程",
+      "items": [
+        {
+          "time": "10:00",
+          "activity": "前往机场/高铁站返程",
+          "type": "Transport",
+          "notes": "顺利返程，结束美好的成渝之行！"
+        }
+      ]
+    }
+  ]
+}
