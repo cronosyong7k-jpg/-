@@ -1,200 +1,568 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Location Photo Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>成渝景点相册地图 - Location Photo Explorer</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
+    /* Custom mobile scrolling improvements */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tap-highlight-transparent { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
 
   <!-- Header -->
-  <header class="sticky top-0 z-30 bg-slate-800/90 backdrop-blur border-b border-slate-700 px-4 py-3">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-map-location-dot text-indigo-400 text-xl"></i>
-        <h1 class="font-bold text-lg tracking-tight">Location Explorer</h1>
+  <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-4 py-3 shadow-sm">
+    <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <div class="bg-gradient-to-tr from-red-500 to-amber-500 text-white p-2 rounded-xl shadow-md">
+          <i class="fa-solid fa-[#fa4e00] fa-map-location-dot text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-tight">成渝景点相册</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">成都 · 重庆 专线导览</p>
+        </div>
       </div>
-      <span id="item-count" class="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded-full">0 locations</span>
+
+      <div class="flex items-center gap-2">
+        <button id="themeToggleBtn" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition tap-highlight-transparent" title="切换模式">
+          <i class="fa-solid fa-moon dark:hidden"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+        </button>
+        <button id="openJsonModalBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-medium text-xs shadow hover:opacity-90 transition tap-highlight-transparent">
+          <i class="fa-solid fa-code"></i>
+          <span>JSON 设置</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- Search & Filter Bar -->
-  <div class="max-w-md mx-auto w-full px-4 pt-4 space-y-3">
-    <div class="relative">
-      <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
-      <input 
-        type="text" 
-        id="search-input" 
-        placeholder="Search location or city..." 
-        class="w-full bg-slate-800 border border-slate-700 text-slate-100 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition"
-      />
-    </div>
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-4 space-y-4">
 
-    <!-- Category Pills -->
-    <div id="category-container" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-      <button class="cat-btn active bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium" data-cat="all">All</button>
-    </div>
-  </div>
-
-  <!-- Main Content Area -->
-  <main class="max-w-md mx-auto w-full flex-1 px-4 py-4 space-y-4">
-    <!-- Locations Grid -->
-    <div id="locations-list" class="space-y-4">
-      <div class="text-center py-12 text-slate-400 space-y-2">
-        <i class="fa-solid fa-spinner animate-spin text-2xl text-indigo-400"></i>
-        <p class="text-sm">Loading locations.json...</p>
-      </div>
-    </div>
-  </main>
-
-  <!-- Image & Detail Modal -->
-  <div id="photo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
-    <div class="bg-slate-800 w-full max-w-md rounded-t-2xl sm:rounded-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-700 shadow-2xl animate-in slide-in-from-bottom duration-200">
+    <!-- Search & Dual Filters Box -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200/80 dark:border-slate-700/80 space-y-3">
       
-      <!-- Modal Header -->
-      <div class="relative bg-black h-64 flex items-center justify-center">
-        <img id="modal-img" src="" alt="Location Photo" class="w-full h-full object-cover">
-        <button id="close-modal" class="absolute top-3 right-3 bg-black/60 hover:bg-black/90 text-white w-8 h-8 rounded-full flex items-center justify-center">
-          <i class="fa-solid fa-xmark"></i>
+      <!-- Search Input -->
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="搜索景点名称、地址或关键词..." 
+          class="w-full pl-10 pr-10 py-2.5 bg-slate-100 dark:bg-slate-700/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 transition placeholder-slate-400"
+        >
+        <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-circle-xmark"></i>
         </button>
       </div>
 
-      <!-- Modal Body -->
-      <div class="p-5 overflow-y-auto space-y-3">
-        <div class="flex items-start justify-between gap-2">
-          <div>
-            <span id="modal-category" class="text-xs font-semibold text-indigo-400 uppercase tracking-wider"></span>
-            <h2 id="modal-title" class="text-xl font-bold text-white leading-tight"></h2>
-          </div>
+      <!-- Filter Row 1: City Select (城市筛选) -->
+      <div class="flex items-center gap-2 pt-1">
+        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0"><i class="fa-solid fa-city mr-1"></i>城市:</span>
+        <div id="cityFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <!-- Populated by JS -->
         </div>
+      </div>
 
-        <p id="modal-address" class="text-xs text-slate-400 flex items-center gap-1.5">
-          <i class="fa-solid fa-location-dot text-rose-400"></i>
-          <span></span>
-        </p>
+      <!-- Filter Row 2: Category Multi-Select (分类多选) -->
+      <div class="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-700/50">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"><i class="fa-solid fa-tags mr-1"></i>分类 (可多选):</span>
+          <button id="resetCategoryBtn" class="text-[11px] text-red-500 dark:text-red-400 hover:underline hidden">重置分类</button>
+        </div>
+        <div id="categoryFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
 
-        <p id="modal-desc" class="text-sm text-slate-300 leading-relaxed"></p>
+    <!-- Active Filters & Stats Bar -->
+    <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+      <div>
+        共找到 <span id="locationCount" class="font-bold text-red-600 dark:text-red-400">0</span> 个景点
+      </div>
+      <button id="clearAllFiltersBtn" class="hidden text-red-500 hover:underline flex items-center gap-1">
+        <i class="fa-solid fa-filter-circle-xmark"></i> 清空所有筛选
+      </button>
+    </div>
 
-        <a id="modal-map-link" href="#" target="_blank" rel="noopener" class="mt-4 flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl text-sm transition">
-          <i class="fa-solid fa-map"></i> Open in Maps
-        </a>
+    <!-- Locations Grid -->
+    <div id="locationGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Location cards rendered dynamically -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden py-16 text-center space-y-3">
+      <div class="w-16 h-16 mx-auto bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 text-2xl">
+        <i class="fa-solid fa-compass-slash"></i>
+      </div>
+      <h3 class="font-bold text-slate-700 dark:text-slate-200">未找到相关景点</h3>
+      <p class="text-xs text-slate-500 max-w-xs mx-auto">请尝试更换搜索词，或者重置城市与分类筛选条件。</p>
+      <button onclick="resetAllFilters()" class="px-4 py-2 bg-red-500 text-white rounded-xl text-xs font-medium shadow hover:bg-red-600 transition">
+        重置所有条件
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Photo Lightbox Modal -->
+  <div id="lightboxModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <button id="closeLightboxBtn" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/40 transition">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    <div class="max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center space-y-3">
+      <img id="lightboxImage" src="" alt="" class="max-h-[75vh] w-auto max-w-full rounded-lg object-contain shadow-2xl">
+      <div id="lightboxCaption" class="text-center text-white space-y-1">
+        <h3 id="lightboxTitle" class="font-bold text-lg"></h3>
+        <p id="lightboxSub" class="text-xs text-slate-300 max-w-lg"></p>
       </div>
     </div>
   </div>
 
-  <script>
-    let locations = [];
-    let selectedCategory = 'all';
+  <!-- JSON Configuration Modal -->
+  <div id="jsonModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <!-- Modal Header -->
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-sliders text-red-500"></i>
+          <h2 class="font-bold text-base">编辑 / 导入 JSON 景点数据</h2>
+        </div>
+        <button id="closeJsonModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <!-- Modal Body -->
+      <div class="p-5 flex-grow overflow-y-auto space-y-4">
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          你可以直接修改下方的 JSON 配置，自定义你的成渝或其它路线景点照片。
+        </p>
+        <textarea id="jsonTextArea" rows="12" class="w-full p-3 bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+        <div id="jsonError" class="hidden text-xs text-red-500 bg-red-50 dark:bg-red-950/40 p-2.5 rounded-lg border border-red-200 dark:border-red-800"></div>
+      </div>
+      <!-- Modal Footer -->
+      <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+        <button id="resetDefaultJsonBtn" class="px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-red-500 transition">
+          恢复默认示例
+        </button>
+        <div class="flex items-center gap-2">
+          <button id="formatJsonBtn" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 text-xs font-medium rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition">
+            格式化代码
+          </button>
+          <button id="saveJsonBtn" class="px-4 py-2 bg-red-500 text-white text-xs font-medium rounded-xl shadow hover:bg-red-600 transition">
+            保存并应用
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    async function loadLocations() {
-      const container = document.getElementById('locations-list');
-      try {
-        const response = await fetch('locations.json');
-        if (!response.ok) throw new Error('locations.json not found');
-        locations = await response.json();
-        buildCategories();
-        renderLocations();
-      } catch (err) {
-        container.innerHTML = `
-          <div class="bg-rose-950/40 border border-rose-800 rounded-xl p-4 text-center space-y-2">
-            <i class="fa-solid fa-triangle-exclamation text-rose-400 text-2xl"></i>
-            <p class="text-sm text-rose-200 font-medium">Could not load locations.json</p>
-            <p class="text-xs text-slate-400">Make sure locations.json is in the same folder on GitHub.</p>
-          </div>
-        `;
+  <!-- JavaScript Logic -->
+  <script>
+    // 默认成都 & 重庆 景点 JSON 数据
+    const defaultData = [
+      {
+        "id": "1",
+        "name": "洪崖洞民俗风貌区",
+        "city": "重庆",
+        "category": "热门地标",
+        "address": "重庆市渝中区嘉陵江滨江路88号",
+        "description": "具有浓郁巴渝传统建筑特色的吊脚楼建筑群，夜晚华灯初上时金碧辉煌，犹如置身于《千与千寻》的梦幻世界。",
+        "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada",
+        "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
+      },
+      {
+        "id": "2",
+        "name": "李子坝轻轨穿楼",
+        "city": "重庆",
+        "category": "奇观景点",
+        "address": "重庆市渝中区李子坝正街",
+        "description": "重庆轨道交通2号线李子坝站，轻轨列车直接穿过19层居民楼，是著名的网红打卡奇观。",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png",
+        "mapsUrl": "https://maps.google.com/?q=Liziba+Station"
+      },
+      {
+        "id": "3",
+        "name": "武隆天生三桥",
+        "city": "重庆",
+        "category": "自然风光",
+        "address": "重庆市武隆区仙女山镇",
+        "description": "罕见的喀斯特地质奇观，包含天龙桥、青龙桥和黑龙桥三座天然石拱桥，也是电影《变形金刚4》与《满城尽带黄金甲》的取景地。",
+        "imageUrl": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d",
+        "mapsUrl": "https://maps.google.com/?q=Wulong+Karst+National+Geopark"
+      },
+      {
+        "id": "4",
+        "name": "成都大熊猫繁育研究基地",
+        "city": "成都",
+        "category": "动物园与公园",
+        "address": "成都市成华区熊猫大道1375号",
+        "description": "享誉全球的大熊猫庇护与繁育基地，可以近距离观察可爱的大熊猫和红熊猫在竹林间嬉戏、吃竹子。",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg",
+        "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
+      },
+      {
+        "id": "5",
+        "name": "宽窄巷子",
+        "city": "成都",
+        "category": "历史街区",
+        "address": "成都市青羊区长顺街附近",
+        "description": "由宽巷子、窄巷子和井巷子组成的清末民初古建筑群，是体验成都传统采耳、喝盖碗茶和慢生活的绝佳去处。",
+        "imageUrl": "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f",
+        "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley+Chengdu"
+      },
+      {
+        "id": "6",
+        "name": "锦里古街",
+        "city": "成都",
+        "category": "民俗美食街",
+        "address": "成都市武侯区武侯祠大街231号",
+        "description": "依托三国文化打造的历史商业街，古色古香的街道两旁红灯笼高挂，汇聚了三大炮、糖油果子等各种四川地道特色小吃。",
+        "imageUrl": "https://images.unsplash.com/photo-1528164344705-47542687990d",
+        "mapsUrl": "https://maps.google.com/?q=Jinli+Ancient+Street+Chengdu"
+      }
+    ];
+
+    // App State
+    let locations = [];
+    let selectedCity = '全部';
+    let selectedCategories = new Set(); // Multi-select Set
+    let searchQuery = '';
+
+    // DOM Elements
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const cityFilterContainer = document.getElementById('cityFilterContainer');
+    const categoryFilterContainer = document.getElementById('categoryFilterContainer');
+    const resetCategoryBtn = document.getElementById('resetCategoryBtn');
+    const clearAllFiltersBtn = document.getElementById('clearAllFiltersBtn');
+    const locationCount = document.getElementById('locationCount');
+    const locationGrid = document.getElementById('locationGrid');
+    const emptyState = document.getElementById('emptyState');
+    
+    // Lightbox Elements
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const lightboxSub = document.getElementById('lightboxSub');
+    const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+
+    // JSON Modal Elements
+    const jsonModal = document.getElementById('jsonModal');
+    const openJsonModalBtn = document.getElementById('openJsonModalBtn');
+    const closeJsonModalBtn = document.getElementById('closeJsonModalBtn');
+    const jsonTextArea = document.getElementById('jsonTextArea');
+    const saveJsonBtn = document.getElementById('saveJsonBtn');
+    const formatJsonBtn = document.getElementById('formatJsonBtn');
+    const resetDefaultJsonBtn = document.getElementById('resetDefaultJsonBtn');
+    const jsonError = document.getElementById('jsonError');
+
+    // Theme Toggle
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+    // Initialization
+    function init() {
+      loadDataFromStorage();
+      setupEventListeners();
+      renderApp();
+    }
+
+    function loadDataFromStorage() {
+      const stored = localStorage.getItem('chengdu_chongqing_locations');
+      if (stored) {
+        try {
+          locations = JSON.parse(stored);
+        } catch (e) {
+          locations = [...defaultData];
+        }
+      } else {
+        locations = [...defaultData];
       }
     }
 
-    function buildCategories() {
-      const categories = ['all', ...new Set(locations.map(item => item.category || 'General'))];
-      const catContainer = document.getElementById('category-container');
-      catContainer.innerHTML = categories.map(cat => `
-        <button class="cat-btn text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium capitalize border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-cat="${cat}">
-          ${cat}
-        </button>
-      `).join('');
+    function saveDataToStorage() {
+      localStorage.setItem('chengdu_chongqing_locations', JSON.stringify(locations));
+    }
 
-      document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          document.querySelectorAll('.cat-btn').forEach(b => {
-            b.classList.remove('bg-indigo-600', 'text-white');
-            b.classList.add('bg-slate-800', 'text-slate-300');
-          });
-          e.target.classList.remove('bg-slate-800', 'text-slate-300');
-          e.target.classList.add('bg-indigo-600', 'text-white');
-          selectedCategory = e.target.dataset.cat;
-          renderLocations();
-        });
+    function setupEventListeners() {
+      // Theme Toggle
+      themeToggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+      });
+
+      // Search
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim().toLowerCase();
+        clearSearchBtn.classList.toggle('hidden', searchQuery === '');
+        renderLocations();
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearSearchBtn.classList.add('hidden');
+        renderLocations();
+      });
+
+      resetCategoryBtn.addEventListener('click', () => {
+        selectedCategories.clear();
+        renderFilters();
+        renderLocations();
+      });
+
+      clearAllFiltersBtn.addEventListener('click', resetAllFilters);
+
+      // Lightbox
+      closeLightboxBtn.addEventListener('click', closeLightbox);
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target === lightboxModal) closeLightbox();
+      });
+
+      // JSON Modal
+      openJsonModalBtn.addEventListener('click', () => {
+        jsonTextArea.value = JSON.stringify(locations, null, 2);
+        jsonError.classList.add('hidden');
+        jsonModal.classList.remove('hidden');
+      });
+
+      closeJsonModalBtn.addEventListener('click', () => jsonModal.classList.add('hidden'));
+
+      formatJsonBtn.addEventListener('click', () => {
+        try {
+          const parsed = JSON.parse(jsonTextArea.value);
+          jsonTextArea.value = JSON.stringify(parsed, null, 2);
+          jsonError.classList.add('hidden');
+        } catch (err) {
+          jsonError.textContent = 'JSON 格式错误: ' + err.message;
+          jsonError.classList.remove('hidden');
+        }
+      });
+
+      resetDefaultJsonBtn.addEventListener('click', () => {
+        locations = [...defaultData];
+        saveDataToStorage();
+        jsonModal.classList.add('hidden');
+        resetAllFilters();
+      });
+
+      saveJsonBtn.addEventListener('click', () => {
+        try {
+          const parsed = JSON.parse(jsonTextArea.value);
+          if (!Array.isArray(parsed)) throw new Error('根对象必须为 JSON 数组');
+          locations = parsed;
+          saveDataToStorage();
+          jsonModal.classList.add('hidden');
+          resetAllFilters();
+        } catch (err) {
+          jsonError.textContent = '无法保存: ' + err.message;
+          jsonError.classList.remove('hidden');
+        }
       });
     }
 
-    function renderLocations() {
-      const container = document.getElementById('locations-list');
-      const query = document.getElementById('search-input').value.toLowerCase();
+    function resetAllFilters() {
+      selectedCity = '全部';
+      selectedCategories.clear();
+      searchQuery = '';
+      searchInput.value = '';
+      clearSearchBtn.classList.add('hidden');
+      renderApp();
+    }
 
-      const filtered = locations.filter(item => {
-        const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
-        const matchSearch = item.name.toLowerCase().includes(query) || 
-                            (item.address && item.address.toLowerCase().includes(query)) ||
-                            (item.city && item.city.toLowerCase().includes(query));
-        return matchCat && matchSearch;
+    function renderApp() {
+      renderFilters();
+      renderLocations();
+    }
+
+    // Render City & Category Filters
+    function renderFilters() {
+      // 1. Render City Options
+      const cities = ['全部', ...new Set(locations.map(item => item.city || '其他'))];
+      cityFilterContainer.innerHTML = '';
+      cities.forEach(city => {
+        const isSelected = selectedCity === city;
+        const btn = document.createElement('button');
+        btn.className = `px-3 py-1 rounded-lg text-xs font-medium transition tap-highlight-transparent border ${
+          isSelected 
+            ? 'bg-red-500 text-white border-red-500 shadow-sm' 
+            : 'bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-600'
+        }`;
+        btn.textContent = city;
+        btn.onclick = () => {
+          selectedCity = city;
+          renderFilters();
+          renderLocations();
+        };
+        cityFilterContainer.appendChild(btn);
       });
 
-      document.getElementById('item-count').textContent = `${filtered.length} locations`;
+      // 2. Render Category Options (Multi-select)
+      const categories = [...new Set(locations.map(item => item.category || '未分类'))];
+      categoryFilterContainer.innerHTML = '';
+      
+      resetCategoryBtn.classList.toggle('hidden', selectedCategories.size === 0);
+
+      categories.forEach(cat => {
+        const isSelected = selectedCategories.has(cat);
+        const btn = document.createElement('button');
+        btn.className = `px-3 py-1 rounded-xl text-xs font-medium transition flex items-center gap-1.5 tap-highlight-transparent border ${
+          isSelected
+            ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+            : 'bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600'
+        }`;
+        
+        btn.innerHTML = `
+          <i class="fa-solid ${isSelected ? 'fa-square-check' : 'fa-square'} text-[11px]"></i>
+          <span>${cat}</span>
+        `;
+        
+        btn.onclick = () => {
+          if (selectedCategories.has(cat)) {
+            selectedCategories.delete(cat);
+          } else {
+            selectedCategories.add(cat);
+          }
+          renderFilters();
+          renderLocations();
+        };
+        categoryFilterContainer.appendChild(btn);
+      });
+    }
+
+    // Filter and Render Cards
+    function renderLocations() {
+      const filtered = locations.filter(loc => {
+        // City Filter
+        const matchesCity = selectedCity === '全部' || (loc.city || '其他') === selectedCity;
+        
+        // Category Multi-select Filter
+        const matchesCategory = selectedCategories.size === 0 || selectedCategories.has(loc.category || '未分类');
+        
+        // Search Filter
+        const matchesSearch = searchQuery === '' || 
+          (loc.name && loc.name.toLowerCase().includes(searchQuery)) ||
+          (loc.address && loc.address.toLowerCase().includes(searchQuery)) ||
+          (loc.description && loc.description.toLowerCase().includes(searchQuery));
+
+        return matchesCity && matchesCategory && matchesSearch;
+      });
+
+      locationCount.textContent = filtered.length;
+
+      // Show clear all button if filters applied
+      const isFiltered = selectedCity !== '全部' || selectedCategories.size > 0 || searchQuery !== '';
+      clearAllFiltersBtn.classList.toggle('hidden', !isFiltered);
 
       if (filtered.length === 0) {
-        container.innerHTML = `<p class="text-center py-8 text-sm text-slate-400">No matching locations found.</p>`;
+        locationGrid.innerHTML = '';
+        emptyState.classList.remove('hidden');
         return;
       }
 
-      container.innerHTML = filtered.map(item => `
-        <div onclick="openModal('${item.id}')" class="bg-slate-800 hover:bg-slate-750 border border-slate-700/80 rounded-2xl overflow-hidden cursor-pointer transition transform active:scale-[0.98] shadow-lg flex flex-col">
-          <div class="relative h-48 bg-slate-950 overflow-hidden">
-            <img src="${item.imageUrl}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover transition duration-300 hover:scale-105" onError="this.src='https://placehold.co/600x400/1e293b/94a3b8?text=Photo+Not+Found'">
-            ${item.category ? `<span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur text-indigo-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">${item.category}</span>` : ''}
+      emptyState.classList.add('hidden');
+      locationGrid.innerHTML = filtered.map(item => `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 dark:border-slate-700/80 flex flex-col hover:shadow-md transition">
+          
+          <!-- Image Header with Lightbox Trigger -->
+          <div class="relative h-48 bg-slate-100 dark:bg-slate-900 cursor-pointer group" onclick="openLightbox('${escapeHtml(item.imageUrl)}', '${escapeHtml(item.name)}', '${escapeHtml(item.address)}')">
+            <img 
+              src="${item.imageUrl}" 
+              alt="${escapeHtml(item.name)}" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+              onerror="this.src='https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600'"
+            >
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
+            
+            <!-- City & Category Badges -->
+            <div class="absolute top-3 left-3 flex flex-wrap gap-1">
+              ${item.city ? `<span class="px-2 py-0.5 bg-red-600/90 text-white text-[10px] font-bold rounded-md backdrop-blur-md">${escapeHtml(item.city)}</span>` : ''}
+              ${item.category ? `<span class="px-2 py-0.5 bg-black/50 text-white text-[10px] rounded-md backdrop-blur-md">${escapeHtml(item.category)}</span>` : ''}
+            </div>
+
+            <!-- View Full Image Icon -->
+            <div class="absolute bottom-3 right-3 text-white/90 bg-black/40 p-2 rounded-full backdrop-blur-sm group-hover:bg-red-500 transition">
+              <i class="fa-solid fa-expand text-xs"></i>
+            </div>
+
+            <div class="absolute bottom-3 left-3 right-12 text-white">
+              <h3 class="font-bold text-base leading-tight drop-shadow-sm">${escapeHtml(item.name)}</h3>
+            </div>
           </div>
-          <div class="p-4 space-y-1">
-            <h3 class="font-bold text-white text-base leading-snug">${item.name}</h3>
-            ${item.address ? `<p class="text-xs text-slate-400 line-clamp-1"><i class="fa-solid fa-location-dot text-rose-400 mr-1"></i>${item.address}</p>` : ''}
+
+          <!-- Card Body -->
+          <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+              ${escapeHtml(item.description || '暂无描述信息')}
+            </p>
+
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs">
+              <div class="flex items-center text-slate-500 dark:text-slate-400 truncate mr-2" title="${escapeHtml(item.address || '')}">
+                <i class="fa-solid fa-location-dot text-red-500 mr-1.5 shrink-0"></i>
+                <span class="truncate">${escapeHtml(item.address || '暂无地址信息')}</span>
+              </div>
+
+              ${item.mapsUrl ? `
+                <a href="${escapeHtml(item.mapsUrl)}" target="_blank" rel="noopener noreferrer" class="shrink-0 flex items-center gap-1 text-red-500 hover:text-red-600 font-medium text-xs bg-red-50 dark:bg-red-950/50 px-2.5 py-1 rounded-lg border border-red-100 dark:border-red-900 transition">
+                  <span>导航</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              ` : ''}
+            </div>
           </div>
         </div>
       `).join('');
     }
 
-    function openModal(id) {
-      const item = locations.find(l => l.id == id);
-      if (!item) return;
-
-      document.getElementById('modal-img').src = item.imageUrl;
-      document.getElementById('modal-title').textContent = item.name;
-      document.getElementById('modal-category').textContent = item.category || 'Location';
-      document.getElementById('modal-address').querySelector('span').textContent = item.address || 'Address not specified';
-      document.getElementById('modal-desc').textContent = item.description || 'No description provided.';
-      
-      const mapBtn = document.getElementById('modal-map-link');
-      if (item.mapsUrl) {
-        mapBtn.href = item.mapsUrl;
-        mapBtn.classList.remove('hidden');
-      } else {
-        mapBtn.classList.add('hidden');
-      }
-
-      document.getElementById('photo-modal').classList.remove('hidden');
+    // Lightbox helpers
+    function openLightbox(url, title, sub) {
+      lightboxImage.src = url;
+      lightboxTitle.textContent = title;
+      lightboxSub.textContent = sub;
+      lightboxModal.classList.remove('hidden');
     }
 
-    document.getElementById('close-modal').addEventListener('click', () => {
-      document.getElementById('photo-modal').classList.add('hidden');
-    });
+    function closeLightbox() {
+      lightboxModal.classList.add('hidden');
+    }
 
-    document.getElementById('search-input').addEventListener('input', renderLocations);
+    // Security HTML Escape
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
-    window.addEventListener('DOMContentLoaded', loadLocations);
+    // Run on ready
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
