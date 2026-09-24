@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>成渝旅游导览 - 相册与行程</title>
+  <title>成渝行指南 - 相册与行程</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -111,6 +111,9 @@
 
     <div class="flex items-center justify-between text-xs text-slate-500 px-1">
       <div>共找到 <span id="locationCount" class="font-bold text-red-600 dark:text-red-400">0</span> 个景点</div>
+      <button id="resetDataBtn" onclick="resetToDefaults()" class="text-xs text-red-500 hover:underline">
+        <i class="fa-solid fa-rotate-right mr-1"></i>重置数据
+      </button>
     </div>
 
     <!-- Grid -->
@@ -173,7 +176,6 @@
 
   <!-- App Script -->
   <script>
-    // 默认数据（包含景点列表与行程安排）
     const defaultData = {
       "locations": [
         {
@@ -196,10 +198,19 @@
         },
         {
           "id": "3",
+          "name": "十八梯传统风貌区",
+          "city": "重庆",
+          "category": "历史街区",
+          "description": "老重庆山城步道与吊脚楼建筑特色，夜景优雅。",
+          "images": ["https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600"],
+          "mapsUrl": "https://maps.google.com/?q=Shibati+Chongqing"
+        },
+        {
+          "id": "4",
           "name": "成都大熊猫繁育研究基地",
           "city": "成都",
-          "category": "动物园与公园",
-          "description": "享誉全球的大熊猫庇护与繁育基地，近距离观赏大熊猫。",
+          "category": "自然动物",
+          "description": "享誉全球的大熊猫庇护与繁育基地。",
           "images": ["https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg"],
           "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
         }
@@ -207,19 +218,11 @@
       "itinerary": [
         {
           "day": 1,
-          "title": "Day 1: 重庆魔幻地标打卡",
+          "title": "Day 1: 抵达重庆与山城步道",
           "items": [
-            { "time": "09:00", "activity": "抵达重庆，办理入住", "type": "Transport", "notes": "入住渝中区靠近轻轨站酒店" },
-            { "time": "14:00", "activity": "李子坝轻轨穿楼", "type": "POI", "locationId": "2", "notes": "观景台拍照约 1 小时" },
-            { "time": "19:00", "activity": "洪崖洞夜景 & 火锅", "type": "Food", "locationId": "1", "notes": "建议开灯时间20:00观赏" }
-          ]
-        },
-        {
-          "day": 2,
-          "title": "Day 2: 动车前往成都与国宝大熊猫",
-          "items": [
-            { "time": "08:30", "activity": "乘坐高铁前往成都 (重庆北 -> 成都东)", "type": "Transport", "notes": "车程约 1.5 小时" },
-            { "time": "11:00", "activity": "成都大熊猫繁育研究基地", "type": "POI", "locationId": "3", "notes": "建议早上看活跃的大熊猫" }
+            { "time": "14:00", "activity": "抵达重庆，办理入住", "type": "Transport", "notes": "入住渝中区靠近轻轨站酒店" },
+            { "time": "16:30", "activity": "十八梯传统风貌区", "type": "POI", "locationId": "3", "notes": "体验山城步道" },
+            { "time": "19:00", "activity": "洪崖洞夜景", "type": "POI", "locationId": "1", "notes": "观赏金碧辉煌吊脚楼夜景" }
           ]
         }
       ]
@@ -230,25 +233,58 @@
     let selectedCategories = new Set();
     let searchQuery = '';
 
-    // Gallery State
     let activeImages = [];
     let activeImageIndex = 0;
     let activeTitle = '';
 
-    function init() {
-      loadData();
+    async function init() {
+      await loadData();
       setupListeners();
       renderAll();
     }
 
-    function loadData() {
+    async function loadData() {
+      // First try fetching locations.json from GitHub Pages server
+      try {
+        const res = await fetch('./locations.json', { cache: 'no-cache' });
+        if (res.ok) {
+          const json = await res.json();
+          if (json && (Array.isArray(json.locations) || Array.isArray(json))) {
+            if (Array.isArray(json)) {
+              appData = { locations: json, itinerary: [] };
+            } else {
+              appData = json;
+            }
+            if (!appData.locations) appData.locations = [];
+            if (!appData.itinerary) appData.itinerary = [];
+            if (appData.locations.length > 0) {
+              saveData();
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Could not fetch locations.json, falling back to local storage', err);
+      }
+
+      // Fallback to Local Storage or Default
       const stored = localStorage.getItem('chengdu_chongqing_app_v3');
       if (stored) {
-        try { appData = JSON.parse(stored); } catch (e) { appData = defaultData; }
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed && (Array.isArray(parsed.locations) || Array.isArray(parsed))) {
+            appData = Array.isArray(parsed) ? { locations: parsed, itinerary: [] } : parsed;
+          }
+        } catch (e) {
+          appData = defaultData;
+        }
       } else {
         appData = defaultData;
       }
-      if (!appData.locations) appData.locations = [];
+
+      if (!appData.locations || appData.locations.length === 0) {
+        appData = defaultData;
+      }
       if (!appData.itinerary) appData.itinerary = [];
     }
 
@@ -256,7 +292,15 @@
       localStorage.setItem('chengdu_chongqing_app_v3', JSON.stringify(appData));
     }
 
-    // Tab Navigation Switch
+    window.resetToDefaults = function() {
+      localStorage.removeItem('chengdu_chongqing_app_v3');
+      appData = defaultData;
+      selectedCity = '全部';
+      selectedCategories.clear();
+      searchQuery = '';
+      renderAll();
+    };
+
     window.switchTab = function(tabName) {
       const locPage = document.getElementById('locationsPage');
       const itiPage = document.getElementById('itineraryPage');
@@ -281,52 +325,59 @@
       document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
       document.getElementById('themeToggleBtnMobile')?.addEventListener('click', toggleTheme);
 
-      // Search
       const searchInput = document.getElementById('searchInput');
       searchInput?.addEventListener('input', (e) => {
         searchQuery = e.target.value.trim().toLowerCase();
-        document.getElementById('clearSearchBtn').classList.toggle('hidden', searchQuery === '');
+        document.getElementById('clearSearchBtn')?.classList.toggle('hidden', searchQuery === '');
         renderLocations();
       });
 
       document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
-        searchInput.value = '';
+        if (searchInput) searchInput.value = '';
         searchQuery = '';
-        document.getElementById('clearSearchBtn').classList.add('hidden');
+        document.getElementById('clearSearchBtn')?.classList.add('hidden');
         renderLocations();
       });
 
-      // Lightbox
-      document.getElementById('closeLightboxBtn').onclick = () => document.getElementById('lightboxModal').classList.add('hidden');
-      document.getElementById('prevImgBtn').onclick = (e) => { e.stopPropagation(); navigateImage(-1); };
-      document.getElementById('nextImgBtn').onclick = (e) => { e.stopPropagation(); navigateImage(1); };
+      document.getElementById('closeLightboxBtn')?.addEventListener('click', () => {
+        document.getElementById('lightboxModal')?.classList.add('hidden');
+      });
+      document.getElementById('prevImgBtn')?.addEventListener('click', (e) => { e.stopPropagation(); navigateImage(-1); });
+      document.getElementById('nextImgBtn')?.addEventListener('click', (e) => { e.stopPropagation(); navigateImage(1); });
 
-      // Modal JSON
       const openModal = () => {
         document.getElementById('jsonTextArea').value = JSON.stringify(appData, null, 2);
-        document.getElementById('jsonModal').classList.remove('hidden');
+        document.getElementById('jsonModal')?.classList.remove('hidden');
       };
-      document.getElementById('openJsonModalBtn').onclick = openModal;
-      document.getElementById('openJsonModalBtnMobile').onclick = openModal;
-      document.getElementById('closeJsonModalBtn').onclick = () => document.getElementById('jsonModal').classList.add('hidden');
+      
+      document.getElementById('openJsonModalBtn')?.addEventListener('click', openModal);
+      document.getElementById('openJsonModalBtnMobile')?.addEventListener('click', openModal);
+      document.getElementById('closeJsonModalBtn')?.addEventListener('click', () => {
+        document.getElementById('jsonModal')?.classList.add('hidden');
+      });
 
-      document.getElementById('saveJsonBtn').onclick = () => {
+      document.getElementById('saveJsonBtn')?.addEventListener('click', () => {
         try {
-          appData = JSON.parse(document.getElementById('jsonTextArea').value);
+          const parsed = JSON.parse(document.getElementById('jsonTextArea').value);
+          if (Array.isArray(parsed)) {
+            appData = { locations: parsed, itinerary: [] };
+          } else {
+            appData = parsed;
+          }
+          if (!appData.locations) appData.locations = [];
+          if (!appData.itinerary) appData.itinerary = [];
           saveData();
-          document.getElementById('jsonModal').classList.add('hidden');
+          document.getElementById('jsonModal')?.classList.add('hidden');
           renderAll();
         } catch (e) {
           alert('JSON 格式错误: ' + e.message);
         }
-      };
+      });
 
-      document.getElementById('resetDefaultJsonBtn').onclick = () => {
-        appData = defaultData;
-        saveData();
-        document.getElementById('jsonModal').classList.add('hidden');
-        renderAll();
-      };
+      document.getElementById('resetDefaultJsonBtn')?.addEventListener('click', () => {
+        resetToDefaults();
+        document.getElementById('jsonModal')?.classList.add('hidden');
+      });
     }
 
     function renderAll() {
@@ -336,22 +387,27 @@
     }
 
     function renderFilters() {
-      const cities = ['全部', ...new Set(appData.locations.map(i => i.city || '其他'))];
+      const locs = appData.locations || [];
+      const cities = ['全部', ...new Set(locs.map(i => i.city || '其他'))];
       const cityBox = document.getElementById('cityFilterContainer');
-      cityBox.innerHTML = cities.map(c => `
-        <button onclick="setCity('${c}')" class="px-3 py-1 rounded-lg text-xs font-medium border ${selectedCity === c ? 'bg-red-500 text-white border-red-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-transparent'}">${c}</button>
-      `).join('');
+      if (cityBox) {
+        cityBox.innerHTML = cities.map(c => `
+          <button onclick="setCity('${c}')" class="px-3 py-1 rounded-lg text-xs font-medium border shrink-0 ${selectedCity === c ? 'bg-red-500 text-white border-red-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-transparent'}">${c}</button>
+        `).join('');
+      }
 
-      const categories = [...new Set(appData.locations.map(i => i.category || '未分类'))];
+      const categories = [...new Set(locs.map(i => i.category || '未分类'))];
       const catBox = document.getElementById('categoryFilterContainer');
-      catBox.innerHTML = categories.map(cat => {
-        const isSel = selectedCategories.has(cat);
-        return `
-          <button onclick="toggleCat('${cat}')" class="px-3 py-1 rounded-xl text-xs font-medium border ${isSel ? 'bg-amber-500 text-white border-amber-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'}">
-            <i class="fa-solid ${isSel ? 'fa-square-check' : 'fa-square'} mr-1"></i>${cat}
-          </button>
-        `;
-      }).join('');
+      if (catBox) {
+        catBox.innerHTML = categories.map(cat => {
+          const isSel = selectedCategories.has(cat);
+          return `
+            <button onclick="toggleCat('${cat}')" class="px-3 py-1 rounded-xl text-xs font-medium border shrink-0 ${isSel ? 'bg-amber-500 text-white border-amber-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'}">
+              <i class="fa-solid ${isSel ? 'fa-square-check' : 'fa-square'} mr-1"></i>${cat}
+            </button>
+          `;
+        }).join('');
+      }
     }
 
     window.setCity = (c) => { selectedCity = c; renderFilters(); renderLocations(); };
@@ -362,22 +418,37 @@
     };
 
     function renderLocations() {
-      const filtered = appData.locations.filter(loc => {
+      const locs = appData.locations || [];
+      const filtered = locs.filter(loc => {
         const matchesCity = selectedCity === '全部' || (loc.city || '其他') === selectedCity;
         const matchesCat = selectedCategories.size === 0 || selectedCategories.has(loc.category || '未分类');
-        const matchesSearch = searchQuery === '' || loc.name.toLowerCase().includes(searchQuery) || (loc.description && loc.description.toLowerCase().includes(searchQuery));
+        const matchesSearch = searchQuery === '' || (loc.name && loc.name.toLowerCase().includes(searchQuery)) || (loc.description && loc.description.toLowerCase().includes(searchQuery));
         return matchesCity && matchesCat && matchesSearch;
       });
 
-      document.getElementById('locationCount').textContent = filtered.length;
+      const countElem = document.getElementById('locationCount');
+      if (countElem) countElem.textContent = filtered.length;
+
       const grid = document.getElementById('locationGrid');
+      if (!grid) return;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12 space-y-3">
+            <div class="text-slate-300 text-4xl"><i class="fa-solid fa-compass-slash"></i></div>
+            <p class="text-xs text-slate-400">未找到相关景点，请尝试清空筛选或重置数据。</p>
+            <button onclick="resetToDefaults()" class="px-4 py-1.5 bg-red-500 text-white text-xs rounded-xl shadow">恢复默认景点</button>
+          </div>
+        `;
+        return;
+      }
 
       grid.innerHTML = filtered.map(item => {
-        const imgs = item.images && item.images.length > 0 ? item.images : ['https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600'];
+        const imgs = item.images && item.images.length > 0 ? item.images : (item.imageUrl ? [item.imageUrl] : ['https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600']);
         return `
           <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
             <div class="relative h-44 bg-slate-100 cursor-pointer group" onclick="openPhotoById('${item.id}')">
-              <img src="${imgs[0]}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+              <img src="${imgs[0]}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600'">
               <div class="absolute top-3 left-3 flex gap-1">
                 ${item.city ? `<span class="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded">${item.city}</span>` : ''}
                 ${item.category ? `<span class="px-2 py-0.5 bg-black/50 text-white text-[10px] rounded">${item.category}</span>` : ''}
@@ -398,6 +469,8 @@
 
     function renderItinerary() {
       const container = document.getElementById('itineraryTimeline');
+      if (!container) return;
+
       if (!appData.itinerary || appData.itinerary.length === 0) {
         container.innerHTML = '<p class="text-xs text-slate-400 text-center py-8">暂无行程安排数据</p>';
         return;
@@ -414,7 +487,7 @@
           <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-2">${day.title}</h3>
           <div class="space-y-3">
             ${day.items.map(item => {
-              const linkedLoc = item.locationId ? appData.locations.find(l => l.id === item.locationId) : null;
+              const linkedLoc = item.locationId ? (appData.locations || []).find(l => l.id === item.locationId) : null;
               return `
                 <div class="flex items-start gap-3 text-xs">
                   <span class="font-mono text-slate-400 shrink-0 mt-0.5">${item.time}</span>
@@ -439,13 +512,13 @@
     }
 
     window.openPhotoById = function(locId) {
-      const loc = appData.locations.find(l => l.id === locId);
+      const loc = (appData.locations || []).find(l => l.id === locId);
       if (!loc) return;
-      activeImages = loc.images && loc.images.length > 0 ? loc.images : [];
+      activeImages = loc.images && loc.images.length > 0 ? loc.images : (loc.imageUrl ? [loc.imageUrl] : []);
       activeImageIndex = 0;
       activeTitle = loc.name;
       updateLightbox();
-      document.getElementById('lightboxModal').classList.remove('hidden');
+      document.getElementById('lightboxModal')?.classList.remove('hidden');
     };
 
     function navigateImage(dir) {
@@ -455,9 +528,14 @@
     }
 
     function updateLightbox() {
-      document.getElementById('lightboxImage').src = activeImages[activeImageIndex] || '';
-      document.getElementById('lightboxTitle').textContent = activeTitle;
-      document.getElementById('lightboxCounter').textContent = `${activeImageIndex + 1}/${activeImages.length}`;
+      const imgElem = document.getElementById('lightboxImage');
+      if (imgElem) imgElem.src = activeImages[activeImageIndex] || '';
+      
+      const titleElem = document.getElementById('lightboxTitle');
+      if (titleElem) titleElem.textContent = activeTitle;
+
+      const counterElem = document.getElementById('lightboxCounter');
+      if (counterElem) counterElem.textContent = `${activeImageIndex + 1}/${activeImages.length}`;
     }
 
     document.addEventListener('DOMContentLoaded', init);
