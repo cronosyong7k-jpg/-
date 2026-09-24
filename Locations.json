@@ -1,0 +1,21 @@
+[
+  {
+    "id": "1",
+    "name": "Chengdu Research Base",
+    "category": "Landmark",
+    "address": "Chengdu, Sichuan",
+    "description": "Famous giant panda breeding center and park.",
+    "imageUrl": "images/chengdu.jpg",
+    "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
+  },
+  {
+    "id": "2",
+    "name": "Hongyadong Chongqing",
+    "category": "City",
+    "address": "Yuzhong District, Chongqing",
+    "description": "Stunning 11-story stilt house complex lit up at night.",
+    "imageUrl": "images/chongqing.jpg",
+    "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
+  }
+]
+
