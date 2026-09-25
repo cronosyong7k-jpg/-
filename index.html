@@ -45,7 +45,6 @@
     <div id="locationsView" class="space-y-4">
       <div class="flex gap-2 overflow-x-auto py-1" id="cityFilter"></div>
       <div id="locationList" class="space-y-4">
-        <!-- 加载动画 -->
         <div class="animate-pulse bg-white rounded-2xl h-48 w-full border border-slate-200"></div>
       </div>
     </div>
@@ -69,7 +68,6 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <!-- 左右切换按钮 -->
         <button id="prevBtn" onclick="changePhoto(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white w-8 h-8 rounded-full hidden flex items-center justify-center">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
@@ -77,10 +75,7 @@
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
 
-        <!-- 照片数量计数器 -->
         <span id="photoBadge" class="absolute bottom-12 right-3 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full hidden"></span>
-
-        <!-- 缩略图条 -->
         <div id="thumbnailStrip" class="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 px-3 overflow-x-auto py-1"></div>
       </div>
 
@@ -92,10 +87,6 @@
           <span></span>
         </p>
         <p id="modalDesc" class="text-sm text-slate-300 leading-relaxed"></p>
-
-        <a id="modalMapBtn" href="#" target="_blank" rel="noopener" class="mt-4 flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-500 text-white font-medium py-2.5 rounded-xl text-sm transition">
-          <i class="fa-solid fa-map-location-dot"></i> 在地图中打开
-        </a>
       </div>
     </div>
   </div>
@@ -114,12 +105,12 @@
           appData = await res.json();
         }
       } catch (e) {
-        console.error('无法读取 locations.json', e);
+        console.error('Unable to read locations.json', e);
       }
 
       renderCityFilter();
       renderItinerary();
-      await loadAllPhotosFromGitHub();
+      await loadAllPhotosFromGitHubFolder();
       renderLocations();
     }
 
@@ -127,20 +118,15 @@
       if (appData.github && appData.github.owner && appData.github.repo) {
         return appData.github;
       }
-      const hostParts = window.location.hostname.split('.');
-      if (hostParts.length >= 3 && hostParts[1] === 'github' && hostParts[2] === 'io') {
-        const owner = hostParts[0];
-        const pathSegments = window.location.pathname.split('/').filter(Boolean);
-        const repo = pathSegments[0] || owner;
-        return { owner, repo };
-      }
-      return null;
+      return { owner: "cronosyong7k", repo: "cronosyong7k-jpg" };
     }
 
-    async function fetchPhotosFromFolder(folderPath) {
-      const repoInfo = getGitHubRepoInfo();
-      if (!repoInfo) return [];
+    function safeEncodePath(path) {
+      return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
+    }
 
+    async function fetchAllImagesFromFolder(folderPath) {
+      const repoInfo = getGitHubRepoInfo();
       const apiUrl = `https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}/contents/${folderPath}`;
       try {
         const res = await fetch(apiUrl);
@@ -148,31 +134,26 @@
         const files = await res.json();
         if (!Array.isArray(files)) return [];
 
-        const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+        const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
         return files
           .filter(f => f.type === 'file' && imageExts.some(ext => f.name.toLowerCase().endsWith(ext)))
-          .map(f => `./${f.path}`);
+          .map(f => `./${safeEncodePath(f.path)}`);
       } catch (e) {
+        console.error(`Error fetching folder ${folderPath}:`, e);
         return [];
       }
     }
 
-    async function loadAllPhotosFromGitHub() {
+    async function loadAllPhotosFromGitHubFolder() {
       const promises = appData.locations.map(async (item) => {
         if (item.folder) {
-          const photos = await fetchPhotosFromFolder(item.folder);
+          const photos = await fetchAllImagesFromFolder(item.folder);
           if (photos.length > 0) {
             locationPhotoMap[item.id] = photos;
             return;
           }
         }
-        if (item.images && Array.isArray(item.images)) {
-          locationPhotoMap[item.id] = item.images;
-        } else if (item.imageUrl) {
-          locationPhotoMap[item.id] = [item.imageUrl];
-        } else {
-          locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
-        }
+        locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
       });
       await Promise.all(promises);
     }
@@ -232,7 +213,6 @@
                 <button onclick="openModalForLocation('${item.id}')" class="text-red-600 font-semibold flex items-center gap-1">
                   <i class="fa-solid fa-images"></i> 查看照片
                 </button>
-                ${item.mapsUrl ? `<a href="${item.mapsUrl}" target="_blank" class="text-slate-400 hover:text-red-600 flex items-center gap-1">地图 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>` : ''}
               </div>
             </div>
           </div>
@@ -289,14 +269,6 @@
         addrEl.classList.remove('hidden');
       } else {
         addrEl.classList.add('hidden');
-      }
-
-      const mapBtn = document.getElementById('modalMapBtn');
-      if (item.mapsUrl) {
-        mapBtn.href = item.mapsUrl;
-        mapBtn.classList.remove('hidden');
-      } else {
-        mapBtn.classList.add('hidden');
       }
 
       updateModalPhoto();
