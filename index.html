@@ -61,7 +61,7 @@
       
       <!-- 照片显示区 -->
       <div class="relative bg-black h-64 flex items-center justify-center overflow-hidden">
-        <img id="modalImg" src="" class="w-full h-full object-cover transition-opacity duration-200">
+        <img id="modalImg" src="" class="w-full h-full object-cover transition-opacity duration-200" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada'">
         
         <span id="modalCityTag" class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"></span>
         <button onclick="closeModal()" class="absolute top-3 right-3 bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center z-10">
@@ -102,15 +102,21 @@
       try {
         const res = await fetch('./locations.json?t=' + Date.now());
         if (res.ok) {
-          appData = await res.json();
+          const json = await res.json();
+          if (Array.isArray(json)) {
+            appData.locations = json;
+            appData.itinerary = [];
+          } else {
+            appData = json;
+          }
         }
       } catch (e) {
         console.error('无法读取 locations.json', e);
       }
 
+      preparePhotoMap();
       renderCityFilter();
       renderItinerary();
-      await loadAllPhotos();
       renderLocations();
     }
 
@@ -118,70 +124,25 @@
       return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
     }
 
-    // 检查图片文件是否存在
-    function checkImageExists(url) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = url;
-      });
-    }
-
-    // 自动扫描识别 img1.jpeg, img2.jpeg, img3.jpg, 1.png 等各种组合
-    async function autoProbeLocationFolder(folder) {
-      const cleanFolder = folder.replace(/^\//, '').replace(/\/$/, '');
-      
-      // 常见的前缀组合
-      const prefixes = ['img', '', 'image', 'photo', 'IMG_'];
-      // 常见的扩展名组合
-      const exts = ['jpeg', 'jpg', 'png', 'webp', 'JPEG', 'JPG', 'PNG'];
-
-      const probePromises = [];
-
-      // 最多探测 30 张图片
-      for (let i = 1; i <= 30; i++) {
-        probePromises.push((async () => {
-          for (let prefix of prefixes) {
-            for (let ext of exts) {
-              const testPath = `./${cleanFolder}/${prefix}${i}.${ext}`;
-              const ok = await checkImageExists(testPath);
-              if (ok) return { index: i, path: testPath };
-            }
-          }
-          return null;
-        })());
-      }
-
-      const results = await Promise.all(probePromises);
-      return results
-        .filter(r => r !== null)
-        .sort((a, b) => a.index - b.index)
-        .map(r => r.path);
-    }
-
-    async function loadAllPhotos() {
-      const promises = appData.locations.map(async (item) => {
-        // 方式 1：如果 JSON 中写了 images 文件列表
+    // 快速计算照片映射（不经过上千次 HTTP 探测）
+    function preparePhotoMap() {
+      const locations = appData.locations || [];
+      locations.forEach(item => {
         if (item.images && Array.isArray(item.images) && item.images.length > 0) {
-          locationPhotoMap[item.id] = item.images.map(img => `./${safeEncodePath(img)}`);
-          return;
+          locationPhotoMap[item.id] = item.images.map(img => safeEncodePath(img));
+        } else if (item.photoUrl) {
+          locationPhotoMap[item.id] = [item.photoUrl];
+        } else if (item.folder) {
+          const cleanFolder = item.folder.replace(/^\//, '').replace(/\/$/, '');
+          locationPhotoMap[item.id] = [
+            `./${cleanFolder}/1.jpg`,
+            `./${cleanFolder}/2.jpg`,
+            `./${cleanFolder}/3.jpg`
+          ];
+        } else {
+          locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
         }
-
-        // 方式 2：根据 folder 智能自动匹配路径下的图片
-        if (item.folder) {
-          const probedPhotos = await autoProbeLocationFolder(item.folder);
-          if (probedPhotos.length > 0) {
-            locationPhotoMap[item.id] = probedPhotos;
-            return;
-          }
-        }
-
-        // 默认保底占位图
-        locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
       });
-
-      await Promise.all(promises);
     }
 
     function switchTab(tab) {
@@ -204,7 +165,8 @@
     }
 
     function renderCityFilter() {
-      const cities = ['全部', ...new Set(appData.locations.map(i => i.city).filter(Boolean))];
+      const locations = appData.locations || [];
+      const cities = ['全部', ...new Set(locations.map(i => i.city).filter(Boolean))];
       document.getElementById('cityFilter').innerHTML = cities.map(c => `
         <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium shrink-0 transition ${selectedCity === c ? 'bg-red-600 text-white shadow-xs' : 'bg-white text-slate-600 border border-slate-200'}">
           ${c}
@@ -219,7 +181,14 @@
     }
 
     function renderLocations() {
-      const filtered = appData.locations.filter(i => selectedCity === '全部' || i.city === selectedCity);
+      const locations = appData.locations || [];
+      const filtered = locations.filter(i => selectedCity === '全部' || i.city === selectedCity);
+      
+      if (filtered.length === 0) {
+        document.getElementById('locationList').innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">暂无景点数据</div>`;
+        return;
+      }
+
       document.getElementById('locationList').innerHTML = filtered.map(item => {
         const photos = locationPhotoMap[item.id] || ['https://images.unsplash.com/photo-1548013146-72479768bada'];
         const coverImg = photos[0];
@@ -247,7 +216,10 @@
     }
 
     function renderItinerary() {
-      if (!appData.itinerary || appData.itinerary.length === 0) return;
+      if (!appData.itinerary || appData.itinerary.length === 0) {
+        document.getElementById('itineraryList').innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">暂无行程安排</div>`;
+        return;
+      }
       const itinList = document.getElementById('itineraryList');
       itinList.innerHTML = appData.itinerary.map(dayPlan => `
         <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-200 space-y-3">
@@ -259,14 +231,14 @@
             <span class="text-[10px] text-slate-400 font-medium">${dayPlan.city || ''}</span>
           </div>
           <div class="space-y-2.5 relative pl-3 border-l-2 border-red-200 ml-1">
-            ${dayPlan.steps.map(step => {
-              const loc = appData.locations.find(l => String(l.id) === String(step.locationId)) || {};
+            ${(dayPlan.steps || []).map(step => {
+              const loc = (appData.locations || []).find(l => String(l.id) === String(step.locationId)) || {};
               return `
                 <div onclick="openModalForLocation('${step.locationId}')" class="bg-slate-50 hover:bg-red-50/50 p-2.5 rounded-xl border border-slate-100 hover:border-red-200 cursor-pointer transition active:scale-[0.98] space-y-1">
                   <div class="flex items-center justify-between">
                     <span class="text-[10px] font-bold text-red-600 bg-red-100/80 px-2 py-0.5 rounded-md">${step.time}</span>
                     <span class="text-xs font-bold text-red-600 flex items-center gap-1">
-                      ${loc.name || '查看景点'} <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                      ${loc.name || step.activity} <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </span>
                   </div>
                   <p class="text-xs text-slate-600 font-medium">${step.activity}</p>
@@ -279,10 +251,10 @@
     }
 
     function openModalForLocation(id) {
-      const item = appData.locations.find(l => String(l.id) === String(id));
+      const item = (appData.locations || []).find(l => String(l.id) === String(id));
       if (!item) return;
 
-      currentPhotos = locationPhotoMap[item.id] || [];
+      currentPhotos = locationPhotoMap[item.id] || ['https://images.unsplash.com/photo-1548013146-72479768bada'];
       currentPhotoIdx = 0;
 
       document.getElementById('modalTitle').textContent = item.name;
@@ -318,7 +290,7 @@
 
         thumbs.innerHTML = currentPhotos.map((src, i) => `
           <button onclick="setPhotoIndex(${i})" class="w-9 h-9 rounded-lg overflow-hidden border-2 shrink-0 transition ${i === currentPhotoIdx ? 'border-red-500 scale-105' : 'border-white/40 opacity-60'}">
-            <img src="${src}" class="w-full h-full object-cover">
+            <img src="${src}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada'">
           </button>
         `).join('');
       } else {
