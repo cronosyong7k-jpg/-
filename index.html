@@ -117,6 +117,48 @@
 
       <!-- Modal Body -->
       <div class="p-6 space-y-5 overflow-y-auto">
+        
+        <!-- Photo Carousel Section -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <i class="fa-regular fa-images text-red-500 mr-1.5"></i>景点相册
+            </span>
+            <span class="text-[11px] text-slate-400 font-normal">点击照片放大查看</span>
+          </div>
+
+          <!-- Carousel Window -->
+          <div id="carousel-container" class="relative group w-full bg-slate-950 rounded-2xl overflow-hidden aspect-video shadow-md">
+            
+            <!-- Slides Track -->
+            <div id="carousel-slides" class="w-full h-full relative">
+              <!-- Slides inserted dynamically -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button id="carousel-prev" onclick="changeSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-9 h-9 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button id="carousel-next" onclick="changeSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-9 h-9 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <!-- Bottom Indicator Dots -->
+            <div id="carousel-indicators" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full z-20">
+              <!-- Dots inserted dynamically -->
+            </div>
+
+            <!-- Slide Counter Badge -->
+            <div id="carousel-counter" class="absolute top-3 right-3 bg-black/60 text-white text-xs font-mono px-2.5 py-1 rounded-full backdrop-blur-md z-20">
+              1 / 1
+            </div>
+          </div>
+
+          <p id="no-gallery-msg" class="hidden text-xs text-slate-400 italic py-6 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            暂无相册照片 (`img1.jpg` 或 `img1.jpeg`)
+          </p>
+        </div>
+
         <!-- Address -->
         <div class="flex items-start gap-3 text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
           <i class="fa-solid fa-location-dot text-red-500 mt-1"></i>
@@ -130,20 +172,6 @@
         <div>
           <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">景点介绍</p>
           <p id="modal-description" class="text-slate-600 text-sm leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-slate-100/50"></p>
-        </div>
-
-        <!-- Photo Gallery Section -->
-        <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
-            <span><i class="fa-regular fa-images text-red-500 mr-1.5"></i>景点相册</span>
-            <span id="gallery-count" class="text-[11px] text-slate-400 font-normal">点击图片可放大查看</span>
-          </p>
-          <div id="modal-gallery" class="grid grid-cols-2 sm:grid-cols-3 gap-3 min-h-[100px]">
-            <!-- Dynamically populated photo grid -->
-          </div>
-          <p id="no-gallery-msg" class="hidden text-xs text-slate-400 italic py-4 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
-            暂无相关照片 (`img1.jpg` 或 `img1.jpeg`)
-          </p>
         </div>
 
         <!-- Folder Path -->
@@ -174,6 +202,10 @@
     let appData = { locations: [], itinerary: [] };
     let currentCategory = 'all';
     let searchQuery = '';
+    
+    // Carousel state
+    let currentModalPhotos = [];
+    let currentSlideIndex = 0;
 
     // Fetch locations.json from the same directory
     async function loadData() {
@@ -241,7 +273,6 @@
         img.dataset.triedJpeg = "true";
         img.src = fallbackPath;
       } else {
-        // If neither img1.jpg nor img1.jpeg exists, show sleek gradient placeholder
         const parent = img.parentElement;
         parent.innerHTML = `
           <div class="w-full h-44 bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center text-slate-400">
@@ -371,8 +402,18 @@
       `).join('');
     }
 
-    // Modal Control & Photo Gallery Loader
-    function openModal(id) {
+    // Helper to probe if an image URL exists
+    function checkImageExists(url) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(url);
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    }
+
+    // Modal Control & Carousel Initialization
+    async function openModal(id) {
       const loc = appData.locations.find(item => item.id === id);
       
       if (!loc) {
@@ -387,57 +428,115 @@
       document.getElementById('modal-description').innerText = loc.description;
       document.getElementById('modal-folder').innerText = loc.folder;
 
-      // Load Photos dynamically (scans img1 to img10 for .jpg and .jpeg)
-      loadModalGallery(loc);
-
       const modal = document.getElementById('location-modal');
       modal.classList.remove('hidden');
+
+      // Build & display photo carousel
+      await loadCarouselPhotos(loc);
     }
 
-    function loadModalGallery(loc) {
-      const gallery = document.getElementById('modal-gallery');
+    async function loadCarouselPhotos(loc) {
+      const container = document.getElementById('carousel-container');
       const noMsg = document.getElementById('no-gallery-msg');
-      gallery.innerHTML = '';
-      noMsg.classList.add('hidden');
+      const slidesTrack = document.getElementById('carousel-slides');
+      const indicators = document.getElementById('carousel-indicators');
+      const counter = document.getElementById('carousel-counter');
+      const prevBtn = document.getElementById('carousel-prev');
+      const nextBtn = document.getElementById('carousel-next');
 
-      let loadedCount = 0;
-      const maxCheck = 10; // Scans img1 through img10
+      // Reset carousel state
+      slidesTrack.innerHTML = `
+        <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 text-xs">
+          <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2 text-red-500"></i>
+          <span>正在搜寻相册图片...</span>
+        </div>`;
+      indicators.innerHTML = '';
+      currentModalPhotos = [];
+      currentSlideIndex = 0;
 
-      for (let i = 1; i <= maxCheck; i++) {
-        const itemContainer = document.createElement('div');
-        itemContainer.className = 'relative overflow-hidden rounded-xl bg-slate-100 aspect-video shadow-sm border border-slate-200 group cursor-pointer';
-
-        const img = document.createElement('img');
-        img.src = `${loc.folder}/img${i}.jpg`;
-        img.alt = `${loc.name} photo ${i}`;
-        img.className = 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300';
-
-        // Lightbox click handler
-        img.onclick = () => openLightbox(img.src);
-
-        // Try .jpeg if .jpg fails; if both fail, remove image container
-        img.onerror = function() {
-          if (!this.dataset.triedJpeg) {
-            this.dataset.triedJpeg = 'true';
-            this.src = `${loc.folder}/img${i}.jpeg`;
-          } else {
-            itemContainer.remove();
-            checkGalleryEmpty();
-          }
-        };
-
-        img.onload = function() {
-          loadedCount++;
-        };
-
-        itemContainer.appendChild(img);
-        gallery.appendChild(itemContainer);
+      // Probe img1 to img10 (.jpg then .jpeg)
+      for (let i = 1; i <= 10; i++) {
+        let validUrl = await checkImageExists(`${loc.folder}/img${i}.jpg`);
+        if (!validUrl) {
+          validUrl = await checkImageExists(`${loc.folder}/img${i}.jpeg`);
+        }
+        if (validUrl) {
+          currentModalPhotos.push(validUrl);
+        }
       }
 
-      function checkGalleryEmpty() {
-        if (gallery.children.length === 0) {
-          noMsg.classList.remove('hidden');
+      if (currentModalPhotos.length === 0) {
+        container.classList.add('hidden');
+        noMsg.classList.remove('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      noMsg.classList.add('hidden');
+
+      // Render Slides
+      slidesTrack.innerHTML = currentModalPhotos.map((url, idx) => `
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-500 ease-in-out ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+          <img src="${url}" alt="Photo ${idx+1}" onclick="openLightbox('${url}')" class="w-full h-full object-cover cursor-zoom-in">
+        </div>
+      `).join('');
+
+      // Render Controls & Indicators
+      if (currentModalPhotos.length > 1) {
+        indicators.classList.remove('hidden');
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        counter.classList.remove('hidden');
+
+        indicators.innerHTML = currentModalPhotos.map((_, idx) => `
+          <button onclick="goToSlide(${idx})" class="dot-btn h-2 rounded-full transition-all ${idx === 0 ? 'bg-white w-5' : 'bg-white/50 hover:bg-white/80 w-2'}"></button>
+        `).join('');
+      } else {
+        indicators.classList.add('hidden');
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+        counter.classList.add('hidden');
+      }
+
+      updateCarouselUI();
+    }
+
+    function changeSlide(direction) {
+      if (currentModalPhotos.length <= 1) return;
+      currentSlideIndex = (currentSlideIndex + direction + currentModalPhotos.length) % currentModalPhotos.length;
+      updateCarouselUI();
+    }
+
+    function goToSlide(index) {
+      currentSlideIndex = index;
+      updateCarouselUI();
+    }
+
+    function updateCarouselUI() {
+      const slides = document.querySelectorAll('.carousel-slide');
+      const dots = document.querySelectorAll('.dot-btn');
+      const counter = document.getElementById('carousel-counter');
+
+      slides.forEach((slide, idx) => {
+        if (idx === currentSlideIndex) {
+          slide.classList.remove('opacity-0', 'z-0');
+          slide.classList.add('opacity-100', 'z-10');
+        } else {
+          slide.classList.remove('opacity-100', 'z-10');
+          slide.classList.add('opacity-0', 'z-0');
         }
+      });
+
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlideIndex) {
+          dot.className = 'dot-btn h-2 rounded-full transition-all bg-white w-5';
+        } else {
+          dot.className = 'dot-btn h-2 rounded-full transition-all bg-white/50 hover:bg-white/80 w-2';
+        }
+      });
+
+      if (counter) {
+        counter.innerText = `${currentSlideIndex + 1} / ${currentModalPhotos.length}`;
       }
     }
 
