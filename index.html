@@ -6,6 +6,10 @@
   <title>成都与重庆之旅 - 照片相册</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
 
@@ -42,9 +46,24 @@
   <!-- 主内容区 -->
   <main class="flex-grow max-w-md w-full mx-auto p-4 space-y-4">
     <!-- 视图 1：景点列表 -->
-    <div id="locationsView" class="space-y-4">
-      <div class="flex gap-2 overflow-x-auto py-1" id="cityFilter"></div>
-      <div id="locationList" class="space-y-4">
+    <div id="locationsView" class="space-y-3">
+      
+      <!-- 筛选栏 (城市 + 分类) -->
+      <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-xs space-y-2.5">
+        <!-- 城市筛选 -->
+        <div class="flex items-center space-x-2">
+          <span class="text-[11px] font-bold text-slate-400 whitespace-nowrap min-w-[36px]">城市:</span>
+          <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="cityFilter"></div>
+        </div>
+        <!-- 分类筛选 -->
+        <div class="flex items-center space-x-2 border-t border-slate-100 pt-2">
+          <span class="text-[11px] font-bold text-slate-400 whitespace-nowrap min-w-[36px]">分类:</span>
+          <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="categoryFilter"></div>
+        </div>
+      </div>
+
+      <!-- 景点列表展示 -->
+      <div id="locationList" class="space-y-4 pt-1">
         <div class="animate-pulse bg-white rounded-2xl h-48 w-full border border-slate-200"></div>
       </div>
     </div>
@@ -63,7 +82,11 @@
       <div class="relative bg-black h-64 flex items-center justify-center overflow-hidden">
         <img id="modalImg" src="" class="w-full h-full object-cover transition-opacity duration-200">
         
-        <span id="modalCityTag" class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"></span>
+        <div class="absolute top-3 left-3 flex gap-1">
+          <span id="modalCityTag" class="bg-red-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider"></span>
+          <span id="modalCategoryTag" class="bg-slate-800/80 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full backdrop-blur-xs"></span>
+        </div>
+
         <button onclick="closeModal()" class="absolute top-3 right-3 bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center z-10">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -76,7 +99,7 @@
         </button>
 
         <span id="photoBadge" class="absolute bottom-12 right-3 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full hidden"></span>
-        <div id="thumbnailStrip" class="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 px-3 overflow-x-auto py-1"></div>
+        <div id="thumbnailStrip" class="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 px-3 overflow-x-auto py-1 no-scrollbar"></div>
       </div>
 
       <!-- 详细介绍 -->
@@ -94,6 +117,7 @@
   <script>
     let appData = { locations: [], itinerary: [] };
     let selectedCity = '全部';
+    let selectedCategory = '全部';
     let locationPhotoMap = {};
     let currentPhotos = [];
     let currentPhotoIdx = 0;
@@ -109,6 +133,7 @@
       }
 
       renderCityFilter();
+      renderCategoryFilter();
       renderItinerary();
       await loadAllPhotos();
       renderLocations();
@@ -128,18 +153,14 @@
       });
     }
 
-    // 自动扫描识别 img1.jpeg, img2.jpeg, img3.jpg, 1.png 等各种组合
+    // 自动探测文件夹里的图片 (支持 img1.jpeg, img2.jpg, 1.png 等组合)
     async function autoProbeLocationFolder(folder) {
       const cleanFolder = folder.replace(/^\//, '').replace(/\/$/, '');
-      
-      // 常见的前缀组合
       const prefixes = ['img', '', 'image', 'photo', 'IMG_'];
-      // 常见的扩展名组合
       const exts = ['jpeg', 'jpg', 'png', 'webp', 'JPEG', 'JPG', 'PNG'];
 
       const probePromises = [];
 
-      // 最多探测 30 张图片
       for (let i = 1; i <= 30; i++) {
         probePromises.push((async () => {
           for (let prefix of prefixes) {
@@ -162,13 +183,11 @@
 
     async function loadAllPhotos() {
       const promises = appData.locations.map(async (item) => {
-        // 方式 1：如果 JSON 中写了 images 文件列表
         if (item.images && Array.isArray(item.images) && item.images.length > 0) {
           locationPhotoMap[item.id] = item.images.map(img => `./${safeEncodePath(img)}`);
           return;
         }
 
-        // 方式 2：根据 folder 智能自动匹配路径下的图片
         if (item.folder) {
           const probedPhotos = await autoProbeLocationFolder(item.folder);
           if (probedPhotos.length > 0) {
@@ -177,7 +196,6 @@
           }
         }
 
-        // 默认保底占位图
         locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
       });
 
@@ -206,8 +224,17 @@
     function renderCityFilter() {
       const cities = ['全部', ...new Set(appData.locations.map(i => i.city).filter(Boolean))];
       document.getElementById('cityFilter').innerHTML = cities.map(c => `
-        <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium shrink-0 transition ${selectedCity === c ? 'bg-red-600 text-white shadow-xs' : 'bg-white text-slate-600 border border-slate-200'}">
+        <button onclick="filterCity('${c}')" class="px-2.5 py-0.5 rounded-full text-xs font-medium shrink-0 transition ${selectedCity === c ? 'bg-red-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
           ${c}
+        </button>
+      `).join('');
+    }
+
+    function renderCategoryFilter() {
+      const categories = ['全部', ...new Set(appData.locations.map(i => i.category).filter(Boolean))];
+      document.getElementById('categoryFilter').innerHTML = categories.map(cat => `
+        <button onclick="filterCategory('${cat}')" class="px-2.5 py-0.5 rounded-full text-xs font-medium shrink-0 transition ${selectedCategory === cat ? 'bg-red-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
+          ${cat}
         </button>
       `).join('');
     }
@@ -218,16 +245,44 @@
       renderLocations();
     }
 
+    function filterCategory(cat) {
+      selectedCategory = cat;
+      renderCategoryFilter();
+      renderLocations();
+    }
+
     function renderLocations() {
-      const filtered = appData.locations.filter(i => selectedCity === '全部' || i.city === selectedCity);
-      document.getElementById('locationList').innerHTML = filtered.map(item => {
+      const filtered = appData.locations.filter(i => {
+        const matchCity = selectedCity === '全部' || i.city === selectedCity;
+        const matchCategory = selectedCategory === '全部' || i.category === selectedCategory;
+        return matchCity && matchCategory;
+      });
+
+      const listContainer = document.getElementById('locationList');
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-10 bg-white rounded-2xl border border-slate-200 text-slate-400 text-xs">
+            <i class="fa-solid fa-filter-circle-xmark text-2xl mb-2 text-slate-300"></i>
+            <p>没有找到符合筛选条件的景点</p>
+          </div>
+        `;
+        return;
+      }
+
+      listContainer.innerHTML = filtered.map(item => {
         const photos = locationPhotoMap[item.id] || ['https://images.unsplash.com/photo-1548013146-72479768bada'];
         const coverImg = photos[0];
         return `
           <div class="bg-white rounded-2xl overflow-hidden shadow-xs border border-slate-200">
             <div class="relative h-44 bg-slate-100 cursor-pointer" onclick="openModalForLocation('${item.id}')">
               <img src="${coverImg}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada'">
-              ${item.city ? `<span class="absolute top-3 left-3 px-2.5 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full">${item.city}</span>` : ''}
+              
+              <div class="absolute top-3 left-3 flex gap-1">
+                ${item.city ? `<span class="px-2.5 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full">${item.city}</span>` : ''}
+                ${item.category ? `<span class="px-2.5 py-0.5 bg-slate-800/80 text-white text-[10px] font-bold rounded-full backdrop-blur-xs">${item.category}</span>` : ''}
+              </div>
+
               <span class="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">
                 <i class="fa-solid fa-camera"></i> ${photos.length} 张照片
               </span>
@@ -287,6 +342,15 @@
 
       document.getElementById('modalTitle').textContent = item.name;
       document.getElementById('modalCityTag').textContent = item.city || '景点';
+      
+      const catTag = document.getElementById('modalCategoryTag');
+      if (item.category) {
+        catTag.textContent = item.category;
+        catTag.classList.remove('hidden');
+      } else {
+        catTag.classList.add('hidden');
+      }
+
       document.getElementById('modalDesc').textContent = item.description || '暂无详细介绍。';
 
       const addrEl = document.getElementById('modalAddress');
