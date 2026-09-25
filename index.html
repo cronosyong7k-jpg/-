@@ -99,36 +99,36 @@
 
   </main>
 
-  <!-- Location Detail Modal -->
-  <div id="location-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+  <!-- Location Detail Modal (Enlarged to max-w-4xl) -->
+  <div id="location-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden transform transition-all flex flex-col max-h-[92vh]">
       
       <!-- Modal Header -->
-      <div class="bg-slate-900 text-white p-6 relative">
-        <button onclick="closeModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center transition">
-          <i class="fa-solid fa-xmark"></i>
+      <div class="bg-slate-900 text-white p-6 sm:p-7 relative">
+        <button onclick="closeModal()" class="absolute right-5 top-5 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full w-9 h-9 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
         </button>
         <div class="flex items-center gap-2 mb-2">
-          <span id="modal-category" class="bg-red-500/20 text-red-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-red-500/30"></span>
-          <span id="modal-city" class="text-slate-400 text-xs font-medium"></span>
+          <span id="modal-category" class="bg-red-500/20 text-red-300 text-xs font-semibold px-3 py-1 rounded-full border border-red-500/30"></span>
+          <span id="modal-city" class="text-slate-400 text-sm font-medium"></span>
         </div>
-        <h3 id="modal-name" class="text-2xl font-bold pr-8"></h3>
+        <h3 id="modal-name" class="text-2xl sm:text-3xl font-bold pr-10"></h3>
       </div>
 
       <!-- Modal Body -->
-      <div class="p-6 space-y-5 overflow-y-auto">
+      <div class="p-6 sm:p-8 space-y-6 overflow-y-auto">
         
-        <!-- Photo Carousel Section -->
+        <!-- Large Photo Carousel Section -->
         <div>
-          <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
               <i class="fa-regular fa-images text-red-500 mr-1.5"></i>景点相册
             </span>
-            <span class="text-[11px] text-slate-400 font-normal">点击照片放大查看</span>
+            <span class="text-xs text-slate-400 font-normal">点击照片可全屏预览</span>
           </div>
 
-          <!-- Carousel Window -->
-          <div id="carousel-container" class="relative group w-full bg-slate-950 rounded-2xl overflow-hidden aspect-video shadow-md">
+          <!-- Larger Carousel Frame -->
+          <div id="carousel-container" class="relative group w-full bg-slate-950 rounded-2xl overflow-hidden h-[320px] sm:h-[480px] shadow-lg">
             
             <!-- Slides Track -->
             <div id="carousel-slides" class="w-full h-full relative">
@@ -136,54 +136,54 @@
             </div>
 
             <!-- Navigation Buttons -->
-            <button id="carousel-prev" onclick="changeSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-9 h-9 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20">
-              <i class="fa-solid fa-chevron-left"></i>
+            <button id="carousel-prev" onclick="changeSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white rounded-full w-11 h-11 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20 shadow-md">
+              <i class="fa-solid fa-chevron-left text-lg"></i>
             </button>
-            <button id="carousel-next" onclick="changeSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-9 h-9 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20">
-              <i class="fa-solid fa-chevron-right"></i>
+            <button id="carousel-next" onclick="changeSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white rounded-full w-11 h-11 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20 shadow-md">
+              <i class="fa-solid fa-chevron-right text-lg"></i>
             </button>
 
             <!-- Bottom Indicator Dots -->
-            <div id="carousel-indicators" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full z-20">
+            <div id="carousel-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-md px-4 py-1.5 rounded-full z-20">
               <!-- Dots inserted dynamically -->
             </div>
 
             <!-- Slide Counter Badge -->
-            <div id="carousel-counter" class="absolute top-3 right-3 bg-black/60 text-white text-xs font-mono px-2.5 py-1 rounded-full backdrop-blur-md z-20">
+            <div id="carousel-counter" class="absolute top-4 right-4 bg-black/70 text-white text-xs font-mono px-3 py-1 rounded-full backdrop-blur-md z-20">
               1 / 1
             </div>
           </div>
 
-          <p id="no-gallery-msg" class="hidden text-xs text-slate-400 italic py-6 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+          <p id="no-gallery-msg" class="hidden text-sm text-slate-400 italic py-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
             暂无相册照片 (`img1.jpg` 或 `img1.jpeg`)
           </p>
         </div>
 
-        <!-- Address -->
-        <div class="flex items-start gap-3 text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
-          <i class="fa-solid fa-location-dot text-red-500 mt-1"></i>
+        <!-- Address Box -->
+        <div class="flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <i class="fa-solid fa-location-dot text-red-500 text-lg mt-0.5"></i>
           <div>
             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">详细地址</p>
-            <p id="modal-address" class="text-sm font-medium text-slate-700 mt-0.5"></p>
+            <p id="modal-address" class="text-base font-medium text-slate-700 mt-1"></p>
           </div>
         </div>
 
-        <!-- Description -->
+        <!-- Description Box -->
         <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">景点介绍</p>
-          <p id="modal-description" class="text-slate-600 text-sm leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-slate-100/50"></p>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">景点介绍</p>
+          <p id="modal-description" class="text-slate-600 text-sm sm:text-base leading-relaxed bg-slate-50/50 p-4 rounded-xl border border-slate-100/60"></p>
         </div>
 
         <!-- Folder Path -->
-        <div class="flex items-center justify-between text-xs text-slate-400 border-t pt-4">
+        <div class="flex items-center justify-between text-xs sm:text-sm text-slate-400 border-t pt-4">
           <span class="flex items-center gap-1.5"><i class="fa-regular fa-folder"></i> 资源路径:</span>
-          <code id="modal-folder" class="bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono"></code>
+          <code id="modal-folder" class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded font-mono"></code>
         </div>
       </div>
 
       <!-- Modal Footer -->
-      <div class="bg-slate-50 p-4 border-t text-right">
-        <button onclick="closeModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition">
+      <div class="bg-slate-50 p-4 sm:p-5 border-t text-right">
+        <button onclick="closeModal()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition">
           关闭
         </button>
       </div>
@@ -446,9 +446,9 @@
 
       // Reset carousel state
       slidesTrack.innerHTML = `
-        <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 text-xs">
-          <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2 text-red-500"></i>
-          <span>正在搜寻相册图片...</span>
+        <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 text-sm">
+          <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-red-500"></i>
+          <span>正在加载照片...</span>
         </div>`;
       indicators.innerHTML = '';
       currentModalPhotos = [];
@@ -476,7 +476,7 @@
 
       // Render Slides
       slidesTrack.innerHTML = currentModalPhotos.map((url, idx) => `
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-500 ease-in-out ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-500 ease-in-out ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} flex items-center justify-center bg-black/40">
           <img src="${url}" alt="Photo ${idx+1}" onclick="openLightbox('${url}')" class="w-full h-full object-cover cursor-zoom-in">
         </div>
       `).join('');
@@ -489,7 +489,7 @@
         counter.classList.remove('hidden');
 
         indicators.innerHTML = currentModalPhotos.map((_, idx) => `
-          <button onclick="goToSlide(${idx})" class="dot-btn h-2 rounded-full transition-all ${idx === 0 ? 'bg-white w-5' : 'bg-white/50 hover:bg-white/80 w-2'}"></button>
+          <button onclick="goToSlide(${idx})" class="dot-btn h-2.5 rounded-full transition-all ${idx === 0 ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80 w-2.5'}"></button>
         `).join('');
       } else {
         indicators.classList.add('hidden');
@@ -529,9 +529,9 @@
 
       dots.forEach((dot, idx) => {
         if (idx === currentSlideIndex) {
-          dot.className = 'dot-btn h-2 rounded-full transition-all bg-white w-5';
+          dot.className = 'dot-btn h-2.5 rounded-full transition-all bg-white w-6';
         } else {
-          dot.className = 'dot-btn h-2 rounded-full transition-all bg-white/50 hover:bg-white/80 w-2';
+          dot.className = 'dot-btn h-2.5 rounded-full transition-all bg-white/50 hover:bg-white/80 w-2.5';
         }
       });
 
