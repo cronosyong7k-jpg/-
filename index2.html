@@ -3,533 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>成渝景点相册地图</title>
-  <!-- Tailwind CSS -->
+  <title>成渝 2 日精选游</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb' }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .tap-highlight-transparent { -webkit-tap-highlight-color: transparent; }
-  </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
 
   <!-- Header -->
-  <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-4 py-3 shadow-sm">
-    <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+  <header class="sticky top-0 z-30 bg-white shadow-sm border-b px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2">
-        <div class="bg-gradient-to-tr from-red-500 to-amber-500 text-white p-2 rounded-xl shadow-md">
-          <i class="fa-solid fa-map-location-dot text-lg"></i>
+        <div class="bg-red-500 text-white p-2 rounded-xl">
+          <i class="fa-solid fa-route"></i>
         </div>
         <div>
-          <h1 class="font-bold text-lg leading-tight tracking-tight">成渝景点相册</h1>
-          <p class="text-xs text-slate-500 dark:text-slate-400">成都 · 重庆 多图相册导览</p>
+          <h1 class="font-bold text-base leading-tight">成渝 2 日精选游</h1>
+          <p class="text-[11px] text-slate-500">5大景点 + 2天行程（点击可查详情）</p>
         </div>
       </div>
-
-      <div class="flex items-center gap-2">
-        <button id="themeToggleBtn" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition tap-highlight-transparent">
-          <i class="fa-solid fa-moon dark:hidden"></i>
-          <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-        </button>
-        <button id="openJsonModalBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-medium text-xs shadow hover:opacity-90 transition tap-highlight-transparent">
-          <i class="fa-solid fa-code"></i>
-          <span>JSON 设置</span>
-        </button>
-      </div>
+      <button onclick="clearAndReload()" class="px-2.5 py-1 text-xs bg-red-50 text-red-600 border border-red-200 rounded-lg active:scale-95 transition">
+        <i class="fa-solid fa-rotate-right mr-1"></i>重置
+      </button>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-4 space-y-4">
-
-    <!-- Search & Dual Filters Box -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200/80 dark:border-slate-700/80 space-y-3">
-      
-      <!-- Search Input -->
-      <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="搜索景点名称或描述..." 
-          class="w-full pl-10 pr-10 py-2.5 bg-slate-100 dark:bg-slate-700/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 transition placeholder-slate-400"
-        >
-        <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
-          <i class="fa-solid fa-circle-xmark"></i>
-        </button>
-      </div>
-
-      <!-- City Select -->
-      <div class="flex items-center gap-2 pt-1">
-        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0"><i class="fa-solid fa-city mr-1"></i>城市:</span>
-        <div id="cityFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
-      </div>
-
-      <!-- Category Multi-Select -->
-      <div class="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-700/50">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"><i class="fa-solid fa-tags mr-1"></i>分类 (可多选):</span>
-          <button id="resetCategoryBtn" class="text-[11px] text-red-500 dark:text-red-400 hover:underline hidden">重置分类</button>
-        </div>
-        <div id="categoryFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1"></div>
-      </div>
-    </div>
-
-    <!-- Stats Bar -->
-    <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
-      <div>共找到 <span id="locationCount" class="font-bold text-red-600 dark:text-red-400">0</span> 个景点</div>
-      <button id="clearAllFiltersBtn" class="hidden text-red-500 hover:underline flex items-center gap-1">
-        <i class="fa-solid fa-filter-circle-xmark"></i> 清空筛选
+  <!-- Navigation Tabs -->
+  <div class="bg-white border-b sticky top-[57px] z-20 shadow-xs">
+    <div class="max-w-md mx-auto flex">
+      <button id="tabLocBtn" onclick="switchTab('locations')" class="flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-500 text-red-600">
+        <i class="fa-solid fa-location-dot mr-1"></i>景点相册
+      </button>
+      <button id="tabItinBtn" onclick="switchTab('itinerary')" class="flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent">
+        <i class="fa-solid fa-calendar-days mr-1"></i>2日行程安排
       </button>
     </div>
+  </div>
 
-    <!-- Locations Grid -->
-    <div id="locationGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <!-- Main Container -->
+  <main class="flex-grow max-w-md w-full mx-auto p-4 space-y-4">
 
-    <!-- Empty State -->
-    <div id="emptyState" class="hidden py-16 text-center space-y-3">
-      <div class="w-16 h-16 mx-auto bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 text-2xl">
-        <i class="fa-solid fa-compass-slash"></i>
-      </div>
-      <h3 class="font-bold text-slate-700 dark:text-slate-200">未找到相关景点</h3>
-      <button onclick="resetAllFilters()" class="px-4 py-2 bg-red-500 text-white rounded-xl text-xs font-medium shadow hover:bg-red-600 transition">
-        重置条件
-      </button>
+    <!-- View 1: Locations -->
+    <div id="locationsView" class="space-y-4">
+      <div class="flex gap-2 overflow-x-auto py-1" id="cityFilter"></div>
+      <div id="locationList" class="space-y-4"></div>
+    </div>
+
+    <!-- View 2: Itinerary -->
+    <div id="itineraryView" class="space-y-4 hidden">
+      <div id="itineraryList" class="space-y-6"></div>
     </div>
 
   </main>
 
-  <!-- Photo Lightbox Modal with Multi-Image Navigation -->
-  <div id="lightboxModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <!-- Close Button -->
-    <button id="closeLightboxBtn" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/40 transition">
-      <i class="fa-solid fa-xmark text-xl"></i>
-    </button>
-    
-    <!-- Prev / Next Navigation Arrows -->
-    <button id="prevImgBtn" class="absolute left-3 z-20 w-11 h-11 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-red-500 transition border border-white/20">
-      <i class="fa-solid fa-chevron-left text-lg"></i>
-    </button>
-    <button id="nextImgBtn" class="absolute right-3 z-20 w-11 h-11 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-red-500 transition border border-white/20">
-      <i class="fa-solid fa-chevron-right text-lg"></i>
-    </button>
-
-    <div class="max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center space-y-3">
-      <img id="lightboxImage" src="" alt="" class="max-h-[72vh] w-auto max-w-full rounded-lg object-contain shadow-2xl">
-      <div class="text-center text-white space-y-1">
-        <div class="flex items-center justify-center gap-2">
-          <h3 id="lightboxTitle" class="font-bold text-lg"></h3>
-          <span id="lightboxCounter" class="bg-white/20 text-xs px-2 py-0.5 rounded-full">1/1</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- JSON Configuration Modal -->
-  <div id="jsonModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-sliders text-red-500"></i>
-          <h2 class="font-bold text-base">编辑 / 导入 JSON 景点数据</h2>
-        </div>
-        <button id="closeJsonModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-          <i class="fa-solid fa-xmark text-lg"></i>
+  <!-- Photo & Detail Modal -->
+  <div id="photoModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="handleBackdropClick(event)">
+    <div class="bg-slate-900 text-white w-full max-w-md rounded-t-2xl sm:rounded-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-800 shadow-2xl animate-in slide-in-from-bottom duration-200">
+      
+      <!-- Image Header -->
+      <div class="relative bg-black h-60 flex items-center justify-center">
+        <img id="modalImg" src="" class="w-full h-full object-cover">
+        <span id="modalCityTag" class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"></span>
+        <button onclick="closeModal()" class="absolute top-3 right-3 bg-black/60 hover:bg-black/90 text-white w-8 h-8 rounded-full flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div class="p-5 flex-grow overflow-y-auto space-y-4">
-        <textarea id="jsonTextArea" rows="12" class="w-full p-3 bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
-        <div id="jsonError" class="hidden text-xs text-red-500 bg-red-50 dark:bg-red-950/40 p-2.5 rounded-lg border border-red-200 dark:border-red-800"></div>
-      </div>
-      <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
-        <button id="resetDefaultJsonBtn" class="px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-red-500 transition">恢复默认</button>
-        <div class="flex items-center gap-2">
-          <button id="formatJsonBtn" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 text-xs font-medium rounded-xl">格式化</button>
-          <button id="saveJsonBtn" class="px-4 py-2 bg-red-500 text-white text-xs font-medium rounded-xl shadow">保存并应用</button>
-        </div>
+
+      <!-- Detail Content -->
+      <div class="p-5 overflow-y-auto space-y-3">
+        <h2 id="modalTitle" class="text-xl font-bold leading-tight"></h2>
+        <p id="modalAddress" class="text-xs text-slate-400 flex items-center gap-1.5 hidden">
+          <i class="fa-solid fa-location-dot text-red-400"></i>
+          <span></span>
+        </p>
+        <p id="modalDesc" class="text-sm text-slate-300 leading-relaxed"></p>
+
+        <a id="modalMapBtn" href="#" target="_blank" rel="noopener" class="mt-4 flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-500 text-white font-medium py-2.5 rounded-xl text-sm transition">
+          <i class="fa-solid fa-map-location-dot"></i> 打开地图导航
+        </a>
       </div>
     </div>
   </div>
 
-  <!-- JavaScript Logic -->
   <script>
-    const defaultData = [
-      {
-        "id": "1",
-        "name": "洪崖洞民俗风貌区",
-        "city": "重庆",
-        "category": "热门地标",
-        "description": "具有浓郁巴渝传统建筑特色的吊脚楼建筑群，夜晚华灯初上时金碧辉煌，犹如置身于《千与千寻》的梦幻世界。",
-        "images": [
-          "https://images.unsplash.com/photo-1548013146-72479768bada",
-          "https://images.unsplash.com/photo-1508804185872-d7badad00f7d"
-        ],
-        "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
-      },
-      {
-        "id": "2",
-        "name": "李子坝轻轨穿楼",
-        "city": "重庆",
-        "category": "奇观景点",
-        "description": "重庆轨道交通2号线李子坝站，轻轨列车直接穿过19层居民楼，是著名的网红打卡奇观。",
-        "images": [
-          "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png"
-        ],
-        "mapsUrl": "https://maps.google.com/?q=Liziba+Station"
-      },
-      {
-        "id": "3",
-        "name": "成都大熊猫繁育研究基地",
-        "city": "成都",
-        "category": "动物园与公园",
-        "description": "享誉全球的大熊猫庇护与繁育基地，可以近距离观察可爱的大熊猫和红熊猫在竹林间嬉戏、吃竹子。",
-        "images": [
-          "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg"
-        ],
-        "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
-      },
-      {
-        "id": "4",
-        "name": "宽窄巷子",
-        "city": "成都",
-        "category": "历史街区",
-        "description": "由宽巷子、窄巷子和井巷子组成的清末民初古建筑群，是体验成都传统采耳、喝盖碗茶和慢生活的绝佳去处。",
-        "images": [
-          "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f"
-        ],
-        "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley+Chengdu"
-      }
-    ];
+    // Embedded backup data
+    const DEFAULT_DATA = {
+      "locations": [
+        { "id": "1", "name": "洪崖洞民俗风貌区", "city": "重庆", "category": "热门地标", "address": "重庆市渝中区嘉陵江滨江路88号", "description": "最具代表性的巴渝吊脚楼建筑群，夜景极其震撼，仿佛《千与千寻》现实版。", "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada", "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing" },
+        { "id": "2", "name": "李子坝轻轨穿楼", "city": "重庆", "category": "奇观景点", "address": "重庆市渝中区李子坝正街", "description": "重庆轨道交通2号线独有奇观，轻轨列车直接穿过19层高层居民楼。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png", "mapsUrl": "https://maps.google.com/?q=Liziba+Station" },
+        { "id": "3", "name": "解放碑步行街", "city": "重庆", "category": "城市商业", "address": "重庆市渝中区民族路", "description": "重庆繁华核心商圈，集美食、购物与地标建筑于一体。", "imageUrl": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d", "mapsUrl": "https://maps.google.com/?q=Jiefangbei+Chongqing" },
+        { "id": "4", "name": "成都大熊猫繁育研究基地", "city": "成都", "category": "自然动物", "address": "成都市成华区熊猫大道1375号", "description": "全球最大的大熊猫保护与繁育基地，近距离观看活泼的大熊猫。", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg", "mapsUrl": "https://maps.google.com/?q=Chengdu_Research_Base_of_Giant_Panda_Breeding" },
+        { "id": "5", "name": "宽窄巷子", "city": "成都", "category": "休闲街区", "address": "成都市青羊区长顺上街", "description": "由宽巷子、窄巷子组成的清末民初古街，体验慢生活与盖碗茶文化。", "imageUrl": "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f", "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley" }
+      ],
+      "itinerary": [
+        {
+          "day": "Day 1", "title": "重庆魔幻山城一日游", "city": "重庆",
+          "steps": [
+            { "time": "09:30 AM", "locationId": "2", "activity": "观看李子坝轻轨穿楼奇观并拍照打卡" },
+            { "time": "01:00 PM", "locationId": "3", "activity": "逛解放碑步行街，品尝重庆火锅与酸辣粉" },
+            { "time": "07:00 PM", "locationId": "1", "activity": "游览洪崖洞夜景，欣赏嘉陵江夜色" }
+          ]
+        },
+        {
+          "day": "Day 2", "title": "成都慢生活熊猫一日游", "city": "成都",
+          "steps": [
+            { "time": "08:30 AM", "locationId": "4", "activity": "早上前往大熊猫基地，观看大熊猫进食与活动" },
+            { "time": "02:30 PM", "locationId": "5", "activity": "漫步宽窄巷子，体验成都川剧变脸与盖碗茶" }
+          ]
+        }
+      ]
+    };
 
-    let locations = [];
+    let appData = DEFAULT_DATA;
     let selectedCity = '全部';
-    let selectedCategories = new Set();
-    let searchQuery = '';
 
-    // Active Gallery Lightbox State
-    let activeImages = [];
-    let activeImageIndex = 0;
-    let activeTitle = '';
+    async function init() {
+      if (window.location.search.includes('reset=true')) {
+        localStorage.clear();
+      }
 
-    // DOM Elements
-    const searchInput = document.getElementById('searchInput');
-    const clearSearchBtn = document.getElementById('clearSearchBtn');
-    const cityFilterContainer = document.getElementById('cityFilterContainer');
-    const categoryFilterContainer = document.getElementById('categoryFilterContainer');
-    const resetCategoryBtn = document.getElementById('resetCategoryBtn');
-    const clearAllFiltersBtn = document.getElementById('clearAllFiltersBtn');
-    const locationCount = document.getElementById('locationCount');
-    const locationGrid = document.getElementById('locationGrid');
-    const emptyState = document.getElementById('emptyState');
-    
-    // Lightbox Elements
-    const lightboxModal = document.getElementById('lightboxModal');
-    const lightboxImage = document.getElementById('lightboxImage');
-    const lightboxTitle = document.getElementById('lightboxTitle');
-    const lightboxCounter = document.getElementById('lightboxCounter');
-    const closeLightboxBtn = document.getElementById('closeLightboxBtn');
-    const prevImgBtn = document.getElementById('prevImgBtn');
-    const nextImgBtn = document.getElementById('nextImgBtn');
+      try {
+        const res = await fetch('./locations.json?t=' + Date.now());
+        if (res.ok) {
+          const json = await res.json();
+          if (json.locations && json.locations.length > 0) {
+            appData = json;
+          }
+        }
+      } catch (e) {
+        console.log('Loaded default embedded data');
+      }
 
-    // JSON Modal Elements
-    const jsonModal = document.getElementById('jsonModal');
-    const openJsonModalBtn = document.getElementById('openJsonModalBtn');
-    const closeJsonModalBtn = document.getElementById('closeJsonModalBtn');
-    const jsonTextArea = document.getElementById('jsonTextArea');
-    const saveJsonBtn = document.getElementById('saveJsonBtn');
-    const formatJsonBtn = document.getElementById('formatJsonBtn');
-    const resetDefaultJsonBtn = document.getElementById('resetDefaultJsonBtn');
-    const jsonError = document.getElementById('jsonError');
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-
-    function init() {
-      loadDataFromStorage();
-      setupEventListeners();
-      renderApp();
+      renderCityFilter();
+      renderLocations();
+      renderItinerary();
     }
 
-    function loadDataFromStorage() {
-      const stored = localStorage.getItem('chengdu_chongqing_locations_v2');
-      if (stored) {
-        try { locations = JSON.parse(stored); } catch (e) { locations = [...defaultData]; }
+    function switchTab(tab) {
+      const locView = document.getElementById('locationsView');
+      const itinView = document.getElementById('itineraryView');
+      const locBtn = document.getElementById('tabLocBtn');
+      const itinBtn = document.getElementById('tabItinBtn');
+
+      if (tab === 'locations') {
+        locView.classList.remove('hidden');
+        itinView.classList.add('hidden');
+        locBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-500 text-red-600';
+        itinBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent';
       } else {
-        locations = [...defaultData];
+        locView.classList.add('hidden');
+        itinView.classList.remove('hidden');
+        itinBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-500 text-red-600';
+        locBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent';
       }
     }
 
-    function saveDataToStorage() {
-      localStorage.setItem('chengdu_chongqing_locations_v2', JSON.stringify(locations));
+    function renderCityFilter() {
+      const cities = ['全部', ...new Set(appData.locations.map(i => i.city))];
+      document.getElementById('cityFilter').innerHTML = cities.map(c => `
+        <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium shrink-0 transition ${selectedCity === c ? 'bg-red-500 text-white shadow-xs' : 'bg-white text-slate-600 border border-slate-200'}">
+          ${c}
+        </button>
+      `).join('');
     }
 
-    function setupEventListeners() {
-      themeToggleBtn.addEventListener('click', () => document.documentElement.classList.toggle('dark'));
-
-      searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value.trim().toLowerCase();
-        clearSearchBtn.classList.toggle('hidden', searchQuery === '');
-        renderLocations();
-      });
-
-      clearSearchBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        searchQuery = '';
-        clearSearchBtn.classList.add('hidden');
-        renderLocations();
-      });
-
-      resetCategoryBtn.addEventListener('click', () => {
-        selectedCategories.clear();
-        renderFilters();
-        renderLocations();
-      });
-
-      clearAllFiltersBtn.addEventListener('click', resetAllFilters);
-
-      // Lightbox Controls
-      closeLightboxBtn.addEventListener('click', closeLightbox);
-      prevImgBtn.addEventListener('click', (e) => { e.stopPropagation(); navigateImage(-1); });
-      nextImgBtn.addEventListener('click', (e) => { e.stopPropagation(); navigateImage(1); });
-      lightboxModal.addEventListener('click', (e) => { if (e.target === lightboxModal) closeLightbox(); });
-
-      // JSON Modal
-      openJsonModalBtn.addEventListener('click', () => {
-        jsonTextArea.value = JSON.stringify(locations, null, 2);
-        jsonError.classList.add('hidden');
-        jsonModal.classList.remove('hidden');
-      });
-
-      closeJsonModalBtn.addEventListener('click', () => jsonModal.classList.add('hidden'));
-
-      formatJsonBtn.addEventListener('click', () => {
-        try {
-          jsonTextArea.value = JSON.stringify(JSON.parse(jsonTextArea.value), null, 2);
-          jsonError.classList.add('hidden');
-        } catch (err) {
-          jsonError.textContent = 'JSON 格式错误: ' + err.message;
-          jsonError.classList.remove('hidden');
-        }
-      });
-
-      resetDefaultJsonBtn.addEventListener('click', () => {
-        locations = [...defaultData];
-        saveDataToStorage();
-        jsonModal.classList.add('hidden');
-        resetAllFilters();
-      });
-
-      saveJsonBtn.addEventListener('click', () => {
-        try {
-          const parsed = JSON.parse(jsonTextArea.value);
-          if (!Array.isArray(parsed)) throw new Error('根对象必须为 JSON 数组');
-          locations = parsed;
-          saveDataToStorage();
-          jsonModal.classList.add('hidden');
-          resetAllFilters();
-        } catch (err) {
-          jsonError.textContent = '无法保存: ' + err.message;
-          jsonError.classList.remove('hidden');
-        }
-      });
-    }
-
-    function resetAllFilters() {
-      selectedCity = '全部';
-      selectedCategories.clear();
-      searchQuery = '';
-      searchInput.value = '';
-      clearSearchBtn.classList.add('hidden');
-      renderApp();
-    }
-
-    function renderApp() {
-      renderFilters();
+    function filterCity(city) {
+      selectedCity = city;
+      renderCityFilter();
       renderLocations();
     }
 
-    function renderFilters() {
-      // City Filters
-      const cities = ['全部', ...new Set(locations.map(item => item.city || '其他'))];
-      cityFilterContainer.innerHTML = '';
-      cities.forEach(city => {
-        const isSelected = selectedCity === city;
-        const btn = document.createElement('button');
-        btn.className = `px-3 py-1 rounded-lg text-xs font-medium transition tap-highlight-transparent border ${
-          isSelected 
-            ? 'bg-red-500 text-white border-red-500 shadow-sm' 
-            : 'bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-600'
-        }`;
-        btn.textContent = city;
-        btn.onclick = () => {
-          selectedCity = city;
-          renderFilters();
-          renderLocations();
-        };
-        cityFilterContainer.appendChild(btn);
-      });
-
-      // Category Filters
-      const categories = [...new Set(locations.map(item => item.category || '未分类'))];
-      categoryFilterContainer.innerHTML = '';
-      resetCategoryBtn.classList.toggle('hidden', selectedCategories.size === 0);
-
-      categories.forEach(cat => {
-        const isSelected = selectedCategories.has(cat);
-        const btn = document.createElement('button');
-        btn.className = `px-3 py-1 rounded-xl text-xs font-medium transition flex items-center gap-1.5 tap-highlight-transparent border ${
-          isSelected
-            ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
-            : 'bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600'
-        }`;
-        btn.innerHTML = `<i class="fa-solid ${isSelected ? 'fa-square-check' : 'fa-square'} text-[11px]"></i><span>${cat}</span>`;
-        btn.onclick = () => {
-          if (selectedCategories.has(cat)) selectedCategories.delete(cat);
-          else selectedCategories.add(cat);
-          renderFilters();
-          renderLocations();
-        };
-        categoryFilterContainer.appendChild(btn);
-      });
-    }
-
     function renderLocations() {
-      const filtered = locations.filter(loc => {
-        const matchesCity = selectedCity === '全部' || (loc.city || '其他') === selectedCity;
-        const matchesCategory = selectedCategories.size === 0 || selectedCategories.has(loc.category || '未分类');
-        const matchesSearch = searchQuery === '' || 
-          (loc.name && loc.name.toLowerCase().includes(searchQuery)) ||
-          (loc.description && loc.description.toLowerCase().includes(searchQuery));
-        return matchesCity && matchesCategory && matchesSearch;
-      });
-
-      locationCount.textContent = filtered.length;
-      clearAllFiltersBtn.classList.toggle('hidden', selectedCity === '全部' && selectedCategories.size === 0 && searchQuery === '');
-
-      if (filtered.length === 0) {
-        locationGrid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      locationGrid.innerHTML = filtered.map((item, index) => {
-        // Extract images array or single imageUrl fallback
-        const imgs = Array.isArray(item.images) && item.images.length > 0 
-          ? item.images 
-          : (item.imageUrl ? [item.imageUrl] : ['https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600']);
-        
-        const coverImg = imgs[0];
-        const imgCount = imgs.length;
-
-        return `
-          <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 dark:border-slate-700/80 flex flex-col hover:shadow-md transition">
-            
-            <!-- Cover Photo Card -->
-            <div class="relative h-48 bg-slate-100 dark:bg-slate-900 cursor-pointer group" onclick="openGallery(${index})">
-              <img 
-                src="${coverImg}" 
-                alt="${escapeHtml(item.name)}" 
-                class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                onerror="this.src='https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600'"
-              >
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
-              
-              <!-- Badges -->
-              <div class="absolute top-3 left-3 flex flex-wrap gap-1">
-                ${item.city ? `<span class="px-2 py-0.5 bg-red-600/90 text-white text-[10px] font-bold rounded-md backdrop-blur-md">${escapeHtml(item.city)}</span>` : ''}
-                ${item.category ? `<span class="px-2 py-0.5 bg-black/50 text-white text-[10px] rounded-md backdrop-blur-md">${escapeHtml(item.category)}</span>` : ''}
-              </div>
-
-              <!-- Image Counter Badge -->
-              <div class="absolute top-3 right-3 bg-black/60 text-white text-[10px] font-medium px-2 py-0.5 rounded-full backdrop-blur-md flex items-center gap-1">
-                <i class="fa-solid fa-images"></i>
-                <span>${imgCount} 张照片</span>
-              </div>
-
-              <div class="absolute bottom-3 left-3 right-3 text-white">
-                <h3 class="font-bold text-base leading-tight drop-shadow-sm">${escapeHtml(item.name)}</h3>
-              </div>
-            </div>
-
-            <!-- Card Body (No Address) -->
-            <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
-              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
-                ${escapeHtml(item.description || '暂无描述信息')}
-              </p>
-
-              <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs">
-                <button onclick="openGallery(${index})" class="text-xs text-slate-500 hover:text-red-500 flex items-center gap-1 font-medium">
-                  <i class="fa-solid fa-expand"></i> 查看全图相册
-                </button>
-
-                ${item.mapsUrl ? `
-                  <a href="${escapeHtml(item.mapsUrl)}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-red-500 hover:text-red-600 font-medium text-xs bg-red-50 dark:bg-red-950/50 px-2.5 py-1 rounded-lg border border-red-100 dark:border-red-900 transition">
-                    <span>地图导航</span>
-                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                  </a>
-                ` : ''}
-              </div>
+      const filtered = appData.locations.filter(i => selectedCity === '全部' || i.city === selectedCity);
+      document.getElementById('locationList').innerHTML = filtered.map(item => `
+        <div class="bg-white rounded-2xl overflow-hidden shadow-xs border border-slate-200">
+          <div class="relative h-44 bg-slate-100 cursor-pointer" onclick="openModalForLocation('${item.id}')">
+            <img src="${item.imageUrl}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada'">
+            <span class="absolute top-3 left-3 px-2 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">${item.city}</span>
+          </div>
+          <div class="p-3.5 space-y-2">
+            <h3 class="font-bold text-sm text-slate-800">${item.name}</h3>
+            <p class="text-xs text-slate-500 line-clamp-2">${item.description}</p>
+            <div class="pt-2 border-t flex justify-between items-center text-xs">
+              <button onclick="openModalForLocation('${item.id}')" class="text-red-500 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-circle-info"></i> 查看详情
+              </button>
+              ${item.mapsUrl ? `<a href="${item.mapsUrl}" target="_blank" class="text-slate-400 hover:text-red-500 flex items-center gap-1">地图导航 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>` : ''}
             </div>
           </div>
-        `;
-      }).join('');
-
-      // Store window reference for gallery opening
-      window.currentFiltered = filtered;
+        </div>
+      `).join('');
     }
 
-    // Lightbox Gallery Functions
-    window.openGallery = function(filteredIndex) {
-      const item = window.currentFiltered[filteredIndex];
+    function renderItinerary() {
+      const itinList = document.getElementById('itineraryList');
+      itinList.innerHTML = appData.itinerary.map(dayPlan => `
+        <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between border-b pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded">${dayPlan.day}</span>
+              <h2 class="font-bold text-sm text-slate-800">${dayPlan.title}</h2>
+            </div>
+            <span class="text-[10px] text-slate-400 font-medium">${dayPlan.city}</span>
+          </div>
+          
+          <div class="space-y-2.5 relative pl-3 border-l-2 border-red-200 ml-1">
+            ${dayPlan.steps.map(step => {
+              const loc = appData.locations.find(l => String(l.id) === String(step.locationId)) || {};
+              return `
+                <div onclick="openModalForLocation('${step.locationId}')" class="bg-slate-50 hover:bg-red-50/50 p-2.5 rounded-xl border border-slate-100 hover:border-red-200 cursor-pointer transition active:scale-[0.98] space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-red-500 bg-red-100/80 px-2 py-0.5 rounded-md">${step.time}</span>
+                    <span class="text-xs font-bold text-red-600 flex items-center gap-1">
+                      ${loc.name || '详细景点'} <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-600 font-medium">${step.activity}</p>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openModalForLocation(id) {
+      const item = appData.locations.find(l => String(l.id) === String(id));
       if (!item) return;
 
-      activeImages = Array.isArray(item.images) && item.images.length > 0 
-        ? item.images 
-        : (item.imageUrl ? [item.imageUrl] : []);
-      activeImageIndex = 0;
-      activeTitle = item.name || '';
+      document.getElementById('modalImg').src = item.imageUrl;
+      document.getElementById('modalTitle').textContent = item.name;
+      document.getElementById('modalCityTag').textContent = item.city || '景点';
+      document.getElementById('modalDesc').textContent = item.description || '暂无详细介绍';
+      
+      const addrEl = document.getElementById('modalAddress');
+      if (item.address) {
+        addrEl.querySelector('span').textContent = item.address;
+        addrEl.classList.remove('hidden');
+      } else {
+        addrEl.classList.add('hidden');
+      }
 
-      updateLightboxDisplay();
-      lightboxModal.classList.remove('hidden');
+      const mapBtn = document.getElementById('modalMapBtn');
+      if (item.mapsUrl) {
+        mapBtn.href = item.mapsUrl;
+        mapBtn.classList.remove('hidden');
+      } else {
+        mapBtn.classList.add('hidden');
+      }
+
+      document.getElementById('photoModal').classList.remove('hidden');
     }
 
-    function navigateImage(direction) {
-      if (activeImages.length <= 1) return;
-      activeImageIndex = (activeImageIndex + direction + activeImages.length) % activeImages.length;
-      updateLightboxDisplay();
+    function closeModal() {
+      document.getElementById('photoModal').classList.add('hidden');
     }
 
-    function updateLightboxDisplay() {
-      lightboxImage.src = activeImages[activeImageIndex] || '';
-      lightboxTitle.textContent = activeTitle;
-      lightboxCounter.textContent = `${activeImageIndex + 1} / ${activeImages.length}`;
-
-      // Hide arrows if only 1 photo
-      prevImgBtn.style.display = activeImages.length > 1 ? 'flex' : 'none';
-      nextImgBtn.style.display = activeImages.length > 1 ? 'flex' : 'none';
+    function handleBackdropClick(e) {
+      if (e.target.id === 'photoModal') {
+        closeModal();
+      }
     }
 
-    function closeLightbox() {
-      lightboxModal.classList.add('hidden');
-    }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    function clearAndReload() {
+      window.location.href = window.location.pathname + '?reset=true&t=' + Date.now();
     }
 
     document.addEventListener('DOMContentLoaded', init);
