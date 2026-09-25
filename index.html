@@ -152,11 +152,6 @@
           <p id="modal-description" class="text-slate-600 text-sm sm:text-base leading-relaxed bg-slate-50/50 p-4 rounded-xl border border-slate-100/60"></p>
         </div>
 
-        <!-- Folder Path -->
-        <div class="flex items-center justify-between text-xs sm:text-sm text-slate-400 border-t pt-4">
-          <span class="flex items-center gap-1.5"><i class="fa-regular fa-folder"></i> 资源路径:</span>
-          <code id="modal-folder" class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded font-mono"></code>
-        </div>
       </div>
 
       <!-- Modal Footer -->
@@ -169,7 +164,7 @@
     </div>
   </div>
 
-  <!-- Interactive Lightbox Modal (Click to View Next/Prev) -->
+  <!-- Interactive Lightbox Modal -->
   <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 select-none">
     
     <!-- Close Button -->
@@ -428,7 +423,6 @@
       document.getElementById('modal-city').innerText = loc.city;
       document.getElementById('modal-address').innerText = loc.address;
       document.getElementById('modal-description').innerText = loc.description;
-      document.getElementById('modal-folder').innerText = loc.folder;
 
       const modal = document.getElementById('location-modal');
       modal.classList.remove('hidden');
@@ -448,7 +442,7 @@
       
       currentGalleryPhotos = [];
 
-      // Probe img1 to img10 simultaneously in parallel (Promise.all)
+      // Probe img1 to img10 simultaneously in parallel
       const probePromises = [];
       for (let i = 1; i <= 10; i++) {
         probePromises.push(
