@@ -3,150 +3,352 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>成都与重庆之旅</title>
-  <!-- Tailwind CSS -->
+  <title>成都与重庆之旅 - 照片相册</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-4 py-3 shadow-sm">
-    <div class="max-w-4xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2.5">
-        <div class="bg-red-500 text-white p-2 rounded-xl shadow">
-          <i class="fa-solid fa-plane-departure text-sm"></i>
+  <!-- 顶部导航栏 -->
+  <header class="sticky top-0 z-30 bg-white shadow-sm border-b px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="bg-red-600 text-white p-2 rounded-xl">
+          <i class="fa-solid fa-plane-departure"></i>
         </div>
         <div>
-          <h1 class="font-bold text-sm">成都与重庆之旅</h1>
-          <p class="text-[10px] text-slate-400">景点照片与行程浏览</p>
+          <h1 class="font-bold text-base leading-tight">成都与重庆之旅</h1>
+          <p class="text-[11px] text-slate-500">景点照片与行程浏览</p>
         </div>
       </div>
-      <button onclick="location.reload()" class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 text-xs rounded-lg font-medium">
+      <button onclick="clearAndReload()" class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 border border-slate-200 rounded-lg active:scale-95 transition">
         <i class="fa-solid fa-rotate-right mr-1"></i>刷新
       </button>
     </div>
   </header>
 
-  <!-- Main View Container -->
-  <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-4 space-y-4">
-    
-    <!-- Filter Panel -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200/80 dark:border-slate-700/80 space-y-3">
-      <!-- City Filter -->
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-semibold text-slate-400 shrink-0">城市:</span>
-        <div id="cityContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar"></div>
-      </div>
-      <!-- Category Filter -->
-      <div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/50">
-        <span class="text-xs font-semibold text-slate-400 shrink-0">分类:</span>
-        <div id="categoryContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar"></div>
+  <!-- 切换标签 -->
+  <div class="bg-white border-b sticky top-[57px] z-20 shadow-xs">
+    <div class="max-w-md mx-auto flex">
+      <button id="tabLocBtn" onclick="switchTab('locations')" class="flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-600 text-red-600">
+        <i class="fa-solid fa-camera-retro mr-1"></i>景点列表
+      </button>
+      <button id="tabItinBtn" onclick="switchTab('itinerary')" class="flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent">
+        <i class="fa-solid fa-route mr-1"></i>行程安排
+      </button>
+    </div>
+  </div>
+
+  <!-- 主内容区 -->
+  <main class="flex-grow max-w-md w-full mx-auto p-4 space-y-4">
+    <!-- 视图 1：景点列表 -->
+    <div id="locationsView" class="space-y-4">
+      <div class="flex gap-2 overflow-x-auto py-1" id="cityFilter"></div>
+      <div id="locationList" class="space-y-4">
+        <div class="animate-pulse bg-white rounded-2xl h-48 w-full border border-slate-200"></div>
       </div>
     </div>
 
-    <!-- Cards Grid -->
-    <div id="locationGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Instant Loading Skeleton or Cards -->
+    <!-- 视图 2：行程安排 -->
+    <div id="itineraryView" class="space-y-4 hidden">
+      <div id="itineraryList" class="space-y-6"></div>
     </div>
   </main>
 
-  <script>
-    let locations = [];
-    let selectedCity = '全部';
-    let selectedCategory = '全部';
+  <!-- 照片大图弹窗 -->
+  <div id="photoModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="handleBackdropClick(event)">
+    <div class="bg-slate-900 text-white w-full max-w-md rounded-t-2xl sm:rounded-2xl overflow-hidden max-h-[92vh] flex flex-col border border-slate-800 shadow-2xl">
+      
+      <!-- 照片显示区 -->
+      <div class="relative bg-black h-64 flex items-center justify-center overflow-hidden">
+        <img id="modalImg" src="" class="w-full h-full object-cover transition-opacity duration-200">
+        
+        <span id="modalCityTag" class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"></span>
+        <button onclick="closeModal()" class="absolute top-3 right-3 bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center z-10">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
 
-    // Placeholder image in case local image isn't found
-    const FALLBACK_IMG = 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600';
+        <button id="prevBtn" onclick="changePhoto(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white w-8 h-8 rounded-full hidden flex items-center justify-center">
+          <i class="fa-solid fa-chevron-left text-xs"></i>
+        </button>
+        <button id="nextBtn" onclick="changePhoto(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white w-8 h-8 rounded-full hidden flex items-center justify-center">
+          <i class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+
+        <span id="photoBadge" class="absolute bottom-12 right-3 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full hidden"></span>
+        <div id="thumbnailStrip" class="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 px-3 overflow-x-auto py-1"></div>
+      </div>
+
+      <!-- 详细介绍 -->
+      <div class="p-5 overflow-y-auto space-y-3">
+        <h2 id="modalTitle" class="text-xl font-bold leading-tight"></h2>
+        <p id="modalAddress" class="text-xs text-slate-400 flex items-center gap-1.5 hidden">
+          <i class="fa-solid fa-location-dot text-red-400"></i>
+          <span></span>
+        </p>
+        <p id="modalDesc" class="text-sm text-slate-300 leading-relaxed"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let appData = { locations: [], itinerary: [] };
+    let selectedCity = '全部';
+    let locationPhotoMap = {};
+    let currentPhotos = [];
+    let currentPhotoIdx = 0;
 
     async function init() {
       try {
-        const res = await fetch('./locations.json');
+        const res = await fetch('./locations.json?t=' + Date.now());
         if (res.ok) {
-          const data = await res.json();
-          locations = Array.isArray(data) ? data : (data.locations || []);
+          appData = await res.json();
         }
-      } catch (err) {
-        console.error('Failed to load locations.json', err);
+      } catch (e) {
+        console.error('无法读取 locations.json', e);
       }
 
-      renderFilters();
-      renderCards();
+      renderCityFilter();
+      renderItinerary();
+      await loadAllPhotos();
+      renderLocations();
     }
 
-    function renderFilters() {
-      const cities = ['全部', ...new Set(locations.map(i => i.city).filter(Boolean))];
-      const categories = ['全部', ...new Set(locations.map(i => i.category).filter(Boolean))];
-
-      document.getElementById('cityContainer').innerHTML = cities.map(c => `
-        <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium transition ${selectedCity === c ? 'bg-red-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}">${c}</button>
-      `).join('');
-
-      document.getElementById('categoryContainer').innerHTML = categories.map(cat => `
-        <button onclick="filterCategory('${cat}')" class="px-3 py-1 rounded-full text-xs font-medium transition ${selectedCategory === cat ? 'bg-red-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}">${cat}</button>
-      `).join('');
+    function safeEncodePath(path) {
+      return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
     }
 
-    function filterCity(c) { selectedCity = c; renderFilters(); renderCards(); }
-    function filterCategory(cat) { selectedCategory = cat; renderFilters(); renderCards(); }
-
-    function getPrimaryImageUrl(item) {
-      if (item.images && item.images.length > 0) return item.images[0];
-      if (item.folder) return `${item.folder}/1.jpg`;
-      return FALLBACK_IMG;
+    // 检查图片文件是否存在
+    function checkImageExists(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      });
     }
 
-    function handleImageError(imgElem, folder) {
-      if (folder && !imgElem.dataset.triedImg1) {
-        imgElem.dataset.triedImg1 = 'true';
-        imgElem.src = `${folder}/img1.jpg`; // Try img1.jpg fallback
-      } else {
-        imgElem.src = FALLBACK_IMG; // Final default image
+    // 自动扫描识别 img1.jpeg, img2.jpeg, img3.jpg, 1.png 等各种组合
+    async function autoProbeLocationFolder(folder) {
+      const cleanFolder = folder.replace(/^\//, '').replace(/\/$/, '');
+      
+      // 常见的前缀组合
+      const prefixes = ['img', '', 'image', 'photo', 'IMG_'];
+      // 常见的扩展名组合
+      const exts = ['jpeg', 'jpg', 'png', 'webp', 'JPEG', 'JPG', 'PNG'];
+
+      const probePromises = [];
+
+      // 最多探测 30 张图片
+      for (let i = 1; i <= 30; i++) {
+        probePromises.push((async () => {
+          for (let prefix of prefixes) {
+            for (let ext of exts) {
+              const testPath = `./${cleanFolder}/${prefix}${i}.${ext}`;
+              const ok = await checkImageExists(testPath);
+              if (ok) return { index: i, path: testPath };
+            }
+          }
+          return null;
+        })());
       }
+
+      const results = await Promise.all(probePromises);
+      return results
+        .filter(r => r !== null)
+        .sort((a, b) => a.index - b.index)
+        .map(r => r.path);
     }
 
-    function renderCards() {
-      const grid = document.getElementById('locationGrid');
-      const filtered = locations.filter(loc => {
-        const matchCity = selectedCity === '全部' || loc.city === selectedCity;
-        const matchCat = selectedCategory === '全部' || loc.category === selectedCategory;
-        return matchCity && matchCat;
+    async function loadAllPhotos() {
+      const promises = appData.locations.map(async (item) => {
+        // 方式 1：如果 JSON 中写了 images 文件列表
+        if (item.images && Array.isArray(item.images) && item.images.length > 0) {
+          locationPhotoMap[item.id] = item.images.map(img => `./${safeEncodePath(img)}`);
+          return;
+        }
+
+        // 方式 2：根据 folder 智能自动匹配路径下的图片
+        if (item.folder) {
+          const probedPhotos = await autoProbeLocationFolder(item.folder);
+          if (probedPhotos.length > 0) {
+            locationPhotoMap[item.id] = probedPhotos;
+            return;
+          }
+        }
+
+        // 默认保底占位图
+        locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
       });
 
-      if (filtered.length === 0) {
-        grid.innerHTML = '<div class="col-span-full text-center py-10 text-xs text-slate-400">未找到相关景点</div>';
-        return;
-      }
+      await Promise.all(promises);
+    }
 
-      grid.innerHTML = filtered.map(item => {
-        const imgSrc = getPrimaryImageUrl(item);
+    function switchTab(tab) {
+      const locView = document.getElementById('locationsView');
+      const itinView = document.getElementById('itineraryView');
+      const locBtn = document.getElementById('tabLocBtn');
+      const itinBtn = document.getElementById('tabItinBtn');
+
+      if (tab === 'locations') {
+        locView.classList.remove('hidden');
+        itinView.classList.add('hidden');
+        locBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-600 text-red-600';
+        itinBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent';
+      } else {
+        locView.classList.add('hidden');
+        itinView.classList.remove('hidden');
+        itinBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold border-b-2 border-red-600 text-red-600';
+        locBtn.className = 'flex-1 py-2.5 text-center text-xs font-bold text-slate-400 border-b-2 border-transparent';
+      }
+    }
+
+    function renderCityFilter() {
+      const cities = ['全部', ...new Set(appData.locations.map(i => i.city).filter(Boolean))];
+      document.getElementById('cityFilter').innerHTML = cities.map(c => `
+        <button onclick="filterCity('${c}')" class="px-3 py-1 rounded-full text-xs font-medium shrink-0 transition ${selectedCity === c ? 'bg-red-600 text-white shadow-xs' : 'bg-white text-slate-600 border border-slate-200'}">
+          ${c}
+        </button>
+      `).join('');
+    }
+
+    function filterCity(city) {
+      selectedCity = city;
+      renderCityFilter();
+      renderLocations();
+    }
+
+    function renderLocations() {
+      const filtered = appData.locations.filter(i => selectedCity === '全部' || i.city === selectedCity);
+      document.getElementById('locationList').innerHTML = filtered.map(item => {
+        const photos = locationPhotoMap[item.id] || ['https://images.unsplash.com/photo-1548013146-72479768bada'];
+        const coverImg = photos[0];
         return `
-          <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 dark:border-slate-700 flex flex-col">
-            <div class="relative h-44 bg-slate-200 dark:bg-slate-700">
-              <img src="${imgSrc}" 
-                   loading="lazy"
-                   onerror="handleImageError(this, '${item.folder || ''}')" 
-                   class="w-full h-full object-cover">
-              <div class="absolute top-2.5 left-2.5 flex gap-1">
-                ${item.city ? `<span class="px-2 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded-md">${item.city}</span>` : ''}
-                ${item.category ? `<span class="px-2 py-0.5 bg-black/50 backdrop-blur-sm text-white text-[10px] rounded-md">${item.category}</span>` : ''}
-              </div>
+          <div class="bg-white rounded-2xl overflow-hidden shadow-xs border border-slate-200">
+            <div class="relative h-44 bg-slate-100 cursor-pointer" onclick="openModalForLocation('${item.id}')">
+              <img src="${coverImg}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1548013146-72479768bada'">
+              ${item.city ? `<span class="absolute top-3 left-3 px-2.5 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full">${item.city}</span>` : ''}
+              <span class="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa-solid fa-camera"></i> ${photos.length} 张照片
+              </span>
             </div>
-            <div class="p-3.5 flex-grow flex flex-col justify-between space-y-2">
-              <div>
-                <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100">${item.name}</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">${item.description || ''}</p>
+            <div class="p-3.5 space-y-2">
+              <h3 class="font-bold text-sm text-slate-800">${item.name}</h3>
+              <p class="text-xs text-slate-500 line-clamp-2">${item.description || ''}</p>
+              <div class="pt-2 border-t flex justify-between items-center text-xs">
+                <button onclick="openModalForLocation('${item.id}')" class="text-red-600 font-semibold flex items-center gap-1">
+                  <i class="fa-solid fa-images"></i> 查看照片
+                </button>
               </div>
-              ${item.address ? `<p class="text-[11px] text-slate-400 flex items-center gap-1 pt-1"><i class="fa-solid fa-location-dot text-red-400"></i> ${item.address}</p>` : ''}
             </div>
           </div>
         `;
       }).join('');
+    }
+
+    function renderItinerary() {
+      if (!appData.itinerary || appData.itinerary.length === 0) return;
+      const itinList = document.getElementById('itineraryList');
+      itinList.innerHTML = appData.itinerary.map(dayPlan => `
+        <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between border-b pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded">${dayPlan.day}</span>
+              <h2 class="font-bold text-sm text-slate-800">${dayPlan.title}</h2>
+            </div>
+            <span class="text-[10px] text-slate-400 font-medium">${dayPlan.city || ''}</span>
+          </div>
+          <div class="space-y-2.5 relative pl-3 border-l-2 border-red-200 ml-1">
+            ${dayPlan.steps.map(step => {
+              const loc = appData.locations.find(l => String(l.id) === String(step.locationId)) || {};
+              return `
+                <div onclick="openModalForLocation('${step.locationId}')" class="bg-slate-50 hover:bg-red-50/50 p-2.5 rounded-xl border border-slate-100 hover:border-red-200 cursor-pointer transition active:scale-[0.98] space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-red-600 bg-red-100/80 px-2 py-0.5 rounded-md">${step.time}</span>
+                    <span class="text-xs font-bold text-red-600 flex items-center gap-1">
+                      ${loc.name || '查看景点'} <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-600 font-medium">${step.activity}</p>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openModalForLocation(id) {
+      const item = appData.locations.find(l => String(l.id) === String(id));
+      if (!item) return;
+
+      currentPhotos = locationPhotoMap[item.id] || [];
+      currentPhotoIdx = 0;
+
+      document.getElementById('modalTitle').textContent = item.name;
+      document.getElementById('modalCityTag').textContent = item.city || '景点';
+      document.getElementById('modalDesc').textContent = item.description || '暂无详细介绍。';
+
+      const addrEl = document.getElementById('modalAddress');
+      if (item.address) {
+        addrEl.querySelector('span').textContent = item.address;
+        addrEl.classList.remove('hidden');
+      } else {
+        addrEl.classList.add('hidden');
+      }
+
+      updateModalPhoto();
+      document.getElementById('photoModal').classList.remove('hidden');
+    }
+
+    function updateModalPhoto() {
+      const imgEl = document.getElementById('modalImg');
+      imgEl.src = currentPhotos[currentPhotoIdx];
+
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const badge = document.getElementById('photoBadge');
+      const thumbs = document.getElementById('thumbnailStrip');
+
+      if (currentPhotos.length > 1) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        badge.classList.remove('hidden');
+        badge.textContent = `${currentPhotoIdx + 1} / ${currentPhotos.length}`;
+
+        thumbs.innerHTML = currentPhotos.map((src, i) => `
+          <button onclick="setPhotoIndex(${i})" class="w-9 h-9 rounded-lg overflow-hidden border-2 shrink-0 transition ${i === currentPhotoIdx ? 'border-red-500 scale-105' : 'border-white/40 opacity-60'}">
+            <img src="${src}" class="w-full h-full object-cover">
+          </button>
+        `).join('');
+      } else {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+        badge.classList.add('hidden');
+        thumbs.innerHTML = '';
+      }
+    }
+
+    function changePhoto(dir) {
+      currentPhotoIdx = (currentPhotoIdx + dir + currentPhotos.length) % currentPhotos.length;
+      updateModalPhoto();
+    }
+
+    function setPhotoIndex(idx) {
+      currentPhotoIdx = idx;
+      updateModalPhoto();
+    }
+
+    function closeModal() {
+      document.getElementById('photoModal').classList.add('hidden');
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'photoModal') closeModal();
+    }
+
+    function clearAndReload() {
+      window.location.reload();
     }
 
     document.addEventListener('DOMContentLoaded', init);
