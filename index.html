@@ -75,7 +75,7 @@
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
 
-        <span id="photoBadge" class="absolute bottom-12 right-3 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full hidden"></span>
+        <span id="photoBadge" class="absolute bottom-14 right-3 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded-full hidden"></span>
         <div id="thumbnailStrip" class="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 px-3 overflow-x-auto py-1"></div>
       </div>
 
@@ -114,35 +114,76 @@
         console.error('无法读取 locations.json', e);
       }
 
-      preparePhotoMap();
       renderCityFilter();
       renderItinerary();
       renderLocations();
+      
+      // 动态读取 GitHub API 获取文件列表并更新
+      await preparePhotoMap();
+    }
+
+    function getGithubRepoInfo() {
+      const host = window.location.hostname;
+      const pathSegments = window.location.pathname.split('/').filter(p => p && !p.includes('.html'));
+      
+      if (host.includes('github.io')) {
+        const owner = host.split('.')[0];
+        const repo = pathSegments.length > 0 ? pathSegments[0] : `${owner}.github.io`;
+        return { owner, repo };
+      }
+      return null;
     }
 
     function safeEncodePath(path) {
       return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
     }
 
-    // 快速计算照片映射（不经过上千次 HTTP 探测）
-    function preparePhotoMap() {
+    async function preparePhotoMap() {
+      const repoInfo = getGithubRepoInfo();
       const locations = appData.locations || [];
-      locations.forEach(item => {
+
+      for (let item of locations) {
+        // 1. 如果 JSON 里手动指定了 images，优先使用
         if (item.images && Array.isArray(item.images) && item.images.length > 0) {
           locationPhotoMap[item.id] = item.images.map(img => safeEncodePath(img));
-        } else if (item.photoUrl) {
-          locationPhotoMap[item.id] = [item.photoUrl];
-        } else if (item.folder) {
-          const cleanFolder = item.folder.replace(/^\//, '').replace(/\/$/, '');
-          locationPhotoMap[item.id] = [
-            `./${cleanFolder}/1.jpg`,
-            `./${cleanFolder}/2.jpg`,
-            `./${cleanFolder}/3.jpg`
-          ];
-        } else {
-          locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
+          continue;
         }
-      });
+
+        // 2. 如果指定了 folder，向 GitHub API 动态请求目录中的所有照片
+        if (item.folder) {
+          const cleanFolder = item.folder.replace(/^\//, '').replace(/\/$/, '');
+          if (repoInfo) {
+            try {
+              const apiUrl = `https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}/contents/${cleanFolder}`;
+              const res = await fetch(apiUrl);
+              if (res.ok) {
+                const files = await res.json();
+                if (Array.isArray(files)) {
+                  const imageFiles = files
+                    .filter(f => f.type === 'file' && /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(f.name))
+                    .map(f => `./${cleanFolder}/${f.name}`);
+                  
+                  if (imageFiles.length > 0) {
+                    locationPhotoMap[item.id] = imageFiles;
+                    continue;
+                  }
+                }
+              }
+            } catch (e) {
+              console.warn(`无法自动读取文件夹 ${cleanFolder} 的内容:`, e);
+            }
+          }
+          // 保底默认图片路径
+          locationPhotoMap[item.id] = [`./${cleanFolder}/1.jpg`];
+          continue;
+        }
+
+        // 3. 默认占位图
+        locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
+      }
+
+      // 图片列表获取完毕后，自动更新页面呈现
+      renderLocations();
     }
 
     function switchTab(tab) {
@@ -190,7 +231,7 @@
       }
 
       document.getElementById('locationList').innerHTML = filtered.map(item => {
-        const photos = locationPhotoMap[item.id] || ['https://images.unsplash.com/photo-1548013146-72479768bada'];
+        const photos = locationPhotoMap[item.id] || [`./${(item.folder || '').replace(/^\//, '')}/1.jpg`];
         const coverImg = photos[0];
         return `
           <div class="bg-white rounded-2xl overflow-hidden shadow-xs border border-slate-200">
@@ -225,7 +266,7 @@
         <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-200 space-y-3">
           <div class="flex items-center justify-between border-b pb-2">
             <div class="flex items-center space-x-2">
-              <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded">${dayPlan.day}</span>
+              <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded">Day ${dayPlan.day}</span>
               <h2 class="font-bold text-sm text-slate-800">${dayPlan.title}</h2>
             </div>
             <span class="text-[10px] text-slate-400 font-medium">${dayPlan.city || ''}</span>
@@ -233,15 +274,17 @@
           <div class="space-y-2.5 relative pl-3 border-l-2 border-red-200 ml-1">
             ${(dayPlan.steps || []).map(step => {
               const loc = (appData.locations || []).find(l => String(l.id) === String(step.locationId)) || {};
+              const clickAttr = step.locationId ? `onclick="openModalForLocation('${step.locationId}')"` : '';
+              const cursorClass = step.locationId ? 'cursor-pointer hover:bg-red-50/50 hover:border-red-200' : '';
               return `
-                <div onclick="openModalForLocation('${step.locationId}')" class="bg-slate-50 hover:bg-red-50/50 p-2.5 rounded-xl border border-slate-100 hover:border-red-200 cursor-pointer transition active:scale-[0.98] space-y-1">
+                <div ${clickAttr} class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 transition active:scale-[0.98] space-y-1 ${cursorClass}">
                   <div class="flex items-center justify-between">
                     <span class="text-[10px] font-bold text-red-600 bg-red-100/80 px-2 py-0.5 rounded-md">${step.time}</span>
                     <span class="text-xs font-bold text-red-600 flex items-center gap-1">
-                      ${loc.name || step.activity} <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                      ${loc.name \vert{}\vert{} step.activity}${step.locationId ? '<i class="fa-solid fa-chevron-right text-[10px]"></i>' : ''}
                     </span>
                   </div>
-                  <p class="text-xs text-slate-600 font-medium">${step.activity}</p>
+                  <p class="text-xs text-slate-600 font-medium">${step.activity}</p>${step.notes ? `<p class="text-[11px] text-slate-400 font-normal">${step.notes}</p>` : ''}
                 </div>
               `;
             }).join('')}
@@ -254,7 +297,7 @@
       const item = (appData.locations || []).find(l => String(l.id) === String(id));
       if (!item) return;
 
-      currentPhotos = locationPhotoMap[item.id] || ['https://images.unsplash.com/photo-1548013146-72479768bada'];
+      currentPhotos = locationPhotoMap[item.id] || [`./${(item.folder || '').replace(/^\//, '')}/1.jpg`];
       currentPhotoIdx = 0;
 
       document.getElementById('modalTitle').textContent = item.name;
