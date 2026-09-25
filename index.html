@@ -1,232 +1,314 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>重庆旅行指南 | Chongqing Travel Guide</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重庆导览与行程规划 - Chongqing Travel Guide</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
-    .badge-poi { background-color: #e0f2fe; color: #0369a1; }
-    .badge-food { background-color: #fef3c7; color: #b45309; }
-    .badge-transport { background-color: #f3e8ff; color: #6b21a8; }
+    /* Custom scrollbar for smooth UI */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-50 glass-nav border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+  <!-- Header & Navigation -->
+  <header class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
-          渝
-        </div>
+        <i class="fa-solid fa-mountain-city text-3xl"></i>
         <div>
-          <h1 class="font-bold text-slate-900 leading-tight">重庆旅行指南</h1>
-          <p class="text-xs text-slate-500">Chongqing Travel Guide</p>
+          <h1 class="text-2xl font-bold tracking-tight">探索重庆</h1>
+          <p class="text-xs text-rose-100">Chongqing Travel & Itinerary Guide</p>
         </div>
       </div>
-
-      <nav class="flex bg-slate-100 p-1 rounded-xl text-sm font-medium">
-        <button id="nav-locations" onclick="switchTab('locations')" class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-white text-slate-900 shadow-sm">
-          <i class="fa-solid fa-map-location-dot text-rose-500"></i>
-          <span>地标景点</span>
+      
+      <!-- Nav Tabs -->
+      <nav class="flex bg-black/20 p-1 rounded-xl backdrop-blur-md">
+        <button id="nav-locations" onclick="switchTab('locations')" 
+          class="px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm">
+          <i class="fa-solid fa-map-location-dot"></i> 景点列表
         </button>
-        <button id="nav-itinerary" onclick="switchTab('itinerary')" class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900">
-          <i class="fa-solid fa-calendar-days text-amber-500"></i>
-          <span>行程规划</span>
+        <button id="nav-itinerary" onclick="switchTab('itinerary')" 
+          class="px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100">
+          <i class="fa-solid fa-calendar-days"></i> 行程安排
         </button>
       </nav>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
 
-    <!-- LOCATIONS VIEW -->
+    <!-- View 1: Locations List -->
     <section id="view-locations" class="space-y-6">
-      <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-        <div class="relative w-full sm:w-80">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-          <input type="text" id="search-input" oninput="filterLocations()" placeholder="搜索景点或地址..." class="w-full pl-10 pr-4 py-2 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
+      
+      <!-- Search & Category Filters -->
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+        <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+          
+          <!-- Search Bar -->
+          <div class="relative w-full md:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
+            <input type="text" id="search-input" oninput="filterLocations()" placeholder="搜索景点、地址、描述..." 
+              class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition">
+          </div>
+
+          <!-- Category Pills -->
+          <div id="category-filters" class="flex flex-wrap gap-2 w-full md:w-auto items-center">
+            <!-- Dynamically populated categories -->
+          </div>
         </div>
-        <div class="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0" id="category-filters"></div>
       </div>
 
-      <div id="locations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <!-- Locations Grid -->
+      <div id="locations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Dynamically populated cards -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="no-locations" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-100">
+        <i class="fa-solid fa-compass text-4xl text-slate-300 mb-3"></i>
+        <p class="text-slate-500 font-medium">未找到符合条件的景点</p>
+      </div>
     </section>
 
-    <!-- ITINERARY VIEW -->
+    <!-- View 2: Itinerary -->
     <section id="view-itinerary" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-rose-500 to-amber-500 rounded-2xl p-6 text-white shadow-lg">
-        <h2 class="text-2xl font-bold mb-1">山城探索之旅 行程概览</h2>
-        <p class="text-rose-100 text-sm">串联魔幻九宫格火锅、崖壁步道与璀璨夜景</p>
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-xl font-bold">行程规划</h2>
+          <p class="text-slate-400 text-sm mt-1">点击带有标志的活动项目，可随时查看景点详细信息。</p>
+        </div>
+        <button onclick="switchTab('locations')" class="text-xs bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition border border-white/10">
+          <i class="fa-solid fa-arrow-left mr-1"></i> 返回所有景点
+        </button>
       </div>
 
-      <div id="itinerary-timeline" class="space-y-8"></div>
+      <!-- Itinerary List -->
+      <div id="itinerary-container" class="space-y-8">
+        <!-- Dynamically populated itinerary -->
+      </div>
     </section>
 
   </main>
 
-  <!-- Modal -->
-  <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4" onclick="closeModal()">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 space-y-4" onclick="event.stopPropagation()">
-      <div class="flex justify-between items-start">
-        <span id="modal-category" class="px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-xs font-semibold"></span>
-        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+  <!-- Location Detail Modal -->
+  <div id="location-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="bg-slate-900 text-white p-6 relative">
+        <button onclick="closeModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
+        <div class="flex items-center gap-2 mb-2">
+          <span id="modal-category" class="bg-red-500/20 text-red-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-red-500/30"></span>
+          <span id="modal-city" class="text-slate-400 text-xs font-medium"></span>
+        </div>
+        <h3 id="modal-name" class="text-2xl font-bold pr-8"></h3>
       </div>
-      <h3 id="modal-title" class="text-2xl font-bold text-slate-900"></h3>
-      <div class="flex items-center text-xs text-slate-500 space-x-1">
-        <i class="fa-solid fa-location-dot text-rose-500"></i>
-        <span id="modal-address"></span>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-4 overflow-y-auto">
+        <!-- Address -->
+        <div class="flex items-start gap-3 text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+          <i class="fa-solid fa-location-dot text-red-500 mt-1"></i>
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">详细地址</p>
+            <p id="modal-address" class="text-sm font-medium text-slate-700 mt-0.5"></p>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">景点介绍</p>
+          <p id="modal-description" class="text-slate-600 text-sm leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-slate-100/50"></p>
+        </div>
+
+        <!-- Folder Path -->
+        <div class="flex items-center justify-between text-xs text-slate-400 border-t pt-4">
+          <span class="flex items-center gap-1.5"><i class="fa-regular fa-folder"></i> 资源路径:</span>
+          <code id="modal-folder" class="bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono"></code>
+        </div>
       </div>
-      <p id="modal-description" class="text-slate-600 text-sm leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100"></p>
-      <div class="pt-2 flex justify-end">
-        <button onclick="closeModal()" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors">关闭</button>
+
+      <!-- Modal Footer -->
+      <div class="bg-slate-50 p-4 border-t text-right">
+        <button onclick="closeModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition">
+          关闭
+        </button>
       </div>
+
     </div>
   </div>
 
+  <!-- JavaScript Logic -->
   <script>
-    let travelData = { locations: [], itinerary: [] };
-    let selectedCategory = "全部";
+    let appData = { locations: [], itinerary: [] };
+    let currentCategory = 'all';
+    let searchQuery = '';
 
-    // Fetch JSON from the same folder
-    document.addEventListener("DOMContentLoaded", async () => {
+    // Fetch locations.json from the same directory
+    async function loadData() {
       try {
-        const response = await fetch('./locations.json');
-        if (!response.ok) throw new Error("HTTP Status: " + response.status);
-        travelData = await response.json();
-
-        renderCategoryFilters();
-        renderLocations(travelData.locations);
-        renderItinerary(travelData.itinerary);
+        const response = await fetch('locations.json');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        appData = await response.json();
+        
+        initApp();
       } catch (error) {
-        console.error("Fetch Error:", error);
-        document.getElementById("locations-grid").innerHTML = `
-          <div class="col-span-full p-6 text-center text-rose-600 bg-rose-50 rounded-2xl border border-rose-100">
-            <p class="font-bold text-base">无法读取 locations.json</p>
-            <p class="text-xs text-slate-500 mt-1">如果您是在电脑上直接双击打开 HTML，请用 VS Code 的 Live Server 运行，或者发布到 GitHub Pages 查看。</p>
-          </div>
-        `;
-      }
-    });
-
-    function switchTab(tab) {
-      const locBtn = document.getElementById("nav-locations");
-      const itiBtn = document.getElementById("nav-itinerary");
-      const locView = document.getElementById("view-locations");
-      const itiView = document.getElementById("view-itinerary");
-
-      if (tab === "locations") {
-        locBtn.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-white text-slate-900 shadow-sm";
-        itiBtn.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900";
-        locView.classList.remove("hidden");
-        itiView.classList.add("hidden");
-      } else {
-        itiBtn.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-white text-slate-900 shadow-sm";
-        locBtn.className = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900";
-        itiView.classList.remove("hidden");
-        locView.classList.add("hidden");
+        console.error("Error loading json:", error);
+        document.getElementById('locations-grid').innerHTML = `
+          <div class="col-span-full p-6 bg-red-50 text-red-700 rounded-2xl border border-red-200 text-center">
+            <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+            <p class="font-bold">无法加载数据 (locations.json)</p>
+            <p class="text-xs mt-1 text-red-600">请确保网页与 locations.json 处于同一文件夹，并且通过本地服务器 (例如 Live Server 或 npx serve) 运行。</p>
+          </div>`;
       }
     }
 
-    function renderCategoryFilters() {
-      const categories = ["全部", ...new Set(travelData.locations.map(l => l.category))];
-      const container = document.getElementById("category-filters");
+    function initApp() {
+      setupCategoryFilters();
+      renderLocations();
+      renderItinerary();
+    }
+
+    // Setup Category Buttons
+    function setupCategoryFilters() {
+      const categories = ['all', ...new Set(appData.locations.map(loc => loc.category))];
+      const container = document.getElementById('category-filters');
       
-      container.innerHTML = categories.map(cat => `
-        <button onclick="selectCategory('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
-          cat === selectedCategory ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-        }">
-          ${cat}
-        </button>
-      `).join('');
+      container.innerHTML = categories.map(cat => {
+        const isAll = cat === 'all';
+        const label = isAll ? '全部景点' : cat;
+        return `
+          <button onclick="setCategory('${cat}')" data-cat="${cat}"
+            class="cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition ${isAll ? 'bg-red-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+            ${label}
+          </button>
+        `;
+      }).join('');
     }
 
-    function selectCategory(cat) {
-      selectedCategory = cat;
-      renderCategoryFilters();
+    // Filter Trigger
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = 'cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-red-600 text-white shadow-sm';
+        } else {
+          btn.className = 'cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-slate-100 text-slate-600 hover:bg-slate-200';
+        }
+      });
       filterLocations();
     }
 
     function filterLocations() {
-      const query = document.getElementById("search-input").value.toLowerCase();
-      const filtered = travelData.locations.filter(loc => {
-        const matchesCategory = selectedCategory === "全部" || loc.category === selectedCategory;
-        const matchesSearch = loc.name.toLowerCase().includes(query) || loc.address.toLowerCase().includes(query) || loc.description.toLowerCase().includes(query);
-        return matchesCategory && matchesSearch;
-      });
-      renderLocations(filtered);
+      searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+      renderLocations();
     }
 
-    function renderLocations(locations) {
-      const grid = document.getElementById("locations-grid");
-      if (locations.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400">未找到相关景点</div>`;
+    // Render Location Cards
+    function renderLocations() {
+      const grid = document.getElementById('locations-grid');
+      const emptyState = document.getElementById('no-locations');
+
+      const filtered = appData.locations.filter(loc => {
+        const matchesCategory = currentCategory === 'all' || loc.category === currentCategory;
+        const matchesSearch = loc.name.toLowerCase().includes(searchQuery) ||
+                              loc.address.toLowerCase().includes(searchQuery) ||
+                              loc.description.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
         return;
       }
 
-      grid.innerHTML = locations.map(loc => `
-        <div onclick="openModal('${loc.id}')" class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-semibold">${loc.category}</span>
-              <span class="text-xs text-slate-400"><i class="fa-solid fa-city mr-1"></i>${loc.city}</span>
+      emptyState.classList.add('hidden');
+      grid.innerHTML = filtered.map(loc => `
+        <div onclick="openModal('${loc.id}')" 
+          class="group bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl border border-slate-100 hover:border-red-100 transition-all duration-300 cursor-pointer flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="bg-red-50 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-lg border border-red-100">
+                ${loc.category}
+              </span>
+              <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-city mr-1"></i>${loc.city}</span>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 group-hover:text-rose-500 transition-colors">${loc.name}</h3>
-            <p class="text-xs text-slate-500 flex items-start space-x-1">
-              <i class="fa-solid fa-location-dot text-slate-400 mt-0.5"></i>
-              <span class="line-clamp-1">${loc.address}</span>
+            
+            <h3 class="text-lg font-bold text-slate-800 group-hover:text-red-600 transition-colors line-clamp-1 mb-2">
+              ${loc.name}
+            </h3>
+            
+            <p class="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">
+              ${loc.description}
             </p>
-            <p class="text-sm text-slate-600 line-clamp-3 leading-relaxed">${loc.description}</p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-50 flex justify-end text-xs font-semibold text-rose-500 group-hover:translate-x-1 transition-transform">
-            查看详情 <i class="fa-solid fa-arrow-right ml-1 self-center"></i>
+
+          <div class="pt-3 border-t border-slate-50 flex items-center justify-between text-xs text-slate-400">
+            <span class="truncate max-w-[200px]"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>${loc.address}</span>
+            <span class="text-red-500 font-medium group-hover:translate-x-1 transition-transform flex items-center gap-1">
+              详情 <i class="fa-solid fa-arrow-right"></i>
+            </span>
           </div>
         </div>
       `).join('');
     }
 
-    function renderItinerary(itinerary) {
-      const container = document.getElementById("itinerary-timeline");
+    // Render Itinerary Timeline
+    function renderItinerary() {
+      const container = document.getElementById('itinerary-container');
 
-      container.innerHTML = itinerary.map(day => `
-        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-6">
-          <div class="flex items-center space-x-3 pb-4 border-b border-slate-100">
-            <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm">
-              ${day.day}
+      container.innerHTML = appData.itinerary.map(day => `
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center gap-3 pb-4 mb-6 border-b border-slate-100">
+            <div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-xl text-sm">
+              Day ${day.day}
             </div>
-            <h3 class="text-lg font-bold text-slate-900">${day.title}</h3>
+            <h3 class="text-lg font-bold text-slate-800">${day.title}</h3>
           </div>
 
-          <div class="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+          <div class="relative pl-6 border-l-2 border-slate-100 space-y-6">
             ${day.steps.map(step => {
-              const location = travelData.locations.find(l => l.id === step.locationId);
-              let typeClass = 'badge-poi';
-              let typeLabel = '景点';
-              if(step.type === 'Food') { typeClass = 'badge-food'; typeLabel = '美食'; }
-              if(step.type === 'Transport') { typeClass = 'badge-transport'; typeLabel = '交通'; }
-
+              const locationObj = step.locationId ? appData.locations.find(l => l.id === step.locationId) : null;
+              
               return `
                 <div class="relative group">
-                  <div class="absolute -left-[19px] top-1 w-3 h-3 rounded-full bg-white border-2 border-rose-500"></div>
-                  <div class="bg-slate-50 rounded-xl p-4 space-y-2 border border-slate-100">
-                    <div class="flex items-center justify-between flex-wrap gap-2">
-                      <div class="flex items-center space-x-2">
-                        <span class="text-xs font-bold text-slate-400"><i class="fa-regular fa-clock mr-1"></i>${step.time}</span>
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${typeClass}">${typeLabel}</span>
+                  <!-- Timeline Node dot -->
+                  <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-white border-4 border-red-500"></div>
+
+                  <div class="bg-slate-50 hover:bg-slate-100/80 rounded-xl p-4 transition border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono text-xs font-semibold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">
+                          ${step.time}
+                        </span>
+                        <span class="text-xs text-slate-400 px-2 py-0.5 rounded bg-white border">
+                          ${step.type}
+                        </span>
                       </div>
-                      ${location ? `
-                        <button onclick="openModal('${location.id}')" class="text-xs text-rose-500 hover:underline font-medium">
-                          <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>查看地标
-                        </button>
-                      ` : ''}
+                      <h4 class="font-bold text-slate-800 text-base">
+                        ${step.activity}
+                      </h4>
+                      ${step.notes ? `<p class="text-xs text-slate-500"><i class="fa-regular fa-lightbulb text-amber-500 mr-1"></i>${step.notes}</p>` : ''}
                     </div>
-                    <h4 class="font-bold text-slate-800 text-base">${step.activity}</h4>${step.notes ? `<p class="text-xs text-slate-500"><i class="fa-regular fa-lightbulb mr-1 text-amber-500"></i>${step.notes}</p>` : ''}
+
+                    ${step.locationId ? `
+                      <button onclick="openModal('${step.locationId}')" 
+                        class="self-start sm:self-center bg-white hover:bg-red-50 text-red-600 hover:text-red-700 border border-red-200 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                        <i class="fa-solid fa-circle-info"></i> 查看景点详情
+                      </button>
+                    ` : ''}
                   </div>
                 </div>
               `;
@@ -236,29 +318,60 @@
       `).join('');
     }
 
-    function openModal(locationId) {
-      const loc = travelData.locations.find(l => l.id === locationId);
-      if (!loc) return;
+    // Modal Control
+    function openModal(id) {
+      const loc = appData.locations.find(item => item.id === id);
+      
+      if (!loc) {
+        alert("未找到该景点的详细数据");
+        return;
+      }
 
-      document.getElementById("modal-category").innerText = loc.category;
-      document.getElementById("modal-title").innerText = loc.name;
-      document.getElementById("modal-address").innerText = loc.address;
-      document.getElementById("modal-description").innerText = loc.description;
+      document.getElementById('modal-name').innerText = loc.name;
+      document.getElementById('modal-category').innerText = loc.category;
+      document.getElementById('modal-city').innerText = loc.city;
+      document.getElementById('modal-address').innerText = loc.address;
+      document.getElementById('modal-description').innerText = loc.description;
+      document.getElementById('modal-folder').innerText = loc.folder;
 
-      const backdrop = document.getElementById("modal-backdrop");
-      backdrop.classList.remove("hidden");
-      setTimeout(() => {
-        backdrop.classList.remove("opacity-0");
-        backdrop.firstElementChild.classList.remove("scale-95");
-      }, 10);
+      const modal = document.getElementById('location-modal');
+      modal.classList.remove('hidden');
     }
 
     function closeModal() {
-      const backdrop = document.getElementById("modal-backdrop");
-      backdrop.classList.add("opacity-0");
-      backdrop.firstElementChild.classList.add("scale-95");
-      setTimeout(() => { backdrop.classList.add("hidden"); }, 300);
+      document.getElementById('location-modal').classList.add('hidden');
     }
+
+    // Tab Navigation
+    function switchTab(tab) {
+      const locationsView = document.getElementById('view-locations');
+      const itineraryView = document.getElementById('view-itinerary');
+      const btnLocations = document.getElementById('nav-locations');
+      const btnItinerary = document.getElementById('nav-itinerary');
+
+      if (tab === 'locations') {
+        locationsView.classList.remove('hidden');
+        itineraryView.classList.add('hidden');
+        btnLocations.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm";
+        btnItinerary.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100";
+      } else {
+        locationsView.classList.add('hidden');
+        itineraryView.classList.remove('hidden');
+        btnItinerary.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm";
+        btnLocations.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100";
+      }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('location-modal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>
 </html>
