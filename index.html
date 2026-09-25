@@ -97,7 +97,6 @@
     let locationPhotoMap = {};
     let currentPhotos = [];
     let currentPhotoIdx = 0;
-    let repoFileList = [];
 
     async function init() {
       try {
@@ -111,88 +110,78 @@
 
       renderCityFilter();
       renderItinerary();
-      
-      // 1. 动态获取仓库中的全部文件列表（不受 GitHub API 限流影响）
-      await fetchRepoFiles();
-      
-      // 2. 自动匹配文件夹下的所有照片
-      processLocationFolders();
-
+      await loadAllPhotos();
       renderLocations();
     }
 
-    function getGitHubRepoInfo() {
-      if (appData.github && appData.github.owner && appData.github.repo) {
-        return appData.github;
-      }
-      return { owner: "cronosyong7k", repo: "cronosyong7k-jpg" };
-    }
-
-    // 通过 jsDelivr API 一次性动态获取整个仓库文件树（高并发、零限流、CORS 友好）
-    async function fetchRepoFiles() {
-      const repoInfo = getGitHubRepoInfo();
-      
-      // jsDelivr CDN Data API
-      try {
-        const url = `https://data.jsdelivr.com/v1/packages/gh/${repoInfo.owner}/${repoInfo.repo}@HEAD?structure=flat`;
-        const res = await fetch(url);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data.files)) {
-            repoFileList = data.files.map(f => f.name.replace(/^\//, ''));
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn('jsDelivr API 异常，切换 GitHub Git Trees 备用接口', e);
-      }
-
-      // 备用方案：GitHub Git Trees API
-      try {
-        const treeUrl = `https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}/git/trees/main?recursive=1`;
-        const res = await fetch(treeUrl);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data.tree)) {
-            repoFileList = data.tree.filter(item => item.type === 'blob').map(item => item.path);
-            return;
-          }
-        }
-      } catch (e) {
-        console.error('GitHub Trees API 获取失败', e);
-      }
-    }
-
-    // 转义路径中的特殊字符（如空格、括号）
     function safeEncodePath(path) {
       return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
     }
 
-    // 动态匹配文件夹与文件名
-    function processLocationFolders() {
-      const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+    // 检查图片文件是否存在
+    function checkImageExists(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      });
+    }
 
-      appData.locations.forEach(item => {
+    // 自动扫描识别 img1.jpeg, img2.jpeg, img3.jpg, 1.png 等各种组合
+    async function autoProbeLocationFolder(folder) {
+      const cleanFolder = folder.replace(/^\//, '').replace(/\/$/, '');
+      
+      // 常见的前缀组合
+      const prefixes = ['img', '', 'image', 'photo', 'IMG_'];
+      // 常见的扩展名组合
+      const exts = ['jpeg', 'jpg', 'png', 'webp', 'JPEG', 'JPG', 'PNG'];
+
+      const probePromises = [];
+
+      // 最多探测 30 张图片
+      for (let i = 1; i <= 30; i++) {
+        probePromises.push((async () => {
+          for (let prefix of prefixes) {
+            for (let ext of exts) {
+              const testPath = `./${cleanFolder}/${prefix}${i}.${ext}`;
+              const ok = await checkImageExists(testPath);
+              if (ok) return { index: i, path: testPath };
+            }
+          }
+          return null;
+        })());
+      }
+
+      const results = await Promise.all(probePromises);
+      return results
+        .filter(r => r !== null)
+        .sort((a, b) => a.index - b.index)
+        .map(r => r.path);
+    }
+
+    async function loadAllPhotos() {
+      const promises = appData.locations.map(async (item) => {
+        // 方式 1：如果 JSON 中写了 images 文件列表
+        if (item.images && Array.isArray(item.images) && item.images.length > 0) {
+          locationPhotoMap[item.id] = item.images.map(img => `./${safeEncodePath(img)}`);
+          return;
+        }
+
+        // 方式 2：根据 folder 智能自动匹配路径下的图片
         if (item.folder) {
-          const cleanFolder = item.folder.replace(/^\//, '').replace(/\/$/, '').toLowerCase();
-          
-          // 动态筛选匹配当前文件夹下的所有图片
-          const matchedFiles = repoFileList.filter(filePath => {
-            const lowerPath = filePath.toLowerCase();
-            const isInFolder = lowerPath.startsWith(cleanFolder + '/');
-            const isImage = imageExts.some(ext => lowerPath.endsWith(ext));
-            return isInFolder && isImage;
-          });
-
-          if (matchedFiles.length > 0) {
-            locationPhotoMap[item.id] = matchedFiles.map(path => `./${safeEncodePath(path)}`);
+          const probedPhotos = await autoProbeLocationFolder(item.folder);
+          if (probedPhotos.length > 0) {
+            locationPhotoMap[item.id] = probedPhotos;
             return;
           }
         }
 
-        // 默认保底占位
+        // 默认保底占位图
         locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
       });
+
+      await Promise.all(promises);
     }
 
     function switchTab(tab) {
