@@ -99,7 +99,7 @@
 
   </main>
 
-  <!-- Location Detail Modal (Enlarged to max-w-4xl) -->
+  <!-- Location Detail Modal -->
   <div id="location-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden transform transition-all flex flex-col max-h-[92vh]">
       
@@ -118,43 +118,21 @@
       <!-- Modal Body -->
       <div class="p-6 sm:p-8 space-y-6 overflow-y-auto">
         
-        <!-- Large Photo Carousel Section -->
+        <!-- Grid Gallery Section -->
         <div>
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              <i class="fa-regular fa-images text-red-500 mr-1.5"></i>景点相册
+              <i class="fa-regular fa-images text-red-500 mr-1.5"></i>景点图库
             </span>
-            <span class="text-xs text-slate-400 font-normal">点击照片可全屏预览</span>
+            <span class="text-xs text-slate-400 font-normal">点击缩略图放大预览，支持翻页查看</span>
           </div>
 
-          <!-- Larger Carousel Frame -->
-          <div id="carousel-container" class="relative group w-full bg-slate-950 rounded-2xl overflow-hidden h-[320px] sm:h-[480px] shadow-lg">
-            
-            <!-- Slides Track -->
-            <div id="carousel-slides" class="w-full h-full relative">
-              <!-- Slides inserted dynamically -->
-            </div>
-
-            <!-- Navigation Buttons -->
-            <button id="carousel-prev" onclick="changeSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white rounded-full w-11 h-11 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20 shadow-md">
-              <i class="fa-solid fa-chevron-left text-lg"></i>
-            </button>
-            <button id="carousel-next" onclick="changeSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white rounded-full w-11 h-11 flex items-center justify-center transition opacity-0 group-hover:opacity-100 focus:opacity-100 z-20 shadow-md">
-              <i class="fa-solid fa-chevron-right text-lg"></i>
-            </button>
-
-            <!-- Bottom Indicator Dots -->
-            <div id="carousel-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-md px-4 py-1.5 rounded-full z-20">
-              <!-- Dots inserted dynamically -->
-            </div>
-
-            <!-- Slide Counter Badge -->
-            <div id="carousel-counter" class="absolute top-4 right-4 bg-black/70 text-white text-xs font-mono px-3 py-1 rounded-full backdrop-blur-md z-20">
-              1 / 1
-            </div>
+          <!-- Thumbnail Grid -->
+          <div id="gallery-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <!-- Dynamically populated thumbnails -->
           </div>
 
-          <p id="no-gallery-msg" class="hidden text-sm text-slate-400 italic py-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+          <p id="no-gallery-msg" class="hidden text-sm text-slate-400 italic py-6 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
             暂无相册照片 (`img1.jpg` 或 `img1.jpeg`)
           </p>
         </div>
@@ -191,10 +169,34 @@
     </div>
   </div>
 
-  <!-- Image Lightbox Modal -->
-  <div id="lightbox-modal" onclick="closeLightbox()" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 cursor-zoom-out">
-    <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white/70 hover:text-white text-3xl font-bold p-2">&times;</button>
-    <img id="lightbox-img" src="" alt="Full Preview" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl">
+  <!-- Interactive Lightbox Modal (Click to View Next/Prev) -->
+  <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 select-none">
+    
+    <!-- Close Button -->
+    <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white/70 hover:text-white text-3xl font-bold p-3 z-30 transition">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- Prev Button -->
+    <button id="lightbox-prev" onclick="changeLightboxSlide(-1)" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl transition z-30 border border-white/10 shadow-lg">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <!-- Next Button -->
+    <button id="lightbox-next" onclick="changeLightboxSlide(1)" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl transition z-30 border border-white/10 shadow-lg">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <!-- Lightbox Main Image & Counter -->
+    <div class="relative max-w-full max-h-[90vh] flex flex-col items-center justify-center">
+      <img id="lightbox-img" src="" alt="Preview" onclick="changeLightboxSlide(1)" title="点击查看下一张" class="max-w-full max-h-[82vh] object-contain rounded-lg shadow-2xl cursor-pointer">
+      
+      <!-- Counter & Info -->
+      <div class="flex items-center gap-3 mt-3">
+        <span id="lightbox-counter" class="text-white/90 text-xs font-mono bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10"></span>
+        <span class="text-white/50 text-xs hidden sm:inline"><i class="fa-solid fa-keyboard mr-1"></i>可用左右方向键 ← → 切换</span>
+      </div>
+    </div>
   </div>
 
   <!-- JavaScript Logic -->
@@ -203,9 +205,9 @@
     let currentCategory = 'all';
     let searchQuery = '';
     
-    // Carousel state
-    let currentModalPhotos = [];
-    let currentSlideIndex = 0;
+    // Gallery state
+    let currentGalleryPhotos = [];
+    let currentLightboxIndex = 0;
 
     // Fetch locations.json from the same directory
     async function loadData() {
@@ -402,7 +404,7 @@
       `).join('');
     }
 
-    // Helper to probe if an image URL exists
+    // Helper to probe image presence efficiently
     function checkImageExists(url) {
       return new Promise(resolve => {
         const img = new Image();
@@ -412,7 +414,7 @@
       });
     }
 
-    // Modal Control & Carousel Initialization
+    // Modal Control & Parallel Fast Photo Probe
     async function openModal(id) {
       const loc = appData.locations.find(item => item.id === id);
       
@@ -431,130 +433,115 @@
       const modal = document.getElementById('location-modal');
       modal.classList.remove('hidden');
 
-      // Build & display photo carousel
-      await loadCarouselPhotos(loc);
+      // Load photos into grid using parallel probes
+      await loadGalleryPhotos(loc);
     }
 
-    async function loadCarouselPhotos(loc) {
-      const container = document.getElementById('carousel-container');
+    async function loadGalleryPhotos(loc) {
+      const galleryContainer = document.getElementById('gallery-container');
       const noMsg = document.getElementById('no-gallery-msg');
-      const slidesTrack = document.getElementById('carousel-slides');
-      const indicators = document.getElementById('carousel-indicators');
-      const counter = document.getElementById('carousel-counter');
-      const prevBtn = document.getElementById('carousel-prev');
-      const nextBtn = document.getElementById('carousel-next');
 
-      // Reset carousel state
-      slidesTrack.innerHTML = `
-        <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 text-sm">
-          <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-red-500"></i>
-          <span>正在加载照片...</span>
+      galleryContainer.innerHTML = `
+        <div class="col-span-full py-8 flex items-center justify-center text-slate-400 text-xs gap-2">
+          <i class="fa-solid fa-circle-notch fa-spin text-red-500 text-base"></i> 快速加载图片库...
         </div>`;
-      indicators.innerHTML = '';
-      currentModalPhotos = [];
-      currentSlideIndex = 0;
+      
+      currentGalleryPhotos = [];
 
-      // Probe img1 to img10 (.jpg then .jpeg)
+      // Probe img1 to img10 simultaneously in parallel (Promise.all)
+      const probePromises = [];
       for (let i = 1; i <= 10; i++) {
-        let validUrl = await checkImageExists(`${loc.folder}/img${i}.jpg`);
-        if (!validUrl) {
-          validUrl = await checkImageExists(`${loc.folder}/img${i}.jpeg`);
-        }
-        if (validUrl) {
-          currentModalPhotos.push(validUrl);
-        }
+        probePromises.push(
+          (async () => {
+            let validUrl = await checkImageExists(`${loc.folder}/img${i}.jpg`);
+            if (!validUrl) {
+              validUrl = await checkImageExists(`${loc.folder}/img${i}.jpeg`);
+            }
+            return { index: i, url: validUrl };
+          })()
+        );
       }
 
-      if (currentModalPhotos.length === 0) {
-        container.classList.add('hidden');
+      const results = await Promise.all(probePromises);
+
+      // Keep only valid images ordered by index
+      currentGalleryPhotos = results
+        .filter(r => r.url !== null)
+        .sort((a, b) => a.index - b.index)
+        .map(r => r.url);
+
+      if (currentGalleryPhotos.length === 0) {
+        galleryContainer.classList.add('hidden');
         noMsg.classList.remove('hidden');
         return;
       }
 
-      container.classList.remove('hidden');
+      galleryContainer.classList.remove('hidden');
       noMsg.classList.add('hidden');
 
-      // Render Slides
-      slidesTrack.innerHTML = currentModalPhotos.map((url, idx) => `
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-500 ease-in-out ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} flex items-center justify-center bg-black/40">
-          <img src="${url}" alt="Photo ${idx+1}" onclick="openLightbox('${url}')" class="w-full h-full object-cover cursor-zoom-in">
+      // Render Thumbnail Grid
+      galleryContainer.innerHTML = currentGalleryPhotos.map((url, idx) => `
+        <div onclick="openLightbox(${idx})" 
+             class="group relative aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all border border-slate-200/80">
+          <img src="${url}" alt="Gallery ${idx + 1}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+            <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 transition-opacity text-xl drop-shadow-md"></i>
+          </div>
+          <span class="absolute bottom-1.5 right-1.5 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm opacity-80">
+            #${idx + 1}
+          </span>
         </div>
       `).join('');
-
-      // Render Controls & Indicators
-      if (currentModalPhotos.length > 1) {
-        indicators.classList.remove('hidden');
-        prevBtn.classList.remove('hidden');
-        nextBtn.classList.remove('hidden');
-        counter.classList.remove('hidden');
-
-        indicators.innerHTML = currentModalPhotos.map((_, idx) => `
-          <button onclick="goToSlide(${idx})" class="dot-btn h-2.5 rounded-full transition-all ${idx === 0 ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80 w-2.5'}"></button>
-        `).join('');
-      } else {
-        indicators.classList.add('hidden');
-        prevBtn.classList.add('hidden');
-        nextBtn.classList.add('hidden');
-        counter.classList.add('hidden');
-      }
-
-      updateCarouselUI();
-    }
-
-    function changeSlide(direction) {
-      if (currentModalPhotos.length <= 1) return;
-      currentSlideIndex = (currentSlideIndex + direction + currentModalPhotos.length) % currentModalPhotos.length;
-      updateCarouselUI();
-    }
-
-    function goToSlide(index) {
-      currentSlideIndex = index;
-      updateCarouselUI();
-    }
-
-    function updateCarouselUI() {
-      const slides = document.querySelectorAll('.carousel-slide');
-      const dots = document.querySelectorAll('.dot-btn');
-      const counter = document.getElementById('carousel-counter');
-
-      slides.forEach((slide, idx) => {
-        if (idx === currentSlideIndex) {
-          slide.classList.remove('opacity-0', 'z-0');
-          slide.classList.add('opacity-100', 'z-10');
-        } else {
-          slide.classList.remove('opacity-100', 'z-10');
-          slide.classList.add('opacity-0', 'z-0');
-        }
-      });
-
-      dots.forEach((dot, idx) => {
-        if (idx === currentSlideIndex) {
-          dot.className = 'dot-btn h-2.5 rounded-full transition-all bg-white w-6';
-        } else {
-          dot.className = 'dot-btn h-2.5 rounded-full transition-all bg-white/50 hover:bg-white/80 w-2.5';
-        }
-      });
-
-      if (counter) {
-        counter.innerText = `${currentSlideIndex + 1} / ${currentModalPhotos.length}`;
-      }
     }
 
     function closeModal() {
       document.getElementById('location-modal').classList.add('hidden');
     }
 
-    // Lightbox Control
-    function openLightbox(src) {
-      const lightbox = document.getElementById('lightbox-modal');
-      const lightboxImg = document.getElementById('lightbox-img');
-      lightboxImg.src = src;
-      lightbox.classList.remove('hidden');
+    // Lightbox Controls
+    function openLightbox(index) {
+      currentLightboxIndex = index;
+      updateLightboxUI();
+      document.getElementById('lightbox-modal').classList.remove('hidden');
     }
 
     function closeLightbox() {
       document.getElementById('lightbox-modal').classList.add('hidden');
     }
+
+    function changeLightboxSlide(direction) {
+      if (currentGalleryPhotos.length <= 1) return;
+      currentLightboxIndex = (currentLightboxIndex + direction + currentGalleryPhotos.length) % currentGalleryPhotos.length;
+      updateLightboxUI();
+    }
+
+    function updateLightboxUI() {
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-counter');
+      const prevBtn = document.getElementById('lightbox-prev');
+      const nextBtn = document.getElementById('lightbox-next');
+
+      img.src = currentGalleryPhotos[currentLightboxIndex];
+      counter.innerText = `${currentLightboxIndex + 1} / ${currentGalleryPhotos.length}`;
+
+      if (currentGalleryPhotos.length > 1) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+      } else {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+      }
+    }
+
+    // Keyboard Arrow Navigation for Lightbox
+    document.addEventListener('keydown', (e) => {
+      const lightbox = document.getElementById('lightbox-modal');
+      if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'ArrowLeft') changeLightboxSlide(-1);
+        if (e.key === 'ArrowRight') changeLightboxSlide(1);
+        if (e.key === 'Escape') closeLightbox();
+      }
+    });
 
     // Tab Navigation
     function switchTab(tab) {
@@ -576,7 +563,7 @@
       }
     }
 
-    // Close modal when clicking outside
+    // Close modal when clicking outside modal box
     window.onclick = function(event) {
       const modal = document.getElementById('location-modal');
       if (event.target === modal) {
