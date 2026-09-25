@@ -1,74 +1,36 @@
 {
+  "github": {
+    "owner": "cronosyong7k",
+    "repo": "cronosyong7k-jpg"
+  },
   "locations": [
     {
-      "id": "1",
-      "name": "洪崖洞民俗风貌区",
+      "id": "cq_lzb",
+      "name": "李子坝轻轨穿楼",
       "city": "重庆",
-      "category": "热门地标",
-      "address": "重庆市渝中区嘉陵江滨江路88号",
-      "description": "最具代表性的巴渝吊脚楼建筑群，夜景极其震撼，仿佛《千与千寻》现实版。",
-      "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada",
-      "mapsUrl": "https://maps.google.com/?q=Hongyadong+Chongqing"
-    },
-    {
-      "id": "2",
-      "name": "李子坝轻轨穿楼1",
-      "city": "重庆",
-      "category": "奇观景点",
+      "category": "景点",
       "address": "重庆市渝中区李子坝正街",
-      "description": "重庆轨道交通2号线独有奇观，轻轨列车直接穿过19层高层居民楼。",
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/%E6%9D%8E%E5%AD%90%E5%9D%9D%E7%AB%99%E8%BD%BB%E8%BD%A8%E7%A9%BF%E6%A5%BC_0023.png",
-      "mapsUrl": "https://maps.google.com/?q=Liziba+Station"
+      "description": "著名的单轨穿楼景观，轻轨列车直接穿过一栋19层的居民楼。",
+      "folder": "images/cq/lzb"
     },
     {
-      "id": "3",
-      "name": "解放碑步行街",
+      "id": "cq_hyd",
+      "name": "洪崖洞",
       "city": "重庆",
-      "category": "城市商业",
-      "address": "重庆市渝中区民族路",
-      "description": "重庆繁华核心商圈，集美食、购物与地标建筑于一体。",
-      "imageUrl": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d",
-      "mapsUrl": "https://maps.google.com/?q=Jiefangbei+Chongqing"
-    },
-    {
-      "id": "4",
-      "name": "成都大熊猫繁育研究基地",
-      "city": "成都",
-      "category": "自然动物",
-      "address": "成都市成华区熊猫大道1375号",
-      "description": "全球最大的大熊猫保护与繁育基地，近距离观看活泼的大熊猫。",
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Chengdu_Research_Base_Eingang.jpg",
-      "mapsUrl": "https://maps.google.com/?q=Chengdu+Panda+Base"
-    },
-    {
-      "id": "5",
-      "name": "宽窄巷子",
-      "city": "成都",
-      "category": "休闲街区",
-      "address": "成都市青羊区长顺上街",
-      "description": "由宽巷子、窄巷子组成的清末民初古街，体验慢生活与盖碗茶文化。",
-      "imageUrl": "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f",
-      "mapsUrl": "https://maps.google.com/?q=Kuanzhai+Alley"
+      "category": "地标",
+      "address": "重庆市渝中区嘉陵江滨江路88号",
+      "description": "沿嘉陵江而建的吊脚楼建筑群，绝美夜景极其壮观。",
+      "folder": "images/cq/hyd"
     }
   ],
   "itinerary": [
     {
-      "day": "Day 1",
-      "title": "重庆魔幻山城一日游",
+      "day": "第 1 天",
+      "title": "重庆轻轨与夜景",
       "city": "重庆",
       "steps": [
-        { "time": "09:30 AM", "locationId": "2", "activity": "观看李子坝轻轨穿楼奇观并拍照打卡" },
-        { "time": "01:00 PM", "locationId": "3", "activity": "逛解放碑步行街，品尝重庆火锅与酸辣粉" },
-        { "time": "07:00 PM", "locationId": "1", "activity": "游览洪崖洞夜景，欣赏嘉陵江夜色" }
-      ]
-    },
-    {
-      "day": "Day 2",
-      "title": "成都慢生活熊猫一日游",
-      "city": "成都",
-      "steps": [
-        { "time": "08:30 AM", "locationId": "4", "activity": "早上前往大熊猫基地，观看大熊猫进食与活动" },
-        { "time": "02:30 PM", "locationId": "5", "activity": "漫步宽窄巷子，体验成都川剧变脸与盖碗茶" }
+        { "time": "上午", "locationId": "cq_lzb", "activity": "观赏李子坝轻轨穿楼。" },
+        { "time": "傍晚", "locationId": "cq_hyd", "activity": "游览洪崖洞吊脚楼夜景。" }
       ]
     }
   ]
