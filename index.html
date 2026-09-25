@@ -4,15 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>重庆旅行指南 | Chongqing Travel Guide</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-    }
+    .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
     .badge-poi { background-color: #e0f2fe; color: #0369a1; }
     .badge-food { background-color: #fef3c7; color: #b45309; }
     .badge-transport { background-color: #f3e8ff; color: #6b21a8; }
@@ -20,7 +15,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <!-- Header / Navigation -->
+  <!-- Header -->
   <header class="sticky top-0 z-50 glass-nav border-b border-slate-200">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
@@ -33,7 +28,6 @@
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
       <nav class="flex bg-slate-100 p-1 rounded-xl text-sm font-medium">
         <button id="nav-locations" onclick="switchTab('locations')" class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 bg-white text-slate-900 shadow-sm">
           <i class="fa-solid fa-map-location-dot text-rose-500"></i>
@@ -47,30 +41,20 @@
     </div>
   </header>
 
-  <!-- Main Content Area -->
+  <!-- Main Content -->
   <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
 
     <!-- LOCATIONS VIEW -->
     <section id="view-locations" class="space-y-6">
-      <!-- Search & Filter Controls -->
       <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
         <div class="relative w-full sm:w-80">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
           <input type="text" id="search-input" oninput="filterLocations()" placeholder="搜索景点或地址..." class="w-full pl-10 pr-4 py-2 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
         </div>
-        <div class="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0" id="category-filters">
-          <!-- Dynamically populated categories -->
-        </div>
+        <div class="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0" id="category-filters"></div>
       </div>
 
-      <!-- Locations Grid -->
-      <div id="locations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Loading State -->
-        <div class="col-span-full text-center py-12 text-slate-400">
-          <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
-          <p>正在加载数据...</p>
-        </div>
-      </div>
+      <div id="locations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
     <!-- ITINERARY VIEW -->
@@ -80,14 +64,12 @@
         <p class="text-rose-100 text-sm">串联魔幻九宫格火锅、崖壁步道与璀璨夜景</p>
       </div>
 
-      <div id="itinerary-timeline" class="space-y-8">
-        <!-- Itinerary days injected via JS -->
-      </div>
+      <div id="itinerary-timeline" class="space-y-8"></div>
     </section>
 
   </main>
 
-  <!-- Location Detail Modal -->
+  <!-- Modal -->
   <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4" onclick="closeModal()">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 space-y-4" onclick="event.stopPropagation()">
       <div class="flex justify-between items-start">
@@ -112,31 +94,27 @@
     let travelData = { locations: [], itinerary: [] };
     let selectedCategory = "全部";
 
-    // Load Data from locations.json in the same folder
+    // Fetch JSON from the same folder
     document.addEventListener("DOMContentLoaded", async () => {
       try {
         const response = await fetch('./locations.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error("HTTP Status: " + response.status);
         travelData = await response.json();
 
         renderCategoryFilters();
         renderLocations(travelData.locations);
         renderItinerary(travelData.itinerary);
       } catch (error) {
-        console.error("加载 locations.json 失败:", error);
+        console.error("Fetch Error:", error);
         document.getElementById("locations-grid").innerHTML = `
           <div class="col-span-full p-6 text-center text-rose-600 bg-rose-50 rounded-2xl border border-rose-100">
-            <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
             <p class="font-bold text-base">无法读取 locations.json</p>
-            <p class="text-xs text-slate-500 mt-1">请确保 <code class="bg-rose-100 px-1 py-0.5 rounded text-rose-700">locations.json</code> 与本 HTML 文件放在同一目录下，并通过本地服务器打开。</p>
+            <p class="text-xs text-slate-500 mt-1">如果您是在电脑上直接双击打开 HTML，请用 VS Code 的 Live Server 运行，或者发布到 GitHub Pages 查看。</p>
           </div>
         `;
       }
     });
 
-    // Switch Navigation Tabs
     function switchTab(tab) {
       const locBtn = document.getElementById("nav-locations");
       const itiBtn = document.getElementById("nav-itinerary");
@@ -156,30 +134,25 @@
       }
     }
 
-    // Render Categories
     function renderCategoryFilters() {
       const categories = ["全部", ...new Set(travelData.locations.map(l => l.category))];
       const container = document.getElementById("category-filters");
       
       container.innerHTML = categories.map(cat => `
         <button onclick="selectCategory('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
-          cat === selectedCategory 
-            ? 'bg-rose-500 text-white shadow-sm' 
-            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+          cat === selectedCategory ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
         }">
           ${cat}
         </button>
       `).join('');
     }
 
-    // Select Category
     function selectCategory(cat) {
       selectedCategory = cat;
       renderCategoryFilters();
       filterLocations();
     }
 
-    // Filter Locations
     function filterLocations() {
       const query = document.getElementById("search-input").value.toLowerCase();
       const filtered = travelData.locations.filter(loc => {
@@ -190,7 +163,6 @@
       renderLocations(filtered);
     }
 
-    // Render Locations Cards
     function renderLocations(locations) {
       const grid = document.getElementById("locations-grid");
       if (locations.length === 0) {
@@ -219,7 +191,6 @@
       `).join('');
     }
 
-    // Render Itinerary Timeline
     function renderItinerary(itinerary) {
       const container = document.getElementById("itinerary-timeline");
 
@@ -265,7 +236,6 @@
       `).join('');
     }
 
-    // Modal Control Functions
     function openModal(locationId) {
       const loc = travelData.locations.find(l => l.id === locationId);
       if (!loc) return;
@@ -287,9 +257,7 @@
       const backdrop = document.getElementById("modal-backdrop");
       backdrop.classList.add("opacity-0");
       backdrop.firstElementChild.classList.add("scale-95");
-      setTimeout(() => {
-        backdrop.classList.add("hidden");
-      }, 300);
+      setTimeout(() => { backdrop.classList.add("hidden"); }, 300);
     }
   </script>
 </body>
