@@ -97,6 +97,7 @@
     let locationPhotoMap = {};
     let currentPhotos = [];
     let currentPhotoIdx = 0;
+    let repoFileList = [];
 
     async function init() {
       try {
@@ -105,12 +106,18 @@
           appData = await res.json();
         }
       } catch (e) {
-        console.error('Unable to read locations.json', e);
+        console.error('无法读取 locations.json', e);
       }
 
       renderCityFilter();
       renderItinerary();
-      await loadAllPhotosFromGitHubFolder();
+      
+      // 1. 动态获取仓库中的全部文件列表（不受 GitHub API 限流影响）
+      await fetchRepoFiles();
+      
+      // 2. 自动匹配文件夹下的所有照片
+      processLocationFolders();
+
       renderLocations();
     }
 
@@ -121,41 +128,71 @@
       return { owner: "cronosyong7k", repo: "cronosyong7k-jpg" };
     }
 
+    // 通过 jsDelivr API 一次性动态获取整个仓库文件树（高并发、零限流、CORS 友好）
+    async function fetchRepoFiles() {
+      const repoInfo = getGitHubRepoInfo();
+      
+      // jsDelivr CDN Data API
+      try {
+        const url = `https://data.jsdelivr.com/v1/packages/gh/${repoInfo.owner}/${repoInfo.repo}@HEAD?structure=flat`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.files)) {
+            repoFileList = data.files.map(f => f.name.replace(/^\//, ''));
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('jsDelivr API 异常，切换 GitHub Git Trees 备用接口', e);
+      }
+
+      // 备用方案：GitHub Git Trees API
+      try {
+        const treeUrl = `https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}/git/trees/main?recursive=1`;
+        const res = await fetch(treeUrl);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.tree)) {
+            repoFileList = data.tree.filter(item => item.type === 'blob').map(item => item.path);
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('GitHub Trees API 获取失败', e);
+      }
+    }
+
+    // 转义路径中的特殊字符（如空格、括号）
     function safeEncodePath(path) {
       return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
     }
 
-    async function fetchAllImagesFromFolder(folderPath) {
-      const repoInfo = getGitHubRepoInfo();
-      const apiUrl = `https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}/contents/${folderPath}`;
-      try {
-        const res = await fetch(apiUrl);
-        if (!res.ok) return [];
-        const files = await res.json();
-        if (!Array.isArray(files)) return [];
+    // 动态匹配文件夹与文件名
+    function processLocationFolders() {
+      const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
 
-        const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
-        return files
-          .filter(f => f.type === 'file' && imageExts.some(ext => f.name.toLowerCase().endsWith(ext)))
-          .map(f => `./${safeEncodePath(f.path)}`);
-      } catch (e) {
-        console.error(`Error fetching folder ${folderPath}:`, e);
-        return [];
-      }
-    }
-
-    async function loadAllPhotosFromGitHubFolder() {
-      const promises = appData.locations.map(async (item) => {
+      appData.locations.forEach(item => {
         if (item.folder) {
-          const photos = await fetchAllImagesFromFolder(item.folder);
-          if (photos.length > 0) {
-            locationPhotoMap[item.id] = photos;
+          const cleanFolder = item.folder.replace(/^\//, '').replace(/\/$/, '').toLowerCase();
+          
+          // 动态筛选匹配当前文件夹下的所有图片
+          const matchedFiles = repoFileList.filter(filePath => {
+            const lowerPath = filePath.toLowerCase();
+            const isInFolder = lowerPath.startsWith(cleanFolder + '/');
+            const isImage = imageExts.some(ext => lowerPath.endsWith(ext));
+            return isInFolder && isImage;
+          });
+
+          if (matchedFiles.length > 0) {
+            locationPhotoMap[item.id] = matchedFiles.map(path => `./${safeEncodePath(path)}`);
             return;
           }
         }
+
+        // 默认保底占位
         locationPhotoMap[item.id] = ['https://images.unsplash.com/photo-1548013146-72479768bada'];
       });
-      await Promise.all(promises);
     }
 
     function switchTab(tab) {
