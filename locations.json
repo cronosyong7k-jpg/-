@@ -28,6 +28,7 @@
       "category": "奇观",
       "folder": "images/cq/lzb",
       "address": "重庆市渝中区李子坝正街",
+      "operation_time": "全天开放，店铺营业时间 : 06:30 - 23:00\n列车大约 3-4 分钟一班",
       "description": "亲眼见证轻轨从居民楼中穿墙而过的魔幻景观，是重庆魔幻地形的经典代表。"
     },
     {
@@ -37,6 +38,8 @@
       "category": "体验",
       "folder": "images/cq/cjsd",
       "address": "重庆市渝中区新华路151号",
+      "operation_time": "08:00 - 22:00",
+      "entrance_fee": "单程30元，往返50元\n微信公众号 “长江索道” 在线购票",
       "description": "横跨长江的“空中巴士”，可以从空中俯瞰两岸风光与山城景色，体验独特的过江方式。"
     },
     {
@@ -46,6 +49,8 @@
       "category": "古镇",
       "folder": "images/cq/cqk",
       "address": "重庆市沙坪坝区磁南街1号",
+      "operation_time": "24 小时全天开放.店铺集中在 08:00 - 22:00",
+      "entrance_fee": "免费，节假日“重庆磁器口古镇”公众号进行免费实名预约",
       "description": "千年巴渝古镇，陈麻花和酸辣粉必尝。"
     },
     {
@@ -55,6 +60,7 @@
       "category": "步道",
       "folder": "images/cq/scx",
       "address": "重庆市渝中区南纪门街道山城巷",
+      "operation_time": "亮灯时间： 每天 19:00 – 22:00, 推荐傍晚 18:00 – 19:30",
       "description": "建在悬崖上的栈道与步道，老重庆街巷氛围浓厚，傍晚红灯笼亮起时景色很美。"
     },
     {
@@ -64,6 +70,7 @@
       "category": "文创区",
       "folder": "images/cq/elec",
       "address": "重庆市渝中区鹅岭正街1号",
+      "operation_time": "推荐下午3点至6点前往",
       "description": "文创公园，电影《从你的全世界路过》取景地。"
     },
     {
@@ -73,6 +80,7 @@
       "category": "街区",
       "folder": "images/cq/bxj",
       "address": "重庆市渝中区白象街1-6号",
+      "operation_time": "建议游览时段为 9:00 - 19:00",
       "description": "拍摄长江索道穿楼的最佳地点，充满老重庆母城记忆。"
     },
 
@@ -83,6 +91,8 @@
     "category": "博物馆",
     "folder": "images/cq/sxbwg",
     "address": "重庆市渝中区人民路257号",
+    "operation_time": "09:00 – 17:00（16:30 停止入馆）。每周一闭馆（法定节假日正常开放）。",
+     "entrance_fee": "免费，重庆中国三峡博物馆”公众号/小程序进行实名制分时段预约\n官方志愿者免费讲解，一般上午10:00和下午14:30",
     "description": "首批国家一级博物馆，馆藏丰富，集中展示巴渝文化、三峡文化与城市历史，免费开放。"
   },
   {
@@ -92,6 +102,7 @@
     "category": "街区",
     "folder": "images/cq/sbt",
     "address": "重庆市渝中区中兴路1号",
+    "operation_time": "店铺营业时间为 10:00 – 22:00， 亮灯时间 18:30 – 22:00",    
     "description": "连接重庆上下半城的老街，电影《从你的全世界路过》取景地。"
   },
   {
@@ -101,6 +112,7 @@
     "category": "商业街",
     "folder": "images/cq/gyq",
     "address": "重庆市江北区观音桥步行街",
+    "operation_time": "大部分百货和商店营业时间为 10:00 - 22:00",    
     "description": "潮流商圈，夜市与流行美食丰富。"
   },
   {
@@ -119,6 +131,7 @@
     "category": "地标",
     "folder": "images/cq/ctm",
     "address": "重庆市渝中区接圣街8号",
+    "operation_time": "来福士 10:00 – 22:00",    
     "description": "重庆古城门之一与两江交汇壮观地点，可在此乘坐游轮欣赏两江四岸夜景。"
   },
   {
