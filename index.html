@@ -137,12 +137,33 @@
           </p>
         </div>
 
-        <!-- Address Box -->
-        <div class="flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
-          <i class="fa-solid fa-location-dot text-red-500 text-lg mt-0.5"></i>
-          <div>
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">详细地址</p>
-            <p id="modal-address" class="text-base font-medium text-slate-700 mt-1"></p>
+        <!-- Meta Info Cards Grid (Address, Time, Fee) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Address Box (Always Shown) -->
+          <div class="flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 col-span-1 md:col-span-2">
+            <i class="fa-solid fa-location-dot text-red-500 text-lg mt-0.5 shrink-0"></i>
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">详细地址</p>
+              <p id="modal-address" class="text-base font-medium text-slate-700 mt-1"></p>
+            </div>
+          </div>
+
+          <!-- Operation Time Box (Optional) -->
+          <div id="modal-time-box" class="hidden flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <i class="fa-regular fa-clock text-red-500 text-lg mt-0.5 shrink-0"></i>
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">开放/营业时间</p>
+              <p id="modal-time" class="text-base font-medium text-slate-700 mt-1"></p>
+            </div>
+          </div>
+
+          <!-- Entrance Fee Box (Optional) -->
+          <div id="modal-fee-box" class="hidden flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <i class="fa-solid fa-ticket text-red-500 text-lg mt-0.5 shrink-0"></i>
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">门票价格</p>
+              <p id="modal-fee" class="text-base font-medium text-slate-700 mt-1"></p>
+            </div>
           </div>
         </div>
 
@@ -423,6 +444,24 @@
       document.getElementById('modal-city').innerText = loc.city;
       document.getElementById('modal-address').innerText = loc.address;
       document.getElementById('modal-description').innerText = loc.description;
+
+      // Handle Operation Time (Optional)
+      const timeBox = document.getElementById('modal-time-box');
+      if (loc.operation_time && loc.operation_time.trim() !== '') {
+        document.getElementById('modal-time').innerText = loc.operation_time;
+        timeBox.classList.remove('hidden');
+      } else {
+        timeBox.classList.add('hidden');
+      }
+
+      // Handle Entrance Fee (Optional)
+      const feeBox = document.getElementById('modal-fee-box');
+      if (loc.entrance_fee && loc.entrance_fee.trim() !== '') {
+        document.getElementById('modal-fee').innerText = loc.entrance_fee;
+        feeBox.classList.remove('hidden');
+      } else {
+        feeBox.classList.add('hidden');
+      }
 
       const modal = document.getElementById('location-modal');
       modal.classList.remove('hidden');
