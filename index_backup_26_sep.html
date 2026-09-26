@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重庆导览与行程规划 - Chongqing Travel Guide</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Custom scrollbar for smooth UI */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+
+  <!-- Header & Navigation -->
+  <header class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <i class="fa-solid fa-mountain-city text-3xl"></i>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight">探索重庆</h1>
+          <p class="text-xs text-rose-100">Chongqing Travel & Itinerary Guide</p>
+        </div>
+      </div>
+      
+      <!-- Nav Tabs -->
+      <nav class="flex bg-black/20 p-1 rounded-xl backdrop-blur-md">
+        <button id="nav-locations" onclick="switchTab('locations')" 
+          class="px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm">
+          <i class="fa-solid fa-map-location-dot"></i> 景点列表
+        </button>
+        <button id="nav-itinerary" onclick="switchTab('itinerary')" 
+          class="px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100">
+          <i class="fa-solid fa-calendar-days"></i> 行程安排
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
+
+    <!-- View 1: Locations List -->
+    <section id="view-locations" class="space-y-6">
+      
+      <!-- Search & Category Filters -->
+      <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+        <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+          
+          <!-- Search Bar -->
+          <div class="relative w-full md:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
+            <input type="text" id="search-input" oninput="filterLocations()" placeholder="搜索景点、地址、描述..." 
+              class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition">
+          </div>
+
+          <!-- Category Pills -->
+          <div id="category-filters" class="flex flex-wrap gap-2 w-full md:w-auto items-center">
+            <!-- Dynamically populated categories -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Locations Grid -->
+      <div id="locations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Dynamically populated cards -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="no-locations" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-100">
+        <i class="fa-solid fa-compass text-4xl text-slate-300 mb-3"></i>
+        <p class="text-slate-500 font-medium">未找到符合条件的景点</p>
+      </div>
+    </section>
+
+    <!-- View 2: Itinerary -->
+    <section id="view-itinerary" class="hidden space-y-8">
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-xl font-bold">行程规划</h2>
+          <p class="text-slate-400 text-sm mt-1">点击带有标志的活动项目，可随时查看景点详细信息。</p>
+        </div>
+        <button onclick="switchTab('locations')" class="text-xs bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition border border-white/10">
+          <i class="fa-solid fa-arrow-left mr-1"></i> 返回所有景点
+        </button>
+      </div>
+
+      <!-- Itinerary List -->
+      <div id="itinerary-container" class="space-y-8">
+        <!-- Dynamically populated itinerary -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Location Detail Modal -->
+  <div id="location-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden transform transition-all flex flex-col max-h-[92vh]">
+      
+      <!-- Modal Header -->
+      <div class="bg-slate-900 text-white p-6 sm:p-7 relative">
+        <button onclick="closeModal()" class="absolute right-5 top-5 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full w-9 h-9 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <div class="flex items-center gap-2 mb-2">
+          <span id="modal-category" class="bg-red-500/20 text-red-300 text-xs font-semibold px-3 py-1 rounded-full border border-red-500/30"></span>
+          <span id="modal-city" class="text-slate-400 text-sm font-medium"></span>
+        </div>
+        <h3 id="modal-name" class="text-2xl sm:text-3xl font-bold pr-10"></h3>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 sm:p-8 space-y-6 overflow-y-auto">
+        
+        <!-- Grid Gallery Section -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <i class="fa-regular fa-images text-red-500 mr-1.5"></i>景点图库
+            </span>
+            <span class="text-xs text-slate-400 font-normal">点击缩略图放大预览，支持翻页查看</span>
+          </div>
+
+          <!-- Thumbnail Grid -->
+          <div id="gallery-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <!-- Dynamically populated thumbnails -->
+          </div>
+
+          <p id="no-gallery-msg" class="hidden text-sm text-slate-400 italic py-6 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            暂无相册照片 (`img1.jpg` 或 `img1.jpeg`)
+          </p>
+        </div>
+
+        <!-- Address Box -->
+        <div class="flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <i class="fa-solid fa-location-dot text-red-500 text-lg mt-0.5"></i>
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">详细地址</p>
+            <p id="modal-address" class="text-base font-medium text-slate-700 mt-1"></p>
+          </div>
+        </div>
+
+        <!-- Description Box -->
+        <div>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">景点介绍</p>
+          <p id="modal-description" class="text-slate-600 text-sm sm:text-base leading-relaxed bg-slate-50/50 p-4 rounded-xl border border-slate-100/60"></p>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-slate-50 p-4 sm:p-5 border-t text-right">
+        <button onclick="closeModal()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition">
+          关闭
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Interactive Lightbox Modal -->
+  <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 select-none">
+    
+    <!-- Close Button -->
+    <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white/70 hover:text-white text-3xl font-bold p-3 z-30 transition">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- Prev Button -->
+    <button id="lightbox-prev" onclick="changeLightboxSlide(-1)" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl transition z-30 border border-white/10 shadow-lg">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <!-- Next Button -->
+    <button id="lightbox-next" onclick="changeLightboxSlide(1)" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl transition z-30 border border-white/10 shadow-lg">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <!-- Lightbox Main Image & Counter -->
+    <div class="relative max-w-full max-h-[90vh] flex flex-col items-center justify-center">
+      <img id="lightbox-img" src="" alt="Preview" onclick="changeLightboxSlide(1)" title="点击查看下一张" class="max-w-full max-h-[82vh] object-contain rounded-lg shadow-2xl cursor-pointer">
+      
+      <!-- Counter & Info -->
+      <div class="flex items-center gap-3 mt-3">
+        <span id="lightbox-counter" class="text-white/90 text-xs font-mono bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10"></span>
+        <span class="text-white/50 text-xs hidden sm:inline"><i class="fa-solid fa-keyboard mr-1"></i>可用左右方向键 ← → 切换</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    let appData = { locations: [], itinerary: [] };
+    let currentCategory = 'all';
+    let searchQuery = '';
+    
+    // Gallery state
+    let currentGalleryPhotos = [];
+    let currentLightboxIndex = 0;
+
+    // Fetch locations.json from the same directory
+    async function loadData() {
+      try {
+        const response = await fetch('./locations.json');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        appData = await response.json();
+        
+        initApp();
+      } catch (error) {
+        console.error("Error loading json:", error);
+        document.getElementById('locations-grid').innerHTML = `
+          <div class="col-span-full p-6 bg-red-50 text-red-700 rounded-2xl border border-red-200 text-center">
+            <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+            <p class="font-bold">无法加载数据 (locations.json)</p>
+            <p class="text-xs mt-1 text-red-600 font-mono">${error.message}</p>
+          </div>`;
+      }
+    }
+
+    function initApp() {
+      setupCategoryFilters();
+      renderLocations();
+      renderItinerary();
+    }
+
+    // Setup Category Buttons
+    function setupCategoryFilters() {
+      const categories = ['all', ...new Set(appData.locations.map(loc => loc.category))];
+      const container = document.getElementById('category-filters');
+      
+      container.innerHTML = categories.map(cat => {
+        const isAll = cat === 'all';
+        const label = isAll ? '全部景点' : cat;
+        return `
+          <button onclick="setCategory('${cat}')" data-cat="${cat}"
+            class="cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition ${isAll ? 'bg-red-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+            ${label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    // Filter Trigger
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = 'cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-red-600 text-white shadow-sm';
+        } else {
+          btn.className = 'cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-slate-100 text-slate-600 hover:bg-slate-200';
+        }
+      });
+      filterLocations();
+    }
+
+    function filterLocations() {
+      searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+      renderLocations();
+    }
+
+    // Fallback Image Handler for Cover Card
+    function handleCoverError(img, fallbackPath) {
+      if (!img.dataset.triedJpeg) {
+        img.dataset.triedJpeg = "true";
+        img.src = fallbackPath;
+      } else {
+        const parent = img.parentElement;
+        parent.innerHTML = `
+          <div class="w-full h-44 bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center text-slate-400">
+            <i class="fa-solid fa-image text-3xl mb-1"></i>
+            <span class="text-[10px] tracking-wide uppercase">暂无封面照片</span>
+          </div>`;
+      }
+    }
+
+    // Render Location Cards
+    function renderLocations() {
+      const grid = document.getElementById('locations-grid');
+      const emptyState = document.getElementById('no-locations');
+
+      const filtered = appData.locations.filter(loc => {
+        const matchesCategory = currentCategory === 'all' || loc.category === currentCategory;
+        const matchesSearch = loc.name.toLowerCase().includes(searchQuery) ||
+                              loc.address.toLowerCase().includes(searchQuery) ||
+                              loc.description.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      grid.innerHTML = filtered.map(loc => {
+        const primaryImg = `${loc.folder}/img1.jpg`;
+        const fallbackImg = `${loc.folder}/img1.jpeg`;
+
+        return `
+          <div onclick="openModal('${loc.id}')" 
+            class="group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 hover:border-red-100 transition-all duration-300 cursor-pointer flex flex-col overflow-hidden">
+            
+            <!-- Cover Photo Thumbnail -->
+            <div class="relative w-full h-44 bg-slate-100 overflow-hidden">
+              <img src="${primaryImg}" 
+                   onerror="handleCoverError(this, '${fallbackImg}')" 
+                   alt="${loc.name}" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute top-3 left-3">
+                <span class="bg-red-600/90 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm">
+                  ${loc.category}
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <h3 class="text-lg font-bold text-slate-800 group-hover:text-red-600 transition-colors line-clamp-1">
+                    ${loc.name}
+                  </h3>
+                  <span class="text-xs text-slate-400 font-medium shrink-0 ml-2"><i class="fa-solid fa-city mr-1"></i>${loc.city}</span>
+                </div>
+                
+                <p class="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">
+                  ${loc.description}
+                </p>
+              </div>
+
+              <div class="pt-3 border-t border-slate-50 flex items-center justify-between text-xs text-slate-400">
+                <span class="truncate max-w-[200px]"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>${loc.address}</span>
+                <span class="text-red-500 font-medium group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0">
+                  详情 <i class="fa-solid fa-arrow-right"></i>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render Itinerary Timeline
+    function renderItinerary() {
+      const container = document.getElementById('itinerary-container');
+
+      container.innerHTML = appData.itinerary.map(day => `
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center gap-3 pb-4 mb-6 border-b border-slate-100">
+            <div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-xl text-sm">
+              Day ${day.day}
+            </div>
+            <h3 class="text-lg font-bold text-slate-800">${day.title}</h3>
+          </div>
+
+          <div class="relative pl-6 border-l-2 border-slate-100 space-y-6">
+            ${day.steps.map(step => {
+              return `
+                <div class="relative group">
+                  <!-- Timeline Node dot -->
+                  <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-white border-4 border-red-500"></div>
+
+                  <div class="bg-slate-50 hover:bg-slate-100/80 rounded-xl p-4 transition border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono text-xs font-semibold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">
+                          ${step.time}
+                        </span>
+                        <span class="text-xs text-slate-400 px-2 py-0.5 rounded bg-white border">
+                          ${step.type}
+                        </span>
+                      </div>
+                      <h4 class="font-bold text-slate-800 text-base">
+                        ${step.activity}
+                      </h4>
+                      ${step.notes ? `<p class="text-xs text-slate-500"><i class="fa-regular fa-lightbulb text-amber-500 mr-1"></i>${step.notes}</p>` : ''}
+                    </div>
+
+                    ${step.locationId ? `
+                      <button onclick="openModal('${step.locationId}')" 
+                        class="self-start sm:self-center bg-white hover:bg-red-50 text-red-600 hover:text-red-700 border border-red-200 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                        <i class="fa-solid fa-circle-info"></i> 查看景点详情
+                      </button>
+                    ` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Helper to probe image presence efficiently
+    function checkImageExists(url) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(url);
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    }
+
+    // Modal Control & Parallel Fast Photo Probe
+    async function openModal(id) {
+      const loc = appData.locations.find(item => item.id === id);
+      
+      if (!loc) {
+        alert("未找到该景点的详细数据");
+        return;
+      }
+
+      document.getElementById('modal-name').innerText = loc.name;
+      document.getElementById('modal-category').innerText = loc.category;
+      document.getElementById('modal-city').innerText = loc.city;
+      document.getElementById('modal-address').innerText = loc.address;
+      document.getElementById('modal-description').innerText = loc.description;
+
+      const modal = document.getElementById('location-modal');
+      modal.classList.remove('hidden');
+
+      // Load photos into grid using parallel probes
+      await loadGalleryPhotos(loc);
+    }
+
+    async function loadGalleryPhotos(loc) {
+      const galleryContainer = document.getElementById('gallery-container');
+      const noMsg = document.getElementById('no-gallery-msg');
+
+      galleryContainer.innerHTML = `
+        <div class="col-span-full py-8 flex items-center justify-center text-slate-400 text-xs gap-2">
+          <i class="fa-solid fa-circle-notch fa-spin text-red-500 text-base"></i> 快速加载图片库...
+        </div>`;
+      
+      currentGalleryPhotos = [];
+
+      // Probe img1 to img10 simultaneously in parallel
+      const probePromises = [];
+      for (let i = 1; i <= 10; i++) {
+        probePromises.push(
+          (async () => {
+            let validUrl = await checkImageExists(`${loc.folder}/img${i}.jpg`);
+            if (!validUrl) {
+              validUrl = await checkImageExists(`${loc.folder}/img${i}.jpeg`);
+            }
+            return { index: i, url: validUrl };
+          })()
+        );
+      }
+
+      const results = await Promise.all(probePromises);
+
+      // Keep only valid images ordered by index
+      currentGalleryPhotos = results
+        .filter(r => r.url !== null)
+        .sort((a, b) => a.index - b.index)
+        .map(r => r.url);
+
+      if (currentGalleryPhotos.length === 0) {
+        galleryContainer.classList.add('hidden');
+        noMsg.classList.remove('hidden');
+        return;
+      }
+
+      galleryContainer.classList.remove('hidden');
+      noMsg.classList.add('hidden');
+
+      // Render Thumbnail Grid
+      galleryContainer.innerHTML = currentGalleryPhotos.map((url, idx) => `
+        <div onclick="openLightbox(${idx})" 
+             class="group relative aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all border border-slate-200/80">
+          <img src="${url}" alt="Gallery ${idx + 1}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+            <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 transition-opacity text-xl drop-shadow-md"></i>
+          </div>
+          <span class="absolute bottom-1.5 right-1.5 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm opacity-80">
+            #${idx + 1}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    function closeModal() {
+      document.getElementById('location-modal').classList.add('hidden');
+    }
+
+    // Lightbox Controls
+    function openLightbox(index) {
+      currentLightboxIndex = index;
+      updateLightboxUI();
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+    }
+
+    function changeLightboxSlide(direction) {
+      if (currentGalleryPhotos.length <= 1) return;
+      currentLightboxIndex = (currentLightboxIndex + direction + currentGalleryPhotos.length) % currentGalleryPhotos.length;
+      updateLightboxUI();
+    }
+
+    function updateLightboxUI() {
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-counter');
+      const prevBtn = document.getElementById('lightbox-prev');
+      const nextBtn = document.getElementById('lightbox-next');
+
+      img.src = currentGalleryPhotos[currentLightboxIndex];
+      counter.innerText = `${currentLightboxIndex + 1} / ${currentGalleryPhotos.length}`;
+
+      if (currentGalleryPhotos.length > 1) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+      } else {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+      }
+    }
+
+    // Keyboard Arrow Navigation for Lightbox
+    document.addEventListener('keydown', (e) => {
+      const lightbox = document.getElementById('lightbox-modal');
+      if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'ArrowLeft') changeLightboxSlide(-1);
+        if (e.key === 'ArrowRight') changeLightboxSlide(1);
+        if (e.key === 'Escape') closeLightbox();
+      }
+    });
+
+    // Tab Navigation
+    function switchTab(tab) {
+      const locationsView = document.getElementById('view-locations');
+      const itineraryView = document.getElementById('view-itinerary');
+      const btnLocations = document.getElementById('nav-locations');
+      const btnItinerary = document.getElementById('nav-itinerary');
+
+      if (tab === 'locations') {
+        locationsView.classList.remove('hidden');
+        itineraryView.classList.add('hidden');
+        btnLocations.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm";
+        btnItinerary.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100";
+      } else {
+        locationsView.classList.add('hidden');
+        itineraryView.classList.remove('hidden');
+        btnItinerary.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm";
+        btnLocations.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100";
+      }
+    }
+
+    // Close modal when clicking outside modal box
+    window.onclick = function(event) {
+      const modal = document.getElementById('location-modal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>
