@@ -7,6 +7,8 @@
       "category": "地标",
       "folder": "images/cq/hyd",
       "address": "重庆市渝中区嘉陵江滨江路88号",
+      "operation_time": "10:00 - 22:00（景观灯 18:30-21:30 开灯）",
+      "entrance_fee": "免费（节假日期间需预约）",
       "description": "现实版《千与千寻》汤屋，夜晚灯火辉煌，是重庆最具代表性的夜景之一。夜景最佳拍摄点在千厮门大桥或洪崖洞天桥。"
     },
     {
@@ -16,6 +18,7 @@
       "category": "商业街",
       "folder": "images/cq/jfb",
       "address": "重庆市渝中区民族路177号",
+      "operation_time": "全天开放，店铺营业时间 : 10:00 - 22:00",
       "description": "重庆的精神地标与繁华商业中心，也是周边美食集中地。可以在历史纪念碑前打卡，感受现代都市与历史交融的氛围。"
     },
     {
@@ -25,6 +28,7 @@
       "category": "奇观",
       "folder": "images/cq/lzb",
       "address": "重庆市渝中区李子坝正街",
+      "operation_time": "全天开放，店铺营业时间 : 06:30 - 23:00\n列车大约 3-4 分钟一班",
       "description": "亲眼见证轻轨从居民楼中穿墙而过的魔幻景观，是重庆魔幻地形的经典代表。"
     },
     {
@@ -34,6 +38,8 @@
       "category": "体验",
       "folder": "images/cq/cjsd",
       "address": "重庆市渝中区新华路151号",
+      "operation_time": "08:00 - 22:00",
+      "entrance_fee": "单程30元，往返50元\n微信公众号 “长江索道” 在线购票",
       "description": "横跨长江的“空中巴士”，可以从空中俯瞰两岸风光与山城景色，体验独特的过江方式。"
     },
     {
@@ -43,6 +49,8 @@
       "category": "古镇",
       "folder": "images/cq/cqk",
       "address": "重庆市沙坪坝区磁南街1号",
+      "operation_time": "24 小时全天开放.店铺集中在 08:00 - 22:00",
+      "entrance_fee": "免费，节假日“重庆磁器口古镇”公众号进行免费实名预约",
       "description": "千年巴渝古镇，陈麻花和酸辣粉必尝。"
     },
     {
@@ -52,6 +60,7 @@
       "category": "步道",
       "folder": "images/cq/scx",
       "address": "重庆市渝中区南纪门街道山城巷",
+      "operation_time": "亮灯时间： 每天 19:00 – 22:00, 推荐傍晚 18:00 – 19:30",
       "description": "建在悬崖上的栈道与步道，老重庆街巷氛围浓厚，傍晚红灯笼亮起时景色很美。"
     },
     {
@@ -61,6 +70,7 @@
       "category": "文创区",
       "folder": "images/cq/elec",
       "address": "重庆市渝中区鹅岭正街1号",
+      "operation_time": "推荐下午3点至6点前往",
       "description": "文创公园，电影《从你的全世界路过》取景地。"
     },
     {
@@ -70,6 +80,7 @@
       "category": "街区",
       "folder": "images/cq/bxj",
       "address": "重庆市渝中区白象街1-6号",
+      "operation_time": "建议游览时段为 9:00 - 19:00",
       "description": "拍摄长江索道穿楼的最佳地点，充满老重庆母城记忆。"
     },
 
@@ -80,6 +91,8 @@
     "category": "博物馆",
     "folder": "images/cq/sxbwg",
     "address": "重庆市渝中区人民路257号",
+    "operation_time": "09:00 – 17:00（16:30 停止入馆）。每周一闭馆（法定节假日正常开放）。",
+    "entrance_fee": "免费，重庆中国三峡博物馆”公众号/小程序进行实名制分时段预约\n官方志愿者免费讲解，一般上午10:00和下午14:30",
     "description": "首批国家一级博物馆，馆藏丰富，集中展示巴渝文化、三峡文化与城市历史，免费开放。"
   },
   {
@@ -89,6 +102,7 @@
     "category": "街区",
     "folder": "images/cq/sbt",
     "address": "重庆市渝中区中兴路1号",
+    "operation_time": "店铺营业时间为 10:00 – 22:00， 亮灯时间 18:30 – 22:00",    
     "description": "连接重庆上下半城的老街，电影《从你的全世界路过》取景地。"
   },
   {
@@ -98,6 +112,7 @@
     "category": "商业街",
     "folder": "images/cq/gyq",
     "address": "重庆市江北区观音桥步行街",
+    "operation_time": "大部分百货和商店营业时间为 10:00 - 22:00",    
     "description": "潮流商圈，夜市与流行美食丰富。"
   },
   {
@@ -116,6 +131,7 @@
     "category": "地标",
     "folder": "images/cq/ctm",
     "address": "重庆市渝中区接圣街8号",
+    "operation_time": "来福士 10:00 – 22:00",    
     "description": "重庆古城门之一与两江交汇壮观地点，可在此乘坐游轮欣赏两江四岸夜景。"
   },
   {
@@ -125,6 +141,7 @@
     "category": "街区",
     "folder": "images/cq/xhl",
     "address": "重庆市南岸区南滨路下浩老街",
+    "operation_time": "店铺营业时间为 10:00 - 21:00, 秋冬 18:00 亮灯",    
     "description": "位于南岸区的老街，被称为“另一个世界”，充满文艺慢生活气息。"
   },
   {
@@ -134,6 +151,7 @@
     "category": "街区",
     "folder": "images/cq/lmh",
     "address": "重庆市南岸区南滨路105号",
+    "operation_time": "大部分店铺为 10:00 - 22:00",    
     "description": "位于南岸，古巴渝十二景“龙门浩月”所在地，拥有绝佳观景平台眺望渝中半岛。"
   },
   {
@@ -143,6 +161,7 @@
     "category": "文创区",
     "folder": "images/cq/bcwc",
     "address": "重庆市江北区塔坪55号",
+    "operation_time": "大部分为 10:00 - 22:00，周一部分文创小店可能休业",    
     "description": "由旧仓库改造而成的文创园，是年轻人扎堆的文艺打卡地。"
   },
   {
@@ -152,6 +171,7 @@
     "category": "街区",
     "folder": "images/cq/lzm",
     "address": "重庆市渝中区民生路与民权路交汇处",
+    "operation_time": "大部分为 10:00 - 22:00，推荐傍晚16:00 - 20:00",    
     "description": "融合新潮店铺与传统市井文化的百年街巷，感受重庆“活标本”式建筑文化。"
   },
   {
@@ -161,6 +181,7 @@
     "category": "公园",
     "folder": "images/cq/jbjjt",
     "address": "重庆市江北区江北嘴城心公园旁",
+    "operation_time": "推荐傍晚18:30左右抵达，可以同时欣赏到日落晚霞、蓝调时刻（约19:30-20:30）和洪崖洞亮灯后的夜景，天空还带淡蓝色，夜景层次最好",    
     "description": "本地人私藏的洪崖洞最佳拍摄点之一，可隔江拍摄洪崖洞全景并避开人潮。"
   },
   {
@@ -170,6 +191,7 @@
     "category": "公园",
     "folder": "images/cq/elgy",
     "address": "重庆市渝中区鹅岭正街176号",
+    "operation_time": "06:00 – 22:00（21:50 停止入园）\n瞰胜楼（两江亭）: 09:00 – 21:30\n鹅项山庄 : 09:00 – 18:00\n悬崖栈道 : 09:00 – 18:00，周一闭园维护",    
     "description": "位于渝中半岛最高处，园内瞰胜楼是俯瞰两江交汇和重庆全景的绝佳位置。"
   },
   {
@@ -179,6 +201,7 @@
     "category": "公园",
     "folder": "images/cq/hes",
     "address": "重庆市江北区红石路305号",
+    "operation_time": "06:30 – 21:30\n鸿恩阁登楼时间 : 09:00 – 21:00",    
     "description": "公园内的古塔式阁楼是拍摄古风夜景大片的绝佳机位。"
   },
   {
@@ -188,6 +211,8 @@
     "category": "景点",
     "folder": "images/cq/cqdwy",
     "address": "重庆市九龙坡区西郊路25号",
+    "operation_time": "08:00 - 18:00",  
+    "entrance_fee": "旺季（1-11月）：成人 25元，\n淡季（12月）：成人 20元",
     "description": "国内城市中大熊猫数量最多的动物园（拥有23只国宝），亲子游好去处。"
   },
   {
@@ -197,6 +222,8 @@
     "category": "博物馆",
     "folder": "images/cq/zrbwg",
     "address": "重庆市北碚区兰渝高铁北碚站旁",
+    "operation_time": "周二至周日 9:00 - 17:00",
+    "entrance_fee": "免费",
     "description": "展示自然历史和生物多样性的好去处，适合对自然科学感兴趣的游客。"
   },
   {
@@ -206,6 +233,7 @@
     "category": "商业街",
     "folder": "images/cq/cjh",
     "address": "重庆市南岸区南滨路长嘉汇",
+    "operation_time": "10:00 – 22:00, 最佳观赏时段为 18:30 – 22:30",
     "description": "能同时看到两江交汇，对岸即是来福士，视野开阔。"
   },
   {
@@ -215,7 +243,9 @@
     "category": "观景台",
     "folder": "images/cq/nsyks",
     "address": "重庆市南岸区南山风景区内",
-    "description": "经典的夜景俯瞰点，可一览渝中半岛的璀璨灯海。"
+    "operation_time": "09:00 – 22:30",
+    "entrance_fee": "成人30元/人",
+    "description": "经典的夜景俯瞰点，可一览渝中半岛的璀璨灯海。\n强烈推荐17:00-17:30左右抵达。这样可以一次性欣赏到三种景色：傍晚的落日余晖、日落后的“蓝调时刻”（天空呈深蓝色，城市灯光刚亮起，层次最丰富），以及夜幕完全降临后的璀璨灯海"
   },
   {
     "id": "cq_hjp",
@@ -224,6 +254,7 @@
     "category": "艺术街",
     "folder": "images/cq/hjp",
     "address": "重庆市九龙坡区黄桷坪正街",
+    "operation_time": "黄桷坪区域 : 10:00 – 16:00\n四川美术学院 : 09:00 – 17:00",
     "description": "充满了豪爽江湖味道的美食街区与艺术涂鸦街。"
   },
   {
@@ -233,6 +264,7 @@
     "category": "地标",
     "folder": "images/cq/cqdjy",
     "address": "重庆市江北区文星门街7号",
+    "operation_time": "有演出时才凭票进入, 推荐傍晚18:30左右抵达",
     "description": "夜幕降临后全馆灯光亮起，本身就是一件大型建筑艺术品。"
   },
   {
@@ -242,6 +274,8 @@
     "category": "博物馆",
     "folder": "images/cq/cqkjg",
     "address": "重庆市江北区文星门街7号",
+    "operation_time": "09:30 – 17:00,周一闭馆",
+    "entrance_fee": "免费,特效影院（IMAX 3D、4D、球幕影院等）需单独购票（约 20–30 元/场）",
     "description": "与重庆大剧院紧密相邻，科普教育与亲子互动好去处。"
   },
   {
@@ -251,6 +285,8 @@
     "category": "主题公园",
     "folder": "images/cq/atj",
     "address": "重庆市万盛经开区黑山谷景区旁",
+    "operation_time": "08:30 – 18:00",
+    "entrance_fee": "约 220 – 260 元/人（通票，含绝大多数高空项目）",
     "description": "汇集众多高空刺激体验项目的地质主题公园。"
   },
   {
@@ -260,6 +296,8 @@
     "category": "自然风光",
     "folder": "images/cq/wltsq",
     "address": "重庆市武隆区仙女山镇",
+    "operation_time": "08:30 – 16:30",
+    "entrance_fee": "95元/人,“天生三桥+龙水峡地缝”联票，195元",
     "description": "罕见的喀斯特地质奇观，电影《满城尽带黄金甲》与《变形金刚4》取景地。"
   }
 
