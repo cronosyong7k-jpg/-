@@ -222,6 +222,8 @@
     "category": "博物馆",
     "folder": "images/cq/zrbwg",
     "address": "重庆市北碚区兰渝高铁北碚站旁",
+    "operation_time": "周二至周日 9:00 - 17:00",
+    "entrance_fee": "免费",
     "description": "展示自然历史和生物多样性的好去处，适合对自然科学感兴趣的游客。"
   },
   {
@@ -231,6 +233,7 @@
     "category": "商业街",
     "folder": "images/cq/cjh",
     "address": "重庆市南岸区南滨路长嘉汇",
+    "operation_time": "10:00 – 22:00, 最佳观赏时段为 18:30 – 22:30",
     "description": "能同时看到两江交汇，对岸即是来福士，视野开阔。"
   },
   {
@@ -240,7 +243,10 @@
     "category": "观景台",
     "folder": "images/cq/nsyks",
     "address": "重庆市南岸区南山风景区内",
-    "description": "经典的夜景俯瞰点，可一览渝中半岛的璀璨灯海。"
+    "operation_time": "09:00 – 22:30",
+    "entrance_fee": "成人30元/人",
+    "description": "经典的夜景俯瞰点，可一览渝中半岛的璀璨灯海。
+    \n强烈推荐17:00-17:30左右抵达。这样可以一次性欣赏到三种景色：傍晚的落日余晖、日落后的“蓝调时刻”（天空呈深蓝色，城市灯光刚亮起，层次最丰富），以及夜幕完全降临后的璀璨灯海"
   },
   {
     "id": "cq_hjp",
@@ -249,6 +255,7 @@
     "category": "艺术街",
     "folder": "images/cq/hjp",
     "address": "重庆市九龙坡区黄桷坪正街",
+    "operation_time": "黄桷坪区域 : 10:00 – 16:00\n四川美术学院 : 09:00 – 17:00",
     "description": "充满了豪爽江湖味道的美食街区与艺术涂鸦街。"
   },
   {
@@ -258,6 +265,7 @@
     "category": "地标",
     "folder": "images/cq/cqdjy",
     "address": "重庆市江北区文星门街7号",
+    "operation_time": "有演出时才凭票进入, 推荐傍晚18:30左右抵达",
     "description": "夜幕降临后全馆灯光亮起，本身就是一件大型建筑艺术品。"
   },
   {
@@ -267,6 +275,8 @@
     "category": "博物馆",
     "folder": "images/cq/cqkjg",
     "address": "重庆市江北区文星门街7号",
+    "operation_time": "09:30 – 17:00,周一闭馆",
+    "entrance_fee": "免费,特效影院（IMAX 3D、4D、球幕影院等）需单独购票（约 20–30 元/场）",
     "description": "与重庆大剧院紧密相邻，科普教育与亲子互动好去处。"
   },
   {
@@ -276,6 +286,8 @@
     "category": "主题公园",
     "folder": "images/cq/atj",
     "address": "重庆市万盛经开区黑山谷景区旁",
+    "operation_time": "08:30 – 18:00",
+    "entrance_fee": "约 220 – 260 元/人（通票，含绝大多数高空项目）",
     "description": "汇集众多高空刺激体验项目的地质主题公园。"
   },
   {
@@ -285,6 +297,8 @@
     "category": "自然风光",
     "folder": "images/cq/wltsq",
     "address": "重庆市武隆区仙女山镇",
+    "operation_time": "08:30 – 16:30",
+    "entrance_fee": "95元/人,“天生三桥+龙水峡地缝”联票，195元",
     "description": "罕见的喀斯特地质奇观，电影《满城尽带黄金甲》与《变形金刚4》取景地。"
   }
 
