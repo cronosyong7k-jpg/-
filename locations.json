@@ -191,15 +191,6 @@
     "description": "国内城市中大熊猫数量最多的动物园（拥有23只国宝），亲子游好去处。"
   },
   {
-    "id": "cq_hygm",
-    "name": "红岩革命纪念馆",
-    "city": "重庆",
-    "category": "博物馆",
-    "folder": "images/cq/hygm",
-    "address": "重庆市渝中区红岩村52号",
-    "description": "了解重庆红色历史、缅怀革命先烈的重要场所。"
-  },
-  {
     "id": "cq_zrbwg",
     "name": "重庆自然博物馆",
     "city": "重庆",
