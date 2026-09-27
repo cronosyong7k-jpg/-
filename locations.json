@@ -408,37 +408,73 @@
       "longitude": 105.7150
     }
   ],
-  "itinerary": [
+ "itinerary": [
     {
       "day": 1,
-      "title": "Day 1 (11月7日): 傍晚抵达 & 渝中核心区夜游",
+      "title": "Day 1 (11月7日): 抵达重庆 & 核心夜景初探",
       "city": "重庆",
       "steps": [
         {
-          "time": "17:30",
-          "activity": "抵达重庆并办理酒店入住",
-          "type": "Transport",
-          "notes": "建议入住渝中区靠近解放碑或十八梯附近的酒店，处于中心位置且方便后续行程顺路出行"
+          "time": "18:00",
+          "activity": "朝天门 / 重庆来福士",
+          "type": "POI",
+          "locationId": "cq_ctm",
+          "notes": "两江交汇壮观地标"
+        },
+        {
+          "time": "19:00",
+          "activity": "千厮门大桥",
+          "type": "POI",
+          "locationId": "cq_qsm",
+          "notes": "拍摄夜景最佳机位"
+        },
+        {
+          "time": "20:00",
+          "activity": "洪崖洞民俗风貌区",
+          "type": "POI",
+          "locationId": "cq_hyd",
+          "notes": "欣赏金碧辉煌的吊脚楼夜景"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2 (11月8日): 西部远郊动物与老街漫步",
+      "city": "重庆",
+      "steps": [
+        {
+          "time": "09:30",
+          "activity": "重庆动物园",
+          "type": "POI",
+          "locationId": "cq_cqdwy",
+          "notes": "看大熊猫"
+        },
+        {
+          "time": "14:00",
+          "activity": "磁器口古镇",
+          "type": "POI",
+          "locationId": "cq_cqk",
+          "notes": "漫步千年古镇品尝特产"
+        },
+        {
+          "time": "16:30",
+          "activity": "山城巷传统风貌区",
+          "type": "POI",
+          "locationId": "cq_scx",
+          "notes": "悬崖栈道与老街风情"
         },
         {
           "time": "19:00",
           "activity": "十八梯传统风貌区",
           "type": "POI",
           "locationId": "cq_sbt",
-          "notes": "亮灯时间 18:30–22:00，漫步吊脚楼街巷，体验老重庆上下半城建筑特色"
-        },
-        {
-          "time": "20:30",
-          "activity": "解放碑步行街 & 鲁祖庙传统风貌区",
-          "type": "POI",
-          "locationId": "cq_jfb",
-          "notes": "从十八梯顺山势向上步行至解放碑，顺逛鲁祖庙(cq_lzm)并享用老火锅或八一好吃街夜宵"
+          "notes": "体验夜幕下的老重庆市井"
         }
       ]
     },
     {
-      "day": 2,
-      "title": "Day 2 (11月8日): 西线——单轨穿楼、古镇与悬崖夕阳",
+      "day": 3,
+      "title": "Day 3 (11月9日): 魔幻轻轨、高地文创与江北夜景",
       "city": "重庆",
       "steps": [
         {
@@ -446,131 +482,112 @@
           "activity": "李子坝单轨穿楼",
           "type": "POI",
           "locationId": "cq_lzb",
-          "notes": "在一楼观景平台打卡轻轨穿过19层居民楼奇观（列车约 3-4 分钟一班）"
+          "notes": "观赏轻轨穿墙奇观"
         },
         {
-          "time": "11:00",
-          "activity": "磁器口古镇",
+          "time": "10:30",
+          "activity": "鹅岭公园",
           "type": "POI",
-          "locationId": "cq_cqk",
-          "notes": "搭乘轨道交通 1 号线直达，漫步古镇石板路，选购陈麻花、酸辣粉等地道特产"
+          "locationId": "cq_elgy",
+          "notes": "登瞰胜楼俯瞰全城"
         },
         {
-          "time": "15:00",
+          "time": "11:30",
           "activity": "鹅岭二厂",
           "type": "POI",
           "locationId": "cq_elec",
-          "notes": "推荐 15:00-18:00 前往，打卡文创公园与电影《从你的全世界路过》取景地"
+          "notes": "文艺文创园拍照打卡"
         },
         {
-          "time": "17:30",
-          "activity": "山城巷传统风貌区（山城步道）",
-          "type": "POI",
-          "locationId": "cq_scx",
-          "notes": "推荐傍晚 18:00–19:30 前往，19:00 亮灯后悬崖栈道红灯笼氛围感极佳"
+          "time": "14:30",
+          "activity": "观音桥步行街 & 好吃街",
+          "type": "Food",
+          "locationId": "cq_gyq",
+          "notes": "潮流商圈与地道小吃"
         },
         {
-          "time": "20:00",
-          "activity": "洪崖洞民俗风貌区夜景",
+          "time": "16:30",
+          "activity": "北仓文创街区",
           "type": "POI",
-          "locationId": "cq_hyd",
-          "notes": "景观灯 18:30-21:30，打卡现实版《千与千寻》，最佳拍摄机位在千厮门大桥上"
-        }
-      ]
-    },
-    {
-      "day": 3,
-      "title": "Day 3 (11月9日): 南岸区线——索道过江、文艺老街与南山灯海",
-      "city": "重庆",
-      "steps": [
-        {
-          "time": "09:30",
-          "activity": "白象居",
-          "type": "POI",
-          "locationId": "cq_bxj",
-          "notes": "游览 09:00-19:00，近距离拍摄长江索道穿楼与老重庆母城记忆"
+          "locationId": "cq_bcwc",
+          "notes": "旧仓库改造的文艺街区"
         },
         {
-          "time": "11:15",
-          "activity": "长江索道景区",
-          "type": "Experience",
-          "locationId": "cq_cjsd",
-          "notes": "自新华路站搭乘“空中巴士”跨越长江至南岸区（单程30元）"
-        },
-        {
-          "time": "12:30",
-          "activity": "龙门浩老街 & 下浩里",
+          "time": "18:30",
+          "activity": "江北嘴江滩公园",
           "type": "POI",
-          "locationId": "cq_lmh",
-          "notes": "两街步道紧密相连，漫步下浩里(cq_xhl)文艺慢生活，并在龙门浩观景平台眺望渝中半岛"
-        },
-        {
-          "time": "17:00",
-          "activity": "南山一棵树观景台",
-          "type": "POI",
-          "locationId": "cq_nsyks",
-          "notes": "强烈推荐 17:00-17:30 抵达，一次性集齐落日余晖、深蓝“蓝调时刻”与夜幕满城灯海"
+          "locationId": "cq_jbjjt",
+          "notes": "隔江拍摄洪崖洞全景"
         },
         {
           "time": "19:30",
-          "activity": "长嘉汇购物公园（弹子石老街）",
+          "activity": "重庆大剧院 & 重庆科技馆",
           "type": "POI",
-          "locationId": "cq_cjh",
-          "notes": "最佳观赏时段 18:30–22:30，在此享用晚餐，正面观赏两江交汇与对岸来福士璀璨夜景"
+          "locationId": "cq_cqdjy",
+          "notes": "现代地标与夜景"
         }
       ]
     },
     {
       "day": 4,
-      "title": "Day 4 (11月10日): 江北区线——文化人文、潮流商圈与绝美对岸夜景",
+      "title": "Day 4 (11月10日): 母城人文、空中巴士与南山夜景收官",
       "city": "重庆",
       "steps": [
         {
-          "time": "09:00",
-          "activity": "重庆中国三峡博物馆",
+          "time": "09:30",
+          "activity": "解放碑步行街",
           "type": "POI",
-          "locationId": "cq_sxbwg",
-          "notes": "国家一级博物馆，免费集中展示巴渝文化与三峡城市历史"
+          "locationId": "cq_jfb",
+          "notes": "重庆精神地标"
+        },
+        {
+          "time": "10:30",
+          "activity": "重庆罗汉寺",
+          "type": "POI",
+          "locationId": "cq_lhs",
+          "notes": "闹市中的千年古刹"
+        },
+        {
+          "time": "11:30",
+          "activity": "熊熊有礼",
+          "type": "Shopping",
+          "locationId": "cq_xxyl",
+          "notes": "伴手礼打卡"
         },
         {
           "time": "12:00",
-          "activity": "观音桥步行街 / 好吃街 / 北仓文创街区",
+          "activity": "鲁祖庙传统风貌区",
           "type": "POI",
-          "locationId": "cq_gyq",
-          "notes": "在观音桥好吃街(cq_gyqhcj)品尝地道小吃，步行至北仓文创园区(cq_bcwc)逛文艺小店"
+          "locationId": "cq_lzm",
+          "notes": "市井老街"
         },
         {
-          "time": "16:00",
-          "activity": "鸿恩寺森林公园",
+          "time": "14:00",
+          "activity": "白象居",
           "type": "POI",
-          "locationId": "cq_hes",
-          "notes": "公园内鸿恩阁（登楼至21:00）是拍摄古风建筑夜景大片的绝佳机位"
+          "locationId": "cq_bxj",
+          "notes": "拍摄长江索道穿楼机位"
         },
         {
-          "time": "18:30",
-          "activity": "江北嘴江滩公园 / 重庆大剧院",
-          "type": "POI",
-          "locationId": "cq_jbjjt",
-          "notes": "强烈推荐 18:30 抵达，欣赏日落晚霞与蓝调时刻，隔江全景拍摄洪崖洞并避开内部人潮(包含 cq_cqdjy)"
-        }
-      ]
-    },
-    {
-      "day": 5,
-      "title": "Day 5 (11月11日): 地道早餐 & 高铁赴成都",
-      "city": "重庆",
-      "steps": [
-        {
-          "time": "08:30",
-          "activity": "地道重庆小面 & 退房",
-          "type": "Food",
-          "notes": "在酒店附近品尝一碗地道重庆小面，办理退房"
+          "time": "15:30",
+          "activity": "长江索道景区",
+          "type": "Experience",
+          "locationId": "cq_cjsd",
+          "notes": "体验空中巴士过江"
         },
         {
-          "time": "10:00",
-          "activity": "前往车站搭乘高铁赴成都",
-          "type": "Transport",
-          "notes": "根据车次前往重庆北站或重庆西站，搭乘高铁开启成都之旅（车程约 1.5 小时）"
+          "time": "16:30",
+          "activity": "下浩里 & 龙门浩老街",
+          "type": "POI",
+          "locationId": "cq_xhl",
+          "notes": "南岸滨江文艺漫步"
+        },
+        {
+          "time": "19:00",
+          "activity": "南山一棵树观景台",
+          "type": "POI",
+          "locationId": "cq_nsyks",
+          "notes": "俯瞰重庆璀璨灯海夜景"
         }
       ]
     }
