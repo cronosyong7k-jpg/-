@@ -705,21 +705,21 @@
           "activity": "朝天门 / 重庆来福士",
           "type": "POI",
           "locationId": "cq_ctm",
-          "notes": "两江交汇壮观地标"
+          "notes": "两江交汇壮观地标[span_0](start_span)[span_0](end_span)"
         },
         {
           "time": "19:00",
           "activity": "千厮门大桥",
           "type": "POI",
           "locationId": "cq_qsm",
-          "notes": "拍摄夜景最佳机位"
+          "notes": "拍摄夜景最佳机位[span_1](start_span)[span_1](end_span)"
         },
         {
           "time": "20:00",
           "activity": "洪崖洞民俗风貌区",
           "type": "POI",
           "locationId": "cq_hyd",
-          "notes": "欣赏金碧辉煌的吊脚楼夜景"
+          "notes": "欣赏金碧辉煌的吊脚楼夜景[span_2](start_span)[span_2](end_span)"
         }
       ]
     },
@@ -733,28 +733,28 @@
           "activity": "重庆动物园",
           "type": "POI",
           "locationId": "cq_cqdwy",
-          "notes": "看大熊猫"
+          "notes": "看大熊猫[span_3](start_span)[span_3](end_span)"
         },
         {
           "time": "14:00",
           "activity": "磁器口古镇",
           "type": "POI",
           "locationId": "cq_cqk",
-          "notes": "漫步千年古镇品尝特产"
+          "notes": "漫步千年古镇品尝特产[span_4](start_span)[span_4](end_span)"
         },
         {
           "time": "16:30",
           "activity": "山城巷传统风貌区",
           "type": "POI",
           "locationId": "cq_scx",
-          "notes": "悬崖栈道与老街风情"
+          "notes": "悬崖栈道与老街风情[span_5](start_span)[span_5](end_span)"
         },
         {
           "time": "19:00",
           "activity": "十八梯传统风貌区",
           "type": "POI",
           "locationId": "cq_sbt",
-          "notes": "体验夜幕下的老重庆市井"
+          "notes": "体验夜幕下的老重庆市井[span_6](start_span)[span_6](end_span)"
         }
       ]
     },
@@ -768,49 +768,49 @@
           "activity": "李子坝单轨穿楼",
           "type": "POI",
           "locationId": "cq_lzb",
-          "notes": "观赏轻轨穿墙奇观"
+          "notes": "观赏轻轨穿墙奇观[span_7](start_span)[span_7](end_span)"
         },
         {
           "time": "10:30",
           "activity": "鹅岭公园",
           "type": "POI",
           "locationId": "cq_elgy",
-          "notes": "登瞰胜楼俯瞰全城"
+          "notes": "登瞰胜楼俯瞰全城[span_8](start_span)[span_8](end_span)"
         },
         {
           "time": "11:30",
           "activity": "鹅岭二厂",
           "type": "POI",
           "locationId": "cq_elec",
-          "notes": "文艺文创园拍照打卡"
+          "notes": "文艺文创园拍照打卡[span_9](start_span)[span_9](end_span)"
         },
         {
           "time": "14:30",
           "activity": "观音桥步行街 & 好吃街",
           "type": "Food",
           "locationId": "cq_gyq",
-          "notes": "潮流商圈与地道小吃"
+          "notes": "潮流商圈与地道小吃[span_10](start_span)[span_10](end_span)"
         },
         {
           "time": "16:30",
           "activity": "北仓文创街区",
           "type": "POI",
           "locationId": "cq_bcwc",
-          "notes": "旧仓库改造的文艺街区"
+          "notes": "旧仓库改造的文艺街区[span_11](start_span)[span_11](end_span)"
         },
         {
           "time": "18:30",
           "activity": "江北嘴江滩公园",
           "type": "POI",
           "locationId": "cq_jbjjt",
-          "notes": "隔江拍摄洪崖洞全景"
+          "notes": "隔江拍摄洪崖洞全景[span_12](start_span)[span_12](end_span)"
         },
         {
           "time": "19:30",
           "activity": "重庆大剧院 & 重庆科技馆",
           "type": "POI",
           "locationId": "cq_cqdjy",
-          "notes": "现代地标与夜景"
+          "notes": "现代地标与夜景[span_13](start_span)[span_13](end_span)"
         }
       ]
     },
@@ -824,56 +824,196 @@
           "activity": "解放碑步行街",
           "type": "POI",
           "locationId": "cq_jfb",
-          "notes": "重庆精神地标"
+          "notes": "重庆精神地标[span_14](start_span)[span_14](end_span)"
         },
         {
           "time": "10:30",
           "activity": "重庆罗汉寺",
           "type": "POI",
           "locationId": "cq_lhs",
-          "notes": "闹市中的千年古刹"
+          "notes": "闹市中的千年古刹[span_15](start_span)[span_15](end_span)"
         },
         {
           "time": "11:30",
           "activity": "熊熊有礼",
           "type": "Shopping",
           "locationId": "cq_xxyl",
-          "notes": "伴手礼打卡"
+          "notes": "伴手礼打卡[span_16](start_span)[span_16](end_span)"
         },
         {
           "time": "12:00",
           "activity": "鲁祖庙传统风貌区",
           "type": "POI",
           "locationId": "cq_lzm",
-          "notes": "市井老街"
+          "notes": "市井老街[span_17](start_span)[span_17](end_span)"
         },
         {
           "time": "14:00",
           "activity": "白象居",
           "type": "POI",
           "locationId": "cq_bxj",
-          "notes": "拍摄长江索道穿楼机位"
+          "notes": "拍摄长江索道穿楼机位[span_18](start_span)[span_18](end_span)"
         },
         {
           "time": "15:30",
           "activity": "长江索道景区",
           "type": "Experience",
           "locationId": "cq_cjsd",
-          "notes": "体验空中巴士过江"
+          "notes": "体验空中巴士过江[span_19](start_span)[span_19](end_span)"
         },
         {
           "time": "16:30",
           "activity": "下浩里 & 龙门浩老街",
           "type": "POI",
           "locationId": "cq_xhl",
-          "notes": "南岸滨江文艺漫步"
+          "notes": "南岸滨江文艺漫步[span_20](start_span)[span_20](end_span)"
         },
         {
           "time": "19:00",
           "activity": "南山一棵树观景台",
           "type": "POI",
           "locationId": "cq_nsyks",
-          "notes": "俯瞰重庆璀璨灯海夜景"
+          "notes": "俯瞰重庆璀璨灯海夜景[span_21](start_span)[span_21](end_span)"
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Day 5: 重庆出发 ➔ 抵达成都（中午）+ 市区经典漫游",
+      "city": "成都",
+      "steps": [
+        {
+          "time": "11:00",
+          "activity": "抵达成都市区",
+          "type": "Experience",
+          "locationId": "cd_kzhz",
+          "notes": "从重庆乘坐高铁前往成都（约 1.5 - 2 小时），抵达后前往酒店办理入住或寄存行李[span_22](start_span)[span_22](end_span)"
+        },
+        {
+          "time": "14:00",
+          "activity": "成都武侯祠",
+          "type": "POI",
+          "locationId": "cd_whc",
+          "notes": "感受三国文化与红墙竹影[span_23](start_span)[span_23](end_span)"
+        },
+        {
+          "time": "15:30",
+          "activity": "宽窄巷子",
+          "type": "POI",
+          "locationId": "cd_kzhz",
+          "notes": "漫步老街，体验老成都民俗[span_24](start_span)[span_24](end_span)"
+        },
+        {
+          "time": "18:30",
+          "activity": "成都远洋太古里 & 大慈寺",
+          "type": "Shopping",
+          "locationId": "cd_tkl",
+          "notes": "体验太古里夜景并享用晚餐[span_25](start_span)[span_25](end_span)"
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "Day 6: 国宝大熊猫与市井慢生活",
+      "city": "成都",
+      "steps": [
+        {
+          "time": "08:30",
+          "activity": "成都大熊猫繁育研究基地",
+          "type": "POI",
+          "locationId": "cd_cxdmp",
+          "notes": "早起看大熊猫吃竹子与萌态幼崽[span_26](start_span)[span_26](end_span)"
+        },
+        {
+          "time": "14:00",
+          "activity": "成都市人民公园（鹤鸣茶社）",
+          "type": "POI",
+          "locationId": "cd_rmgy",
+          "notes": "喝盖碗茶、体验掏耳朵，深度感受老成都的慢生活[span_27](start_span)[span_27](end_span)"
+        },
+        {
+          "time": "16:30",
+          "activity": "文殊院",
+          "type": "POI",
+          "locationId": "cd_wsy",
+          "notes": "祈福参拜，顺便品尝文殊院的甜水面、素包子等经典小吃[span_28](start_span)[span_28](end_span)"
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Day 7: 古蜀文明秘境 ➔ 千年水利奇观 ➔ 都江堰夜宿",
+      "city": "成都",
+      "steps": [
+        {
+          "time": "08:30",
+          "activity": "三星堆博物馆",
+          "type": "POI",
+          "locationId": "cd_sxt",
+          "notes": "探秘青铜神树与古蜀文明，预留3-4小时[span_29](start_span)[span_29](end_span)"
+        },
+        {
+          "time": "14:00",
+          "activity": "都江堰景区",
+          "type": "POI",
+          "locationId": "cd_djy",
+          "notes": "实地领略宝瓶口、飞沙堰、鱼嘴等无坝引水工程的宏大智慧[span_30](start_span)[span_30](end_span)"
+        },
+        {
+          "time": "19:30",
+          "activity": "南桥蓝眼泪",
+          "type": "POI",
+          "locationId": "cd_nqlyn",
+          "notes": "入住都江堰市区的酒店，在夜幕下欣赏炫彩迷人的“蓝眼泪”夜景[span_31](start_span)[span_31](end_span)"
+        }
+      ]
+    },
+    {
+      "day": 8,
+      "title": "Day 8: 熊猫野放探秘 ➔ 周边休闲漫步 ➔ 返回成都",
+      "city": "成都",
+      "steps": [
+        {
+          "time": "09:00",
+          "activity": "都江堰熊猫谷",
+          "type": "POI",
+          "locationId": "cd_xmg",
+          "notes": "在半山竹海的自然环境中近距离看大熊猫和小熊猫[span_32](start_span)[span_32](end_span)"
+        },
+        {
+          "time": "13:30",
+          "activity": "钟书阁（都江堰店）",
+          "type": "POI",
+          "locationId": "cd_zsg",
+          "notes": "探索都江堰周边区域（如灌县古城、仰天广场或钟书阁拍照打卡）[span_33](start_span)[span_33](end_span)"
+        },
+        {
+          "time": "16:00",
+          "activity": "返回成都市区",
+          "type": "Experience",
+          "locationId": "cd_cxlj",
+          "notes": "收拾行李，乘坐高铁或包车返回成都市区，入住酒店办理入住并稍作休整[span_34](start_span)[span_34](end_span)"
+        }
+      ]
+    },
+    {
+      "day": 9,
+      "title": "Day 9: 伴手礼采购与查漏补缺",
+      "city": "成都",
+      "steps": [
+        {
+          "time": "10:00",
+          "activity": "春熙路步行街",
+          "type": "Shopping",
+          "locationId": "cd_cxlj",
+          "notes": "前往大型超市或老字号特产店，选购火锅底料、灯影牛肉、川茶、熊猫主题文创等手信[span_35](start_span)[span_35](end_span)"
+        },
+        {
+          "time": "14:00",
+          "activity": "行程收官与返程",
+          "type": "Experience",
+          "locationId": "cd_whc",
+          "notes": "留出灵活时间查漏补缺，再次品尝心仪的川菜或小吃，随后根据返程时间前往机场或高铁站结束愉快的旅程[span_36](start_span)[span_36](end_span)"
         }
       ]
     }
