@@ -85,39 +85,21 @@
     </section>
 
     <!-- View 2: Itinerary -->
-    <section id="view-itinerary" class="hidden space-y-6">
+    <section id="view-itinerary" class="hidden space-y-8">
       <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 class="text-xl font-bold">行程规划</h2>
-          <p id="itinerary-hint" class="text-slate-400 text-sm mt-1">点击「查看景点详情」可查看景点信息；点「编辑行程」可自由修改。</p>
+          <p class="text-slate-400 text-sm mt-1">点击带有标志的活动项目，可随时查看景点详细信息。</p>
         </div>
-        <div class="flex flex-wrap gap-2">
-          <button id="edit-toggle" onclick="toggleEdit()" class="text-sm bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition font-medium">
-            <i class="fa-solid fa-pen-to-square mr-1"></i> 编辑行程
-          </button>
-          <button onclick="switchTab('locations')" class="text-xs bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition border border-white/10">
-            <i class="fa-solid fa-arrow-left mr-1"></i> 返回所有景点
-          </button>
-        </div>
-      </div>
-
-      <!-- Edit tools (only in edit mode) -->
-      <div id="edit-tools" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap items-center gap-2">
-        <button onclick="exportData()" class="text-xs px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white transition"><i class="fa-solid fa-download mr-1"></i>导出 JSON</button>
-        <button onclick="document.getElementById('import-file').click()" class="text-xs px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"><i class="fa-solid fa-upload mr-1"></i>导入</button>
-        <input type="file" id="import-file" accept=".json,application/json" class="hidden" onchange="importData(event)">
-        <button onclick="resetItinerary()" class="text-xs px-3 py-2 rounded-lg bg-slate-100 hover:bg-amber-100 text-slate-700 transition"><i class="fa-solid fa-rotate-left mr-1"></i>恢复原始行程</button>
-        <span id="save-status" class="text-xs text-slate-400 ml-auto"></span>
+        <button onclick="switchTab('locations')" class="text-xs bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition border border-white/10">
+          <i class="fa-solid fa-arrow-left mr-1"></i> 返回所有景点
+        </button>
       </div>
 
       <!-- Itinerary List -->
       <div id="itinerary-container" class="space-y-8">
         <!-- Dynamically populated itinerary -->
       </div>
-
-      <button id="add-day-btn" onclick="addDay()" class="hidden w-full py-3 rounded-2xl border-2 border-dashed border-slate-300 text-slate-500 hover:border-red-400 hover:text-red-600 transition text-sm font-medium">
-        <i class="fa-solid fa-plus mr-1"></i> 添加一天
-      </button>
     </section>
 
   </main>
@@ -199,18 +181,11 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="bg-slate-50 p-4 sm:p-5 border-t flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-        <div class="flex items-center gap-2">
-          <select id="modal-add-day" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20"></select>
-          <button onclick="addLocationToDay()" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-medium transition whitespace-nowrap">
-            <i class="fa-solid fa-plus mr-1"></i>加入行程
-          </button>
-        </div>
+      <div class="bg-slate-50 p-4 sm:p-5 border-t text-right">
         <button onclick="closeModal()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition">
           关闭
         </button>
       </div>
-</div>
 
     </div>
   </div>
@@ -245,8 +220,6 @@
     </div>
   </div>
 
-  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-4 py-2 rounded-xl shadow-lg z-[60]"></div>
-
   <!-- JavaScript Logic -->
   <script>
     let appData = { locations: [], itinerary: [] };
@@ -264,7 +237,6 @@
         const response = await fetch('./locations.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         appData = await response.json();
-        prepareItinerary();
         
         initApp();
       } catch (error) {
@@ -437,313 +409,55 @@
       }).join('');
     }
 
-    // ===================== Itinerary (editable) =====================
-    const STORAGE_KEY = 'cq_cd_itinerary_v1';
-    const STEP_TYPES = ['POI', 'Food', 'Shopping', 'Experience', 'Transport', 'Hotel', 'Other'];
-    let editMode = false;
-    let originalItinerary = [];
-    let currentModalId = null;
-
-    function esc(v) {
-      return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-
-    // "Day 1 (11月7日): 标题" -> { date, name }
-    function parseTitle(t) {
-      const m = String(t || '').match(/^Day\s*\d+\s*(?:[（(]([^)）]*)[)）])?\s*[:：]?\s*(.*)$/);
-      return m ? { date: m[1] || '', name: m[2] || '' } : { date: '', name: t || '' };
-    }
-
-    function normalizeItinerary(list) {
-      return (list || []).map(d => {
-        const p = parseTitle(d.title);
-        return {
-          city: d.city || '',
-          date: d.date != null ? d.date : p.date,
-          name: d.name != null ? d.name : p.name,
-          steps: (d.steps || []).map(st => ({
-            time: st.time || '',
-            type: st.type || 'POI',
-            activity: st.activity || '',
-            locationId: st.locationId || '',
-            notes: st.notes || ''
-          }))
-        };
-      });
-    }
-
-    function serializeItinerary() {
-      return appData.itinerary.map((d, i) => ({
-        day: i + 1,
-        title: `Day ${i + 1}${d.date ? ` (${d.date})` : ''}: ${d.name}`,
-        city: d.city,
-        steps: d.steps.map(st => {
-          const o = { time: st.time, activity: st.activity, type: st.type };
-          if (st.locationId) o.locationId = st.locationId;
-          if (st.notes) o.notes = st.notes;
-          return o;
-        })
-      }));
-    }
-
-    function prepareItinerary() {
-      originalItinerary = normalizeItinerary(appData.itinerary);
-      let list = originalItinerary;
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) list = normalizeItinerary(JSON.parse(saved));
-      } catch (e) { /* storage unavailable or corrupted: use original */ }
-      appData.itinerary = JSON.parse(JSON.stringify(list));
-    }
-
-    function persist() {
-      const el = document.getElementById('save-status');
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeItinerary()));
-        if (el) el.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i>已自动保存';
-      } catch (e) {
-        if (el) el.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i>无法自动保存，请用「导出 JSON」备份';
-      }
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.remove('hidden');
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => t.classList.add('hidden'), 1800);
-    }
-
-    function getLoc(id) { return appData.locations.find(l => l.id === id); }
-
-    function locationOptions(selectedId) {
-      const cities = [...new Set(appData.locations.map(l => l.city))];
-      let html = `<option value="">（不关联景点 / 自定义）</option>`;
-      let found = !selectedId;
-      cities.forEach(city => {
-        html += `<optgroup label="${esc(city)}">` + appData.locations.filter(l => l.city === city).map(l => {
-          if (l.id === selectedId) found = true;
-          return `<option value="${esc(l.id)}" ${l.id === selectedId ? 'selected' : ''}>${esc(l.name)}</option>`;
-        }).join('') + `</optgroup>`;
-      });
-      if (!found) html += `<option value="${esc(selectedId)}" selected>（未知景点：${esc(selectedId)}）</option>`;
-      return html;
-    }
-
-    function toggleEdit() {
-      editMode = !editMode;
-      document.getElementById('edit-tools').classList.toggle('hidden', !editMode);
-      document.getElementById('add-day-btn').classList.toggle('hidden', !editMode);
-      const btn = document.getElementById('edit-toggle');
-      btn.innerHTML = editMode
-        ? '<i class="fa-solid fa-check mr-1"></i> 完成编辑'
-        : '<i class="fa-solid fa-pen-to-square mr-1"></i> 编辑行程';
-      btn.className = editMode
-        ? 'text-sm bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg transition font-medium'
-        : 'text-sm bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition font-medium';
-      document.getElementById('itinerary-hint').textContent = editMode
-        ? '修改会自动保存在本机浏览器。可调整顺序、更换景点、增删行程。'
-        : '点击「查看景点详情」可查看景点信息；点「编辑行程」可自由修改。';
-      renderItinerary();
-    }
-
-    // ---- data mutations ----
-    function updDay(di, key, val) { appData.itinerary[di][key] = val; persist(); }
-    function updStep(di, si, key, val) { appData.itinerary[di].steps[si][key] = val; persist(); }
-
-    function setStepLocation(di, si, id) {
-      const st = appData.itinerary[di].steps[si];
-      const prev = getLoc(st.locationId);
-      const next = getLoc(id);
-      st.locationId = id;
-      if (next && (!st.activity || (prev && st.activity === prev.name))) st.activity = next.name;
-      persist();
-      renderItinerary();
-    }
-
-    function moveStep(di, si, dir) {
-      const steps = appData.itinerary[di].steps;
-      const j = si + dir;
-      if (j < 0 || j >= steps.length) return;
-      [steps[si], steps[j]] = [steps[j], steps[si]];
-      persist(); renderItinerary();
-    }
-
-    function deleteStep(di, si) {
-      appData.itinerary[di].steps.splice(si, 1);
-      persist(); renderItinerary();
-    }
-
-    function nextTime(steps) {
-      if (!steps.length || !/^\d{1,2}:\d{2}$/.test(steps[steps.length - 1].time)) return '09:00';
-      const [h, m] = steps[steps.length - 1].time.split(':').map(Number);
-      return String(Math.min(h + 1, 23)).padStart(2, '0') + ':' + String(m).padStart(2, '0');
-    }
-
-    function addStep(di) {
-      const steps = appData.itinerary[di].steps;
-      steps.push({ time: nextTime(steps), type: 'POI', activity: '', locationId: '', notes: '' });
-      persist(); renderItinerary();
-    }
-
-    function sortSteps(di) {
-      appData.itinerary[di].steps.sort((a, b) => a.time.localeCompare(b.time));
-      persist(); renderItinerary();
-    }
-
-    function addDay() {
-      const list = appData.itinerary;
-      list.push({ city: list.length ? list[list.length - 1].city : '', date: '', name: '新的一天', steps: [] });
-      persist(); renderItinerary();
-    }
-
-    function moveDay(di, dir) {
-      const list = appData.itinerary;
-      const j = di + dir;
-      if (j < 0 || j >= list.length) return;
-      [list[di], list[j]] = [list[j], list[di]];
-      persist(); renderItinerary();
-    }
-
-    function deleteDay(di) {
-      if (!confirm(`确定删除 Day ${di + 1} 整天的行程吗？`)) return;
-      appData.itinerary.splice(di, 1);
-      persist(); renderItinerary();
-    }
-
-    // Add a location (from the detail modal) into a chosen day
-    function addLocationToDay() {
-      const di = parseInt(document.getElementById('modal-add-day').value, 10);
-      const loc = getLoc(currentModalId);
-      if (!loc || isNaN(di) || !appData.itinerary[di]) return;
-      const steps = appData.itinerary[di].steps;
-      const isFood = /美食|小吃|餐|火锅/.test(loc.category);
-      steps.push({ time: nextTime(steps), type: isFood ? 'Food' : 'POI', activity: loc.name, locationId: loc.id, notes: '' });
-      persist(); renderItinerary();
-      showToast(`已加入 Day ${di + 1}：${loc.name}`);
-    }
-
-    // ---- export / import / reset ----
-    function exportData() {
-      const blob = new Blob([JSON.stringify({ locations: appData.locations, itinerary: serializeItinerary() }, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'locations.json';
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    }
-
-    function importData(ev) {
-      const file = ev.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          const list = Array.isArray(data) ? data : data.itinerary;
-          if (!Array.isArray(list)) throw new Error('no itinerary');
-          appData.itinerary = normalizeItinerary(list);
-          persist(); renderItinerary();
-          showToast('导入成功');
-        } catch (e) { alert('导入失败：文件格式不正确'); }
-        ev.target.value = '';
-      };
-      reader.readAsText(file);
-    }
-
-    function resetItinerary() {
-      if (!confirm('确定放弃所有修改，恢复为原始行程吗？')) return;
-      appData.itinerary = JSON.parse(JSON.stringify(originalItinerary));
-      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-      document.getElementById('save-status').textContent = '';
-      renderItinerary();
-    }
-
-    // ---- rendering ----
-    const iconBtn = 'w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition text-xs disabled:opacity-30';
-    const inputCls = 'px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500';
-
+    // Render Itinerary Timeline
     function renderItinerary() {
       const container = document.getElementById('itinerary-container');
-      const days = appData.itinerary;
-      if (!days.length) {
-        container.innerHTML = `<div class="text-center py-12 bg-white rounded-2xl border border-slate-100 text-slate-400 text-sm">还没有行程，点下方「添加一天」开始吧</div>`;
-        return;
-      }
-      container.innerHTML = days.map((day, di) => editMode ? renderDayEdit(day, di, days.length) : renderDayView(day, di)).join('');
-    }
 
-    function renderDayView(day, di) {
-      return `
+      container.innerHTML = appData.itinerary.map(day => `
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
           <div class="flex items-center gap-3 pb-4 mb-6 border-b border-slate-100">
-            <div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-xl text-sm shrink-0">Day ${di + 1}</div>
-            <h3 class="text-lg font-bold text-slate-800">${day.date ? `<span class="text-slate-400 font-medium">${esc(day.date)}</span> ` : ''}${esc(day.name)}</h3>
-          </div>
-          <div class="relative pl-6 border-l-2 border-slate-100 space-y-6">
-            ${day.steps.length ? day.steps.map(step => `
-              <div class="relative group">
-                <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-white border-4 border-red-500"></div>
-                <div class="bg-slate-50 hover:bg-slate-100/80 rounded-xl p-4 transition border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                      <span class="font-mono text-xs font-semibold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">${esc(step.time)}</span>
-                      <span class="text-xs text-slate-400 px-2 py-0.5 rounded bg-white border">${esc(step.type)}</span>
-                    </div>
-                    <h4 class="font-bold text-slate-800 text-base">${esc(step.activity)}</h4>
-                    ${step.notes ? `<p class="text-xs text-slate-500"><i class="fa-regular fa-lightbulb text-amber-500 mr-1"></i>${esc(step.notes)}</p>` : ''}
-                  </div>
-                  ${step.locationId ? `
-                    <button onclick="openModal('${esc(step.locationId)}')"
-                      class="self-start sm:self-center bg-white hover:bg-red-50 text-red-600 hover:text-red-700 border border-red-200 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
-                      <i class="fa-solid fa-circle-info"></i> 查看景点详情
-                    </button>` : ''}
-                </div>
-              </div>`).join('') : `<p class="text-sm text-slate-400">这一天还没有安排</p>`}
-          </div>
-        </div>`;
-    }
-
-    function renderDayEdit(day, di, total) {
-      return `
-        <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border-2 border-red-100">
-          <div class="flex flex-wrap items-center gap-2 pb-4 mb-4 border-b border-slate-100">
-            <div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-xl text-sm shrink-0">Day ${di + 1}</div>
-            <input type="text" value="${esc(day.date)}" placeholder="日期，如 11月7日" oninput="updDay(${di},'date',this.value)" class="${inputCls} w-32">
-            <input type="text" value="${esc(day.name)}" placeholder="当天主题" oninput="updDay(${di},'name',this.value)" class="${inputCls} flex-1 min-w-[10rem]">
-            <div class="flex gap-1 ml-auto">
-              <button onclick="moveDay(${di},-1)" class="${iconBtn}" ${di === 0 ? 'disabled' : ''} title="上移一天"><i class="fa-solid fa-arrow-up"></i></button>
-              <button onclick="moveDay(${di},1)" class="${iconBtn}" ${di === total - 1 ? 'disabled' : ''} title="下移一天"><i class="fa-solid fa-arrow-down"></i></button>
-              <button onclick="deleteDay(${di})" class="${iconBtn} hover:!text-red-600 hover:!bg-red-50" title="删除这一天"><i class="fa-solid fa-trash"></i></button>
+            <div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-xl text-sm">
+              Day ${day.day}
             </div>
+            <h3 class="text-lg font-bold text-slate-800">${day.title}</h3>
           </div>
 
-          <div class="space-y-3">
-            ${day.steps.map((st, si) => `
-              <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 space-y-2">
-                <div class="flex flex-wrap items-center gap-2">
-                  <input type="time" value="${esc(st.time)}" oninput="updStep(${di},${si},'time',this.value)" class="${inputCls} w-28">
-                  <select onchange="updStep(${di},${si},'type',this.value)" class="${inputCls}">
-                    ${(STEP_TYPES.includes(st.type) ? STEP_TYPES : [...STEP_TYPES, st.type]).map(t => `<option value="${esc(t)}" ${t === st.type ? 'selected' : ''}>${esc(t)}</option>`).join('')}
-                  </select>
-                  <div class="flex gap-1 ml-auto">
-                    <button onclick="moveStep(${di},${si},-1)" class="${iconBtn}" ${si === 0 ? 'disabled' : ''} title="上移"><i class="fa-solid fa-arrow-up"></i></button>
-                    <button onclick="moveStep(${di},${si},1)" class="${iconBtn}" ${si === day.steps.length - 1 ? 'disabled' : ''} title="下移"><i class="fa-solid fa-arrow-down"></i></button>
-                    <button onclick="deleteStep(${di},${si})" class="${iconBtn} hover:!text-red-600 hover:!bg-red-50" title="删除"><i class="fa-solid fa-trash"></i></button>
+          <div class="relative pl-6 border-l-2 border-slate-100 space-y-6">
+            ${day.steps.map(step => {
+              return `
+                <div class="relative group">
+                  <!-- Timeline Node dot -->
+                  <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-white border-4 border-red-500"></div>
+
+                  <div class="bg-slate-50 hover:bg-slate-100/80 rounded-xl p-4 transition border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono text-xs font-semibold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">
+                          ${step.time}
+                        </span>
+                        <span class="text-xs text-slate-400 px-2 py-0.5 rounded bg-white border">
+                          ${step.type}
+                        </span>
+                      </div>
+                      <h4 class="font-bold text-slate-800 text-base">
+                        ${step.activity}
+                      </h4>
+                      ${step.notes ? `<p class="text-xs text-slate-500"><i class="fa-regular fa-lightbulb text-amber-500 mr-1"></i>${step.notes}</p>` : ''}
+                    </div>
+
+                    ${step.locationId ? `
+                      <button onclick="openModal('${step.locationId}')" 
+                        class="self-start sm:self-center bg-white hover:bg-red-50 text-red-600 hover:text-red-700 border border-red-200 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                        <i class="fa-solid fa-circle-info"></i> 查看景点详情
+                      </button>
+                    ` : ''}
                   </div>
                 </div>
-                <select onchange="setStepLocation(${di},${si},this.value)" class="${inputCls} w-full">${locationOptions(st.locationId)}</select>
-                <input type="text" value="${esc(st.activity)}" placeholder="活动名称" oninput="updStep(${di},${si},'activity',this.value)" class="${inputCls} w-full font-medium">
-                <input type="text" value="${esc(st.notes)}" placeholder="备注（可选）" oninput="updStep(${di},${si},'notes',this.value)" class="${inputCls} w-full">
-                ${st.locationId ? `<button onclick="openModal('${esc(st.locationId)}')" class="text-xs text-red-600 hover:underline"><i class="fa-solid fa-circle-info mr-1"></i>查看景点详情</button>` : ''}
-              </div>`).join('')}
+              `;
+            }).join('')}
           </div>
-
-          <div class="flex flex-wrap gap-2 mt-4">
-            <button onclick="addStep(${di})" class="text-xs px-3 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 font-medium transition"><i class="fa-solid fa-plus mr-1"></i>添加活动</button>
-            <button onclick="sortSteps(${di})" class="text-xs px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition"><i class="fa-solid fa-arrow-down-1-9 mr-1"></i>按时间排序</button>
-          </div>
-        </div>`;
+        </div>
+      `).join('');
     }
 
     // Helper to probe image presence efficiently
@@ -766,10 +480,6 @@
       }
 
       document.getElementById('modal-name').innerText = loc.name;
-      currentModalId = id;
-      document.getElementById('modal-add-day').innerHTML = appData.itinerary.length
-        ? appData.itinerary.map((d, i) => `<option value="${i}">Day ${i + 1}${d.date ? ' · ' + esc(d.date) : ''}</option>`).join('')
-        : '<option value="" disabled selected>暂无行程</option>';
       document.getElementById('modal-category').innerText = loc.category;
       document.getElementById('modal-city').innerText = loc.city;
       document.getElementById('modal-address').innerText = loc.address;
