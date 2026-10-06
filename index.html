@@ -49,7 +49,7 @@
     <!-- View 1: Locations List -->
     <section id="view-locations" class="space-y-6">
       
-      <!-- Search & Category/City Filters -->
+      <!-- Search & Category/City Filters & Add Location -->
       <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
         <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
           
@@ -60,22 +60,30 @@
               class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition">
           </div>
 
-          <!-- Filters Container (City & Category Pills) -->
-          <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
-            <div id="city-filters" class="flex flex-wrap gap-2 items-center">
-              <!-- Dynamically populated city filters -->
+          <!-- Filters Container & Add Location Button -->
+          <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center justify-between">
+            <div class="flex flex-wrap gap-2 items-center">
+              <div id="city-filters" class="flex flex-wrap gap-2 items-center"></div>
+              <div id="category-filters" class="flex flex-wrap gap-2 items-center"></div>
             </div>
-            <div id="category-filters" class="flex flex-wrap gap-2 items-center">
-              <!-- Dynamically populated categories -->
-            </div>
+            <button onclick="openLocationEditModal()" class="text-xs bg-red-600 hover:bg-red-500 text-white px-4 py-2.5 rounded-xl transition font-medium whitespace-nowrap shadow-sm flex items-center gap-1.5 shrink-0">
+              <i class="fa-solid fa-plus"></i> 添加新景点
+            </button>
           </div>
+        </div>
+        
+        <!-- Global data tools bar -->
+        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+          <button onclick="exportData()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white transition"><i class="fa-solid fa-download mr-1"></i>导出完整 JSON</button>
+          <button onclick="document.getElementById('import-file').click()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"><i class="fa-solid fa-upload mr-1"></i>导入 JSON</button>
+          <input type="file" id="import-file" accept=".json,application/json" class="hidden" onchange="importData(event)">
+          <button onclick="resetAllData()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-amber-100 text-slate-700 transition"><i class="fa-solid fa-rotate-left mr-1"></i>恢复原始所有数据</button>
+          <span id="global-save-status" class="ml-auto text-slate-400"></span>
         </div>
       </div>
 
       <!-- Locations Grid -->
-      <div id="locations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Dynamically populated cards -->
-      </div>
+      <div id="locations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
       <!-- Empty State -->
       <div id="no-locations" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-100">
@@ -105,15 +113,12 @@
       <div id="edit-tools" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap items-center gap-2">
         <button onclick="exportData()" class="text-xs px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white transition"><i class="fa-solid fa-download mr-1"></i>导出 JSON</button>
         <button onclick="document.getElementById('import-file').click()" class="text-xs px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"><i class="fa-solid fa-upload mr-1"></i>导入</button>
-        <input type="file" id="import-file" accept=".json,application/json" class="hidden" onchange="importData(event)">
         <button onclick="resetItinerary()" class="text-xs px-3 py-2 rounded-lg bg-slate-100 hover:bg-amber-100 text-slate-700 transition"><i class="fa-solid fa-rotate-left mr-1"></i>恢复原始行程</button>
         <span id="save-status" class="text-xs text-slate-400 ml-auto"></span>
       </div>
 
       <!-- Itinerary List -->
-      <div id="itinerary-container" class="space-y-8">
-        <!-- Dynamically populated itinerary -->
-      </div>
+      <div id="itinerary-container" class="space-y-8"></div>
 
       <button id="add-day-btn" onclick="addDay()" class="hidden w-full py-3 rounded-2xl border-2 border-dashed border-slate-300 text-slate-500 hover:border-red-400 hover:text-red-600 transition text-sm font-medium">
         <i class="fa-solid fa-plus mr-1"></i> 添加一天
@@ -135,7 +140,7 @@
           <span id="modal-category" class="bg-red-500/20 text-red-300 text-xs font-semibold px-3 py-1 rounded-full border border-red-500/30"></span>
           <span id="modal-city" class="text-slate-400 text-sm font-medium"></span>
         </div>
-        <h3 id="modal-name" class="text-2xl sm:text-3xl font-bold pr-10"></h3>
+        <h3 id="modal-name" class="text-2xl sm:text-3xl font-bold pr-24"></h3>
       </div>
 
       <!-- Modal Body -->
@@ -150,19 +155,14 @@
             <span class="text-xs text-slate-400 font-normal">点击缩略图放大预览，支持翻页查看</span>
           </div>
 
-          <!-- Thumbnail Grid -->
-          <div id="gallery-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            <!-- Dynamically populated thumbnails -->
-          </div>
-
+          <div id="gallery-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
           <p id="no-gallery-msg" class="hidden text-sm text-slate-400 italic py-6 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
             暂无相册照片 (`img1.jpg` 或 `img1.jpeg`)
           </p>
         </div>
 
-        <!-- Meta Info Cards Grid (Address, Time, Fee) -->
+        <!-- Meta Info Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Address Box (Always Shown) -->
           <div class="flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 col-span-1 md:col-span-2">
             <i class="fa-solid fa-location-dot text-red-500 text-lg mt-0.5 shrink-0"></i>
             <div>
@@ -171,7 +171,6 @@
             </div>
           </div>
 
-          <!-- Operation Time Box (Optional) -->
           <div id="modal-time-box" class="hidden flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
             <i class="fa-regular fa-clock text-red-500 text-lg mt-0.5 shrink-0"></i>
             <div>
@@ -180,7 +179,6 @@
             </div>
           </div>
 
-          <!-- Entrance Fee Box (Optional) -->
           <div id="modal-fee-box" class="hidden flex items-start gap-3.5 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
             <i class="fa-solid fa-ticket text-red-500 text-lg mt-0.5 shrink-0"></i>
             <div>
@@ -200,47 +198,117 @@
 
       <!-- Modal Footer -->
       <div class="bg-slate-50 p-4 sm:p-5 border-t flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
           <select id="modal-add-day" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20"></select>
           <button onclick="addLocationToDay()" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-medium transition whitespace-nowrap">
             <i class="fa-solid fa-plus mr-1"></i>加入行程
           </button>
         </div>
-        <button onclick="closeModal()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition">
-          关闭
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="editCurrentLocation()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition">
+            <i class="fa-solid fa-pen mr-1"></i>编辑景点
+          </button>
+          <button onclick="deleteCurrentLocation()" class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-sm font-medium transition">
+            <i class="fa-solid fa-trash mr-1"></i>删除
+          </button>
+          <button onclick="closeModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-sm font-medium transition">
+            关闭
+          </button>
+        </div>
       </div>
-</div>
+    </div>
+  </div>
 
+  <!-- Location Add / Edit Modal -->
+  <div id="location-edit-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden transform transition-all flex flex-col max-h-[92vh]">
+      <div class="bg-slate-900 text-white p-6 relative">
+        <button onclick="closeLocationEditModal()" class="absolute right-5 top-5 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full w-9 h-9 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <h3 id="loc-edit-title" class="text-xl font-bold">添加新景点</h3>
+      </div>
+      
+      <form id="loc-edit-form" onsubmit="saveLocationForm(event)" class="p-6 space-y-4 overflow-y-auto flex-1">
+        <input type="hidden" id="loc-id">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">景点名称 *</label>
+            <input type="text" id="loc-name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">城市 *</label>
+            <input type="text" id="loc-city" required placeholder="重庆 / 成都" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">分类 *</label>
+            <input type="text" id="loc-category" required placeholder="如：地标、博物馆、公园" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">图片文件夹路径</label>
+            <input type="text" id="loc-folder" placeholder="images/cq/hyd" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">详细地址 *</label>
+          <input type="text" id="loc-address" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">开放/营业时间</label>
+            <input type="text" id="loc-time" placeholder="09:00 - 22:00" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">门票价格</label>
+            <input type="text" id="loc-fee" placeholder="免费 / 30元/人" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">景点介绍 *</label>
+          <textarea id="loc-description" rows="3" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">纬度 (Latitude)</label>
+            <input type="number" step="0.0001" id="loc-lat" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">经度 (Longitude)</label>
+            <input type="number" step="0.0001" id="loc-lng" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+          </div>
+        </div>
+
+        <div class="pt-4 border-t flex justify-end gap-3">
+          <button type="button" onclick="closeLocationEditModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-sm font-medium transition">取消</button>
+          <button type="submit" class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-medium transition">保存景点</button>
+        </div>
+      </form>
     </div>
   </div>
 
   <!-- Interactive Lightbox Modal -->
   <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 select-none">
-    
-    <!-- Close Button -->
     <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white/70 hover:text-white text-3xl font-bold p-3 z-30 transition">
       <i class="fa-solid fa-xmark"></i>
     </button>
-
-    <!-- Prev Button -->
     <button id="lightbox-prev" onclick="changeLightboxSlide(-1)" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl transition z-30 border border-white/10 shadow-lg">
       <i class="fa-solid fa-chevron-left"></i>
     </button>
-
-    <!-- Next Button -->
     <button id="lightbox-next" onclick="changeLightboxSlide(1)" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl transition z-30 border border-white/10 shadow-lg">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
-
-    <!-- Lightbox Main Image & Counter -->
     <div class="relative max-w-full max-h-[90vh] flex flex-col items-center justify-center">
       <img id="lightbox-img" src="" alt="Preview" onclick="changeLightboxSlide(1)" title="点击查看下一张" class="max-w-full max-h-[82vh] object-contain rounded-lg shadow-2xl cursor-pointer">
-      
-      <!-- Counter & Info -->
       <div class="flex items-center gap-3 mt-3">
         <span id="lightbox-counter" class="text-white/90 text-xs font-mono bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10"></span>
-        <span class="text-white/50 text-xs hidden sm:inline"><i class="fa-solid fa-keyboard mr-1"></i>可用左右方向键 ← → 切换</span>
       </div>
     </div>
   </div>
@@ -249,23 +317,46 @@
 
   <!-- JavaScript Logic -->
   <script>
+    const LOCATIONS_STORAGE_KEY = 'cq_cd_locations_v2';
+    const ITINERARY_STORAGE_KEY = 'cq_cd_itinerary_v2';
+
     let appData = { locations: [], itinerary: [] };
+    let originalLocations = [];
+    let originalItinerary = [];
+
     let currentCategory = 'all';
     let currentCity = 'all';
     let searchQuery = '';
     
-    // Gallery state
     let currentGalleryPhotos = [];
     let currentLightboxIndex = 0;
+    let currentModalId = null;
 
-    // Fetch locations.json from the same directory
+    // Load data with localStorage fallback
     async function loadData() {
       try {
         const response = await fetch('./locations.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        appData = await response.json();
-        prepareItinerary();
+        const data = await response.json();
         
+        originalLocations = JSON.parse(JSON.stringify(data.locations || []));
+        originalItinerary = normalizeItinerary(data.itinerary || []);
+
+        let loadedLocations = originalLocations;
+        let loadedItinerary = originalItinerary;
+
+        try {
+          const savedLocs = localStorage.getItem(LOCATIONS_STORAGE_KEY);
+          if (savedLocs) loadedLocations = JSON.parse(savedLocs);
+        } catch (e) {}
+
+        try {
+          const savedItin = localStorage.getItem(ITINERARY_STORAGE_KEY);
+          if (savedItin) loadedItinerary = normalizeItinerary(JSON.parse(savedItin));
+        } catch (e) {}
+
+        appData = { locations: loadedLocations, itinerary: loadedItinerary };
+        prepareItinerary();
         initApp();
       } catch (error) {
         console.error("Error loading json:", error);
@@ -285,6 +376,58 @@
       renderItinerary();
     }
 
+    function persistLocations() {
+      try {
+        localStorage.setItem(LOCATIONS_STORAGE_KEY, JSON.stringify(appData.locations));
+        showGlobalStatus('景点数据已保存');
+      } catch (e) {
+        showGlobalStatus('保存失败（超出存储配额）');
+      }
+    }
+
+    function persistItinerary() {
+      try {
+        localStorage.setItem(ITINERARY_STORAGE_KEY, JSON.stringify(serializeItinerary()));
+        const el = document.getElementById('save-status');
+        if (el) el.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i>已自动保存';
+        showGlobalStatus('行程已保存');
+      } catch (e) {}
+    }
+
+    function showGlobalStatus(msg) {
+      const el = document.getElementById('global-save-status');
+      if (el) {
+        el.textContent = msg;
+        setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 3000);
+      }
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => t.classList.add('hidden'), 1800);
+    }
+
+    // Navigation Tab Switcher
+    function switchTab(tab) {
+      const isLoc = tab === 'locations';
+      document.getElementById('view-locations').classList.toggle('hidden', !isLoc);
+      document.getElementById('view-itinerary').classList.toggle('hidden', isLoc);
+      
+      document.getElementById('nav-locations').className = isLoc 
+        ? 'px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm'
+        : 'px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100';
+      
+      document.getElementById('nav-itinerary').className = !isLoc 
+        ? 'px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm'
+        : 'px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100';
+      
+      if (!isLoc) renderItinerary();
+      else renderLocations();
+    }
+
     // Setup City Filters
     function setupCityFilters() {
       const cities = ['all', ...new Set(appData.locations.map(loc => loc.city))];
@@ -296,23 +439,16 @@
         const label = isAll ? '全部城市' : city;
         return `
           <button onclick="setCity('${city}')" data-city="${city}"
-            class="city-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition ${isAll ? 'bg-slate-800 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+            class="city-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition ${isAll && currentCity === 'all' ? 'bg-slate-800 text-white shadow-sm' : (currentCity === city ? 'bg-slate-800 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200')}">
             ${label}
           </button>
         `;
       }).join('');
     }
 
-    // City Filter Trigger
     function setCity(city) {
       currentCity = city;
-      document.querySelectorAll('.city-btn').forEach(btn => {
-        if (btn.getAttribute('data-city') === city) {
-          btn.className = 'city-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-slate-800 text-white shadow-sm';
-        } else {
-          btn.className = 'city-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-slate-100 text-slate-600 hover:bg-slate-200';
-        }
-      });
+      setupCityFilters();
       filterLocations();
     }
 
@@ -320,29 +456,23 @@
     function setupCategoryFilters() {
       const categories = ['all', ...new Set(appData.locations.map(loc => loc.category))];
       const container = document.getElementById('category-filters');
+      if (!container) return;
       
       container.innerHTML = categories.map(cat => {
         const isAll = cat === 'all';
         const label = isAll ? '全部景点' : cat;
         return `
           <button onclick="setCategory('${cat}')" data-cat="${cat}"
-            class="cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition ${isAll ? 'bg-red-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+            class="cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition ${currentCategory === cat ? 'bg-red-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
             ${label}
           </button>
         `;
       }).join('');
     }
 
-    // Filter Trigger
     function setCategory(cat) {
       currentCategory = cat;
-      document.querySelectorAll('.cat-btn').forEach(btn => {
-        if (btn.getAttribute('data-cat') === cat) {
-          btn.className = 'cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-red-600 text-white shadow-sm';
-        } else {
-          btn.className = 'cat-btn px-3.5 py-1.5 text-xs font-medium rounded-xl transition bg-slate-100 text-slate-600 hover:bg-slate-200';
-        }
-      });
+      setupCategoryFilters();
       filterLocations();
     }
 
@@ -351,7 +481,6 @@
       renderLocations();
     }
 
-    // Fallback Image Handler for Cover Card
     function handleCoverError(img, fallbackPath) {
       if (!img.dataset.triedJpeg) {
         img.dataset.triedJpeg = "true";
@@ -389,14 +518,13 @@
 
       emptyState.classList.add('hidden');
       grid.innerHTML = filtered.map(loc => {
-        const primaryImg = `${loc.folder}/img1.jpg`;
-        const fallbackImg = `${loc.folder}/img1.jpeg`;
+        const primaryImg = `${loc.folder || 'images/cq/hyd'}/img1.jpg`;
+        const fallbackImg = `${loc.folder || 'images/cq/hyd'}/img1.jpeg`;
 
         return `
           <div onclick="openModal('${loc.id}')" 
             class="group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 hover:border-red-100 transition-all duration-300 cursor-pointer flex flex-col overflow-hidden">
             
-            <!-- Cover Photo Thumbnail -->
             <div class="relative w-full h-44 bg-slate-100 overflow-hidden">
               <img src="${primaryImg}" 
                    onerror="handleCoverError(this, '${fallbackImg}')" 
@@ -404,28 +532,27 @@
                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
               <div class="absolute top-3 left-3">
                 <span class="bg-red-600/90 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm">
-                  ${loc.category}
+                  ${esc(loc.category)}
                 </span>
               </div>
             </div>
 
-            <!-- Card Body -->
             <div class="p-5 flex-1 flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-1.5">
                   <h3 class="text-lg font-bold text-slate-800 group-hover:text-red-600 transition-colors line-clamp-1">
-                    ${loc.name}
+                    ${esc(loc.name)}
                   </h3>
-                  <span class="text-xs text-slate-400 font-medium shrink-0 ml-2"><i class="fa-solid fa-city mr-1"></i>${loc.city}</span>
+                  <span class="text-xs text-slate-400 font-medium shrink-0 ml-2"><i class="fa-solid fa-city mr-1"></i>${esc(loc.city)}</span>
                 </div>
                 
                 <p class="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">
-                  ${loc.description}
+                  ${esc(loc.description)}
                 </p>
               </div>
 
               <div class="pt-3 border-t border-slate-50 flex items-center justify-between text-xs text-slate-400">
-                <span class="truncate max-w-[200px]"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>${loc.address}</span>
+                <span class="truncate max-w-[200px]"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>${esc(loc.address)}</span>
                 <span class="text-red-500 font-medium group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0">
                   详情 <i class="fa-solid fa-arrow-right"></i>
                 </span>
@@ -437,18 +564,116 @@
       }).join('');
     }
 
-    // ===================== Itinerary (editable) =====================
-    const STORAGE_KEY = 'cq_cd_itinerary_v1';
+    // ===================== Location Add / Edit Modal Logic =====================
+    function openLocationEditModal(id = null) {
+      const isEdit = id != null;
+      document.getElementById('loc-edit-title').textContent = isEdit ? '编辑景点' : '添加新景点';
+      
+      if (isEdit) {
+        const loc = appData.locations.find(l => l.id === id);
+        if (!loc) return;
+        document.getElementById('loc-id').value = loc.id;
+        document.getElementById('loc-name').value = loc.name || '';
+        document.getElementById('loc-city').value = loc.city || '';
+        document.getElementById('loc-category').value = loc.category || '';
+        document.getElementById('loc-folder').value = loc.folder || '';
+        document.getElementById('loc-address').value = loc.address || '';
+        document.getElementById('loc-time').value = loc.operation_time || '';
+        document.getElementById('loc-fee').value = loc.entrance_fee || '';
+        document.getElementById('loc-description').value = loc.description || '';
+        document.getElementById('loc-lat').value = loc.latitude || '';
+        document.getElementById('loc-lng').value = loc.longitude || '';
+      } else {
+        document.getElementById('loc-edit-form').reset();
+        document.getElementById('loc-id').value = '';
+        document.getElementById('loc-folder').value = 'images/cq/custom';
+      }
+      document.getElementById('location-edit-modal').classList.remove('hidden');
+    }
+
+    function closeLocationEditModal() {
+      document.getElementById('location-edit-modal').classList.add('hidden');
+    }
+
+    function saveLocationForm(e) {
+      e.preventDefault();
+      const idVal = document.getElementById('loc-id').value;
+      const name = document.getElementById('loc-name').value.trim();
+      const city = document.getElementById('loc-city').value.trim();
+      const category = document.getElementById('loc-category').value.trim();
+      const folder = document.getElementById('loc-folder').value.trim() || 'images/cq/custom';
+      const address = document.getElementById('loc-address').value.trim();
+      const operation_time = document.getElementById('loc-time').value.trim();
+      const entrance_fee = document.getElementById('loc-fee').value.trim();
+      const description = document.getElementById('loc-description').value.trim();
+      const latitude = parseFloat(document.getElementById('loc-lat').value) || 29.5500;
+      const longitude = parseFloat(document.getElementById('loc-lng').value) || 106.5000;
+
+      if (idVal) {
+        // Edit existing
+        const idx = appData.locations.findIndex(l => l.id === idVal);
+        if (idx !== -1) {
+          appData.locations[idx] = {
+            ...appData.locations[idx],
+            name, city, category, folder, address, operation_time, entrance_fee, description, latitude, longitude
+          };
+          showToast(`已成功更新景点：${name}`);
+        }
+      } else {
+        // Add new
+        const newId = 'loc_' + Math.random().toString(36).substring(2, 9);
+        const newLoc = {
+          id: newId,
+          name, city, category, folder, address, operation_time, entrance_fee, description, latitude, longitude
+        };
+        appData.locations.push(newLoc);
+        showToast(`已成功添加景点：${name}`);
+      }
+
+      persistLocations();
+      closeLocationEditModal();
+      setupCityFilters();
+      setupCategoryFilters();
+      renderLocations();
+      renderItinerary();
+      
+      // If modal detail view was open, refresh detail modal if it's the same
+      if (currentModalId === idVal) {
+        openModal(idVal);
+      }
+    }
+
+    function editCurrentLocation() {
+      if (!currentModalId) return;
+      closeModal();
+      openLocationEditModal(currentModalId);
+    }
+
+    function deleteCurrentLocation() {
+      if (!currentModalId) return;
+      const loc = appData.locations.find(l => l.id === currentModalId);
+      if (!loc) return;
+      
+      if (!confirm(`确定要删除景点「${loc.name}」吗？相关行程中的关联可能会失效。`)) return;
+
+      appData.locations = appData.locations.filter(l => l.id !== currentModalId);
+      persistLocations();
+      closeModal();
+      setupCityFilters();
+      setupCategoryFilters();
+      renderLocations();
+      renderItinerary();
+      showToast(`已删除景点：${loc.name}`);
+    }
+
+    // ===================== Itinerary Logic =====================
     const STEP_TYPES = ['POI', 'Food', 'Shopping', 'Experience', 'Transport', 'Hotel', 'Other'];
     let editMode = false;
-    let originalItinerary = [];
-    let currentModalId = null;
 
     function esc(v) {
       return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
-    // "Day 1 (11月7日): 标题" -> { date, name }
     function parseTitle(t) {
       const m = String(t || '').match(/^Day\s*\d+\s*(?:[（(]([^)）]*)[)）])?\s*[:：]?\s*(.*)$/);
       return m ? { date: m[1] || '', name: m[2] || '' } : { date: '', name: t || '' };
@@ -487,31 +712,12 @@
     }
 
     function prepareItinerary() {
-      originalItinerary = normalizeItinerary(appData.itinerary);
       let list = originalItinerary;
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
+        const saved = localStorage.getItem(ITINERARY_STORAGE_KEY);
         if (saved) list = normalizeItinerary(JSON.parse(saved));
-      } catch (e) { /* storage unavailable or corrupted: use original */ }
+      } catch (e) {}
       appData.itinerary = JSON.parse(JSON.stringify(list));
-    }
-
-    function persist() {
-      const el = document.getElementById('save-status');
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeItinerary()));
-        if (el) el.innerHTML = '<i class="fa-solid fa-check text-green-500 mr-1"></i>已自动保存';
-      } catch (e) {
-        if (el) el.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i>无法自动保存，请用「导出 JSON」备份';
-      }
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.remove('hidden');
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => t.classList.add('hidden'), 1800);
     }
 
     function getLoc(id) { return appData.locations.find(l => l.id === id); }
@@ -547,9 +753,8 @@
       renderItinerary();
     }
 
-    // ---- data mutations ----
-    function updDay(di, key, val) { appData.itinerary[di][key] = val; persist(); }
-    function updStep(di, si, key, val) { appData.itinerary[di].steps[si][key] = val; persist(); }
+    function updDay(di, key, val) { appData.itinerary[di][key] = val; persistItinerary(); }
+    function updStep(di, si, key, val) { appData.itinerary[di].steps[si][key] = val; persistItinerary(); }
 
     function setStepLocation(di, si, id) {
       const st = appData.itinerary[di].steps[si];
@@ -557,7 +762,7 @@
       const next = getLoc(id);
       st.locationId = id;
       if (next && (!st.activity || (prev && st.activity === prev.name))) st.activity = next.name;
-      persist();
+      persistItinerary();
       renderItinerary();
     }
 
@@ -566,12 +771,12 @@
       const j = si + dir;
       if (j < 0 || j >= steps.length) return;
       [steps[si], steps[j]] = [steps[j], steps[si]];
-      persist(); renderItinerary();
+      persistItinerary(); renderItinerary();
     }
 
     function deleteStep(di, si) {
       appData.itinerary[di].steps.splice(si, 1);
-      persist(); renderItinerary();
+      persistItinerary(); renderItinerary();
     }
 
     function nextTime(steps) {
@@ -583,18 +788,18 @@
     function addStep(di) {
       const steps = appData.itinerary[di].steps;
       steps.push({ time: nextTime(steps), type: 'POI', activity: '', locationId: '', notes: '' });
-      persist(); renderItinerary();
+      persistItinerary(); renderItinerary();
     }
 
     function sortSteps(di) {
       appData.itinerary[di].steps.sort((a, b) => a.time.localeCompare(b.time));
-      persist(); renderItinerary();
+      persistItinerary(); renderItinerary();
     }
 
     function addDay() {
       const list = appData.itinerary;
       list.push({ city: list.length ? list[list.length - 1].city : '', date: '', name: '新的一天', steps: [] });
-      persist(); renderItinerary();
+      persistItinerary(); renderItinerary();
     }
 
     function moveDay(di, dir) {
@@ -602,16 +807,15 @@
       const j = di + dir;
       if (j < 0 || j >= list.length) return;
       [list[di], list[j]] = [list[j], list[di]];
-      persist(); renderItinerary();
+      persistItinerary(); renderItinerary();
     }
 
     function deleteDay(di) {
       if (!confirm(`确定删除 Day ${di + 1} 整天的行程吗？`)) return;
       appData.itinerary.splice(di, 1);
-      persist(); renderItinerary();
+      persistItinerary(); renderItinerary();
     }
 
-    // Add a location (from the detail modal) into a chosen day
     function addLocationToDay() {
       const di = parseInt(document.getElementById('modal-add-day').value, 10);
       const loc = getLoc(currentModalId);
@@ -619,18 +823,23 @@
       const steps = appData.itinerary[di].steps;
       const isFood = /美食|小吃|餐|火锅/.test(loc.category);
       steps.push({ time: nextTime(steps), type: isFood ? 'Food' : 'POI', activity: loc.name, locationId: loc.id, notes: '' });
-      persist(); renderItinerary();
+      persistItinerary();
       showToast(`已加入 Day ${di + 1}：${loc.name}`);
     }
 
-    // ---- export / import / reset ----
+    // ---- Export / Import / Reset ----
     function exportData() {
-      const blob = new Blob([JSON.stringify({ locations: appData.locations, itinerary: serializeItinerary() }, null, 2)], { type: 'application/json' });
+      const exportObj = {
+        locations: appData.locations,
+        itinerary: serializeItinerary()
+      };
+      const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'locations.json';
+      a.download = 'cq_cd_trip_data.json';
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      showToast('导出成功');
     }
 
     function importData(ev) {
@@ -640,11 +849,17 @@
       reader.onload = () => {
         try {
           const data = JSON.parse(reader.result);
+          if (data.locations && Array.isArray(data.locations)) {
+            appData.locations = data.locations;
+            persistLocations();
+          }
           const list = Array.isArray(data) ? data : data.itinerary;
-          if (!Array.isArray(list)) throw new Error('no itinerary');
-          appData.itinerary = normalizeItinerary(list);
-          persist(); renderItinerary();
-          showToast('导入成功');
+          if (list && Array.isArray(list)) {
+            appData.itinerary = normalizeItinerary(list);
+            persistItinerary();
+          }
+          initApp();
+          showToast('数据导入成功');
         } catch (e) { alert('导入失败：文件格式不正确'); }
         ev.target.value = '';
       };
@@ -654,12 +869,23 @@
     function resetItinerary() {
       if (!confirm('确定放弃所有修改，恢复为原始行程吗？')) return;
       appData.itinerary = JSON.parse(JSON.stringify(originalItinerary));
-      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      try { localStorage.removeItem(ITINERARY_STORAGE_KEY); } catch (e) {}
       document.getElementById('save-status').textContent = '';
       renderItinerary();
+      showToast('已恢复原始行程');
     }
 
-    // ---- rendering ----
+    function resetAllData() {
+      if (!confirm('确定要恢复所有景点和行程为初始状态吗？您自定义添加的景点和修改将会被清除。')) return;
+      appData.locations = JSON.parse(JSON.stringify(originalLocations));
+      appData.itinerary = JSON.parse(JSON.stringify(originalItinerary));
+      localStorage.removeItem(LOCATIONS_STORAGE_KEY);
+      localStorage.removeItem(ITINERARY_STORAGE_KEY);
+      initApp();
+      showToast('已完全恢复初始默认数据');
+    }
+
+    // ---- Rendering Itinerary ----
     const iconBtn = 'w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition text-xs disabled:opacity-30';
     const inputCls = 'px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500';
 
@@ -690,8 +916,7 @@
                       <span class="font-mono text-xs font-semibold bg-slate-200 text-slate-700 px-2 py-0.5 rounded">${esc(step.time)}</span>
                       <span class="text-xs text-slate-400 px-2 py-0.5 rounded bg-white border">${esc(step.type)}</span>
                     </div>
-                    <h4 class="font-bold text-slate-800 text-base">${esc(step.activity)}</h4>
-                    ${step.notes ? `<p class="text-xs text-slate-500"><i class="fa-regular fa-lightbulb text-amber-500 mr-1"></i>${esc(step.notes)}</p>` : ''}
+                    <h4 class="font-bold text-slate-800 text-base">${esc(step.activity)}</h4>${step.notes ? `<p class="text-xs text-slate-500"><i class="fa-regular fa-lightbulb text-amber-500 mr-1"></i>${esc(step.notes)}</p>` : ''}
                   </div>
                   ${step.locationId ? `
                     <button onclick="openModal('${esc(step.locationId)}')"
@@ -746,24 +971,10 @@
         </div>`;
     }
 
-    // Helper to probe image presence efficiently
-    function checkImageExists(url) {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.onload = () => resolve(url);
-        img.onerror = () => resolve(null);
-        img.src = url;
-      });
-    }
-
-    // Modal Control & Parallel Fast Photo Probe
+    // ===================== Detail Modal & Gallery =====================
     async function openModal(id) {
       const loc = appData.locations.find(item => item.id === id);
-      
-      if (!loc) {
-        alert("未找到该景点的详细数据");
-        return;
-      }
+      if (!loc) { alert("未找到该景点的详细数据"); return; }
 
       document.getElementById('modal-name').innerText = loc.name;
       currentModalId = id;
@@ -775,7 +986,6 @@
       document.getElementById('modal-address').innerText = loc.address;
       document.getElementById('modal-description').innerText = loc.description;
 
-      // Handle Operation Time (Optional)
       const timeBox = document.getElementById('modal-time-box');
       if (loc.operation_time && loc.operation_time.trim() !== '') {
         document.getElementById('modal-time').innerText = loc.operation_time;
@@ -784,7 +994,6 @@
         timeBox.classList.add('hidden');
       }
 
-      // Handle Entrance Fee (Optional)
       const feeBox = document.getElementById('modal-fee-box');
       if (loc.entrance_fee && loc.entrance_fee.trim() !== '') {
         document.getElementById('modal-fee').innerText = loc.entrance_fee;
@@ -793,11 +1002,22 @@
         feeBox.classList.add('hidden');
       }
 
-      const modal = document.getElementById('location-modal');
-      modal.classList.remove('hidden');
-
-      // Load photos into grid using parallel probes
+      document.getElementById('location-modal').classList.remove('hidden');
       await loadGalleryPhotos(loc);
+    }
+
+    function closeModal() {
+      document.getElementById('location-modal').classList.add('hidden');
+      currentModalId = null;
+    }
+
+    async function checkImageExists(url) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(url);
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
     }
 
     async function loadGalleryPhotos(loc) {
@@ -805,137 +1025,77 @@
       const noMsg = document.getElementById('no-gallery-msg');
 
       galleryContainer.innerHTML = `
-        <div class="col-span-full py-8 flex items-center justify-center text-slate-400 text-xs gap-2">
-          <i class="fa-solid fa-circle-notch fa-spin text-red-500 text-base"></i> 快速加载图片库...
+        <div class="col-span-full py-8 text-center text-slate-400 text-xs">
+          <i class="fa-solid fa-spinner fa-spin text-lg mb-1"></i> 正在加载图库...
         </div>`;
-      
-      currentGalleryPhotos = [];
+      noMsg.classList.add('hidden');
 
-      // Probe img1 to img10 simultaneously in parallel
-      const probePromises = [];
-      for (let i = 1; i <= 10; i++) {
-        probePromises.push(
-          (async () => {
-            let validUrl = await checkImageExists(`${loc.folder}/img${i}.jpg`);
-            if (!validUrl) {
-              validUrl = await checkImageExists(`${loc.folder}/img${i}.jpeg`);
-            }
-            return { index: i, url: validUrl };
-          })()
-        );
+      const folder = loc.folder || 'images/cq/hyd';
+      const maxCount = 6;
+      let foundList = [];
+
+      const promises = [];
+      for (let i = 1; i <= maxCount; i++) {
+        promises.push(checkImageExists(`${folder}/img${i}.jpg`));
+        promises.push(checkImageExists(`${folder}/img${i}.jpeg`));
       }
 
-      const results = await Promise.all(probePromises);
+      const results = await Promise.all(promises);
+      foundList = [...new Set(results.filter(Boolean))];
 
-      // Keep only valid images ordered by index
-      currentGalleryPhotos = results
-        .filter(r => r.url !== null)
-        .sort((a, b) => a.index - b.index)
-        .map(r => r.url);
-
-      if (currentGalleryPhotos.length === 0) {
-        galleryContainer.classList.add('hidden');
+      if (foundList.length === 0) {
+        galleryContainer.innerHTML = '';
         noMsg.classList.remove('hidden');
+        currentGalleryPhotos = [];
         return;
       }
 
-      galleryContainer.classList.remove('hidden');
-      noMsg.classList.add('hidden');
-
-      // Render Thumbnail Grid
-      galleryContainer.innerHTML = currentGalleryPhotos.map((url, idx) => `
-        <div onclick="openLightbox(${idx})" 
-             class="group relative aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all border border-slate-200/80">
-          <img src="${url}" alt="Gallery ${idx + 1}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
-            <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 transition-opacity text-xl drop-shadow-md"></i>
+      currentGalleryPhotos = foundList;
+      galleryContainer.innerHTML = foundList.map((url, idx) => `
+        <div onclick="openLightbox(${idx})" class="relative group aspect-[4/3] rounded-xl bg-slate-100 overflow-hidden cursor-pointer border border-slate-200/60 shadow-sm">
+          <img src="${url}" alt="${loc.name} - 图${idx+1}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs gap-1">
+            <i class="fa-solid fa-magnifying-glass-plus"></i> 查看大图
           </div>
-          <span class="absolute bottom-1.5 right-1.5 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm opacity-80">
-            #${idx + 1}
-          </span>
         </div>
       `).join('');
     }
 
-    function closeModal() {
-      document.getElementById('location-modal').classList.add('hidden');
-    }
-
     // Lightbox Controls
     function openLightbox(index) {
+      if (!currentGalleryPhotos.length) return;
       currentLightboxIndex = index;
-      updateLightboxUI();
+      updateLightboxImage();
       document.getElementById('lightbox-modal').classList.remove('hidden');
+      document.addEventListener('keydown', handleLightboxKeydown);
     }
 
     function closeLightbox() {
       document.getElementById('lightbox-modal').classList.add('hidden');
+      document.removeEventListener('keydown', handleLightboxKeydown);
     }
 
     function changeLightboxSlide(direction) {
-      if (currentGalleryPhotos.length <= 1) return;
+      if (!currentGalleryPhotos.length) return;
       currentLightboxIndex = (currentLightboxIndex + direction + currentGalleryPhotos.length) % currentGalleryPhotos.length;
-      updateLightboxUI();
+      updateLightboxImage();
     }
 
-    function updateLightboxUI() {
+    function updateLightboxImage() {
       const img = document.getElementById('lightbox-img');
       const counter = document.getElementById('lightbox-counter');
-      const prevBtn = document.getElementById('lightbox-prev');
-      const nextBtn = document.getElementById('lightbox-next');
-
       img.src = currentGalleryPhotos[currentLightboxIndex];
-      counter.innerText = `${currentLightboxIndex + 1} / ${currentGalleryPhotos.length}`;
-
-      if (currentGalleryPhotos.length > 1) {
-        prevBtn.classList.remove('hidden');
-        nextBtn.classList.remove('hidden');
-      } else {
-        prevBtn.classList.add('hidden');
-        nextBtn.classList.add('hidden');
-      }
+      counter.textContent = `${currentLightboxIndex + 1} / ${currentGalleryPhotos.length}`;
     }
 
-    // Keyboard Arrow Navigation for Lightbox
-    document.addEventListener('keydown', (e) => {
-      const lightbox = document.getElementById('lightbox-modal');
-      if (!lightbox.classList.contains('hidden')) {
-        if (e.key === 'ArrowLeft') changeLightboxSlide(-1);
-        if (e.key === 'ArrowRight') changeLightboxSlide(1);
-        if (e.key === 'Escape') closeLightbox();
-      }
-    });
-
-    // Tab Navigation
-    function switchTab(tab) {
-      const locationsView = document.getElementById('view-locations');
-      const itineraryView = document.getElementById('view-itinerary');
-      const btnLocations = document.getElementById('nav-locations');
-      const btnItinerary = document.getElementById('nav-itinerary');
-
-      if (tab === 'locations') {
-        locationsView.classList.remove('hidden');
-        itineraryView.classList.add('hidden');
-        btnLocations.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm";
-        btnItinerary.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100";
-      } else {
-        locationsView.classList.add('hidden');
-        itineraryView.classList.remove('hidden');
-        btnItinerary.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 bg-white text-red-600 shadow-sm";
-        btnLocations.className = "px-5 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 text-white hover:text-rose-100";
-      }
+    function handleLightboxKeydown(e) {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') changeLightboxSlide(1);
+      if (e.key === 'ArrowLeft') changeLightboxSlide(-1);
     }
-
-    // Close modal when clicking outside modal box
-    window.onclick = function(event) {
-      const modal = document.getElementById('location-modal');
-      if (event.target === modal) {
-        closeModal();
-      }
-    };
 
     // Initialize on page load
-    document.addEventListener('DOMContentLoaded', loadData);
+    window.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>
 </html>
