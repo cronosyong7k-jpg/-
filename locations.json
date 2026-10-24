@@ -10,7 +10,7 @@
       "operation_time": "10:00 - 22:00（景观灯 18:30-21:30 开灯）",
       "entrance_fee": "免费（节假日期间需预约）",
       "description": "现实版《千与千寻》汤屋，夜晚灯火辉煌，是重庆最具代表性的夜景之一。夜景最佳拍摄点在千厮门大桥或洪崖洞天桥。",
-      "latitude": 29.5630,
+      "latitude": 29.563,
       "longitude": 106.5815
     },
     {
@@ -60,7 +60,7 @@
       "operation_time": "08:00 - 22:00",
       "entrance_fee": "单程30元，往返50元\n微信公众号 “长江索道” 在线购票",
       "description": "横跨长江的“空中巴士”，可以从空中俯瞰两岸风光与山城景色，体验独特的过江方式。",
-      "latitude": 29.5560,
+      "latitude": 29.556,
       "longitude": 106.5835
     },
     {
@@ -97,8 +97,8 @@
       "address": "重庆市渝中区鹅岭正街1号",
       "operation_time": "推荐下午3点至6点前往",
       "description": "文创公园，电影《从你的全世界路过》取景地。",
-      "latitude": 29.5540,
-      "longitude": 106.5360
+      "latitude": 29.554,
+      "longitude": 106.536
     },
     {
       "id": "cq_bxj",
@@ -109,7 +109,7 @@
       "address": "重庆市渝中区白象街1-6号",
       "operation_time": "建议游览时段为 9:00 - 19:00",
       "description": "拍摄长江索道穿楼的最佳地点，充满老重庆母城记忆。",
-      "latitude": 29.5550,
+      "latitude": 29.555,
       "longitude": 106.5862
     },
     {
@@ -123,7 +123,7 @@
       "entrance_fee": "免费，重庆中国三峡博物馆”公众号/小程序进行实名制分时段预约\n官方志愿者免费讲解，一般上午10:00和下午14:30",
       "description": "首批国家一级博物馆，馆藏丰富，集中展示巴渝文化、三峡文化与城市历史，免费开放。",
       "latitude": 29.5658,
-      "longitude": 106.5510
+      "longitude": 106.551
     },
     {
       "id": "cq_sbt",
@@ -135,7 +135,7 @@
       "operation_time": "店铺营业时间为 10:00 – 22:00， 亮灯时间 18:30 – 22:00",
       "description": "连接重庆上下半城的老街，电影《从你的全世界路过》取景地。",
       "latitude": 29.5512,
-      "longitude": 106.5770
+      "longitude": 106.577
     },
     {
       "id": "cq_gyq",
@@ -146,8 +146,8 @@
       "address": "重庆市江北区观音桥步行街",
       "operation_time": "大部分百货和商店营业时间为 10:00 - 22:00",
       "description": "潮流商圈，夜市与流行美食丰富。",
-      "latitude": 29.5770,
-      "longitude": 106.5350
+      "latitude": 29.577,
+      "longitude": 106.535
     },
     {
       "id": "cq_gyqhcj",
@@ -193,8 +193,8 @@
       "address": "重庆市南岸区南滨路下浩老街",
       "operation_time": "店铺营业时间为 10:00 - 21:00, 秋冬 18:00 亮灯",
       "description": "位于南岸区的老街，被称为“另一个世界”，充满文艺慢生活气息。",
-      "latitude": 29.5460,
-      "longitude": 106.5820
+      "latitude": 29.546,
+      "longitude": 106.582
     },
     {
       "id": "cq_lmh",
@@ -206,7 +206,7 @@
       "operation_time": "大部分店铺为 10:00 - 22:00",
       "description": "位于南岸，古巴渝十二景“龙门浩月”所在地，拥有绝佳观景平台眺望渝中半岛。",
       "latitude": 29.5465,
-      "longitude": 106.5840
+      "longitude": 106.584
     },
     {
       "id": "cq_bcwc",
@@ -217,8 +217,8 @@
       "address": "重庆市江北区塔坪55号",
       "operation_time": "大部分为 10:00 - 22:00，周一部分文创小店可能休业",
       "description": "由旧仓库改造而成的文创园，是年轻人扎堆的文艺打卡地。",
-      "latitude": 29.5810,
-      "longitude": 106.5310
+      "latitude": 29.581,
+      "longitude": 106.531
     },
     {
       "id": "cq_lzm",
@@ -241,8 +241,8 @@
       "address": "重庆市江北区江北嘴城心公园旁",
       "operation_time": "推荐傍晚18:30左右抵达，可以同时欣赏到日落晚霞、蓝调时刻（约19:30-20:30）和洪崖洞亮灯后的夜景，天空还带淡蓝色，夜景层次最好",
       "description": "本地人私藏的洪崖洞最佳拍摄点之一，可隔江拍摄洪崖洞全景并避开人潮。",
-      "latitude": 29.5700,
-      "longitude": 106.5820
+      "latitude": 29.57,
+      "longitude": 106.582
     },
     {
       "id": "cq_elgy",
@@ -253,8 +253,8 @@
       "address": "重庆市渝中区鹅岭正街176号",
       "operation_time": "06:00 – 22:00（21:50 停止入园）\n瞰胜楼（两江亭）: 09:00 – 21:30\n鹅项山庄 : 09:00 – 18:00\n悬崖栈道 : 09:00 – 18:00，周一闭园维护",
       "description": "位于渝中半岛最高处，园内瞰胜楼是俯瞰两江交汇和重庆全景的绝佳位置。",
-      "latitude": 29.5530,
-      "longitude": 106.5370
+      "latitude": 29.553,
+      "longitude": 106.537
     },
     {
       "id": "cq_hes",
@@ -265,8 +265,8 @@
       "address": "重庆市江北区红石路305号",
       "operation_time": "06:30 – 21:30\n鸿恩阁登楼时间 : 09:00 – 21:00",
       "description": "公园内的古塔式阁楼是拍摄古风夜景大片的绝佳机位。",
-      "latitude": 29.5910,
-      "longitude": 106.5200
+      "latitude": 29.591,
+      "longitude": 106.52
     },
     {
       "id": "cq_cqdwy",
@@ -278,8 +278,8 @@
       "operation_time": "08:00 - 18:00",
       "entrance_fee": "旺季（1-11月）：成人 25元，\n淡季（12月）：成人 20元",
       "description": "国内城市中大熊猫数量最多的动物园（拥有23只国宝），亲子游好去处。",
-      "latitude": 29.5080,
-      "longitude": 106.4950
+      "latitude": 29.508,
+      "longitude": 106.495
     },
     {
       "id": "cq_xxyl",
@@ -290,7 +290,7 @@
       "address": "重庆市渝中区雨田商务大厦1305室",
       "operation_time": "10:00 - 23:30",
       "description": "热门集章打卡点，店内提供丰富的重庆特色套色章、渐变章、熊猫及时代少年团主题印章，是盖章打卡和挑选文创纪念品的好去处。",
-      "latitude": 29.5580,
+      "latitude": 29.558,
       "longitude": 106.5785
     },
     {
@@ -303,8 +303,8 @@
       "operation_time": "周二至周日 9:00 - 17:00",
       "entrance_fee": "免费",
       "description": "展示自然历史和生物多样性的好去处，适合对自然科学感兴趣的游客。",
-      "latitude": 29.8150,
-      "longitude": 106.4420
+      "latitude": 29.815,
+      "longitude": 106.442
     },
     {
       "id": "cq_cjh",
@@ -315,8 +315,8 @@
       "address": "重庆市南岸区南滨路长嘉汇",
       "operation_time": "10:00 – 22:00, 最佳观赏时段为 18:30 – 22:30",
       "description": "能同时看到两江交汇，对岸即是来福士，视野开阔。",
-      "latitude": 29.5720,
-      "longitude": 106.5890
+      "latitude": 29.572,
+      "longitude": 106.589
     },
     {
       "id": "cq_nsyks",
@@ -328,8 +328,8 @@
       "operation_time": "09:00 – 22:30",
       "entrance_fee": "成人30元/人",
       "description": "经典的夜景俯瞰点，可一览渝中半岛的璀璨灯海。\n强烈推荐17:00-17:30左右抵达。这样可以一次性欣赏到三种景色：傍晚的落日余晖、日落后的“蓝调时刻”（天空呈深蓝色，城市灯光刚亮起，层次最丰富），以及夜幕完全降临后的璀璨灯海",
-      "latitude": 29.5510,
-      "longitude": 106.6080
+      "latitude": 29.551,
+      "longitude": 106.608
     },
     {
       "id": "cq_hjp",
@@ -340,8 +340,8 @@
       "address": "重庆市九龙坡区黄桷坪正街",
       "operation_time": "黄桷坪区域 : 10:00 – 16:00\n四川美术学院 : 09:00 – 17:00",
       "description": "充满了豪爽江湖味道的美食街区与艺术涂鸦街。",
-      "latitude": 29.5160,
-      "longitude": 106.5090
+      "latitude": 29.516,
+      "longitude": 106.509
     },
     {
       "id": "cq_cqdjy",
@@ -352,8 +352,8 @@
       "address": "重庆市江北区文星门街7号",
       "operation_time": "有演出时才凭票进入, 推荐傍晚18:30左右抵达",
       "description": "夜幕降临后全馆灯光亮起，本身就是一件大型建筑艺术品。",
-      "latitude": 29.5700,
-      "longitude": 106.5790
+      "latitude": 29.57,
+      "longitude": 106.579
     },
     {
       "id": "cq_cqkjg",
@@ -365,7 +365,7 @@
       "operation_time": "09:30 – 17:00,周一闭馆",
       "entrance_fee": "免费,特效影院（IMAX 3D、4D、球幕影院等）需单独购票（约 20–30 元/场）",
       "description": "与重庆大剧院紧密相邻，科普教育与亲子互动好去处。",
-      "latitude": 29.5710,
+      "latitude": 29.571,
       "longitude": 106.5775
     },
     {
@@ -378,8 +378,8 @@
       "operation_time": "08:30 – 18:00",
       "entrance_fee": "约 220 – 260 元/人（通票，含绝大多数高空项目）",
       "description": "汇集众多高空刺激体验项目的地质主题公园。",
-      "latitude": 28.9550,
-      "longitude": 106.9320
+      "latitude": 28.955,
+      "longitude": 106.932
     },
     {
       "id": "cq_wltsq",
@@ -391,8 +391,8 @@
       "operation_time": "08:30 – 16:30",
       "entrance_fee": "95元/人,“天生三桥+龙水峡地缝”联票，195元",
       "description": "罕见的喀斯特地质奇观，电影《满城尽带黄金甲》与《变形金刚4》取景地。",
-      "latitude": 29.4510,
-      "longitude": 107.8100
+      "latitude": 29.451,
+      "longitude": 107.81
     },
     {
       "id": "cq_dzsk",
@@ -404,8 +404,8 @@
       "operation_time": "08:30 - 18:00（16:30 停止售票）",
       "entrance_fee": "宝顶山+北山联票 140元",
       "description": "世界文化遗产，唐宋时期石刻艺术的巅峰之作，集佛教、道教、儒家思想于一体的宏大摩崖造像群。",
-      "latitude": 29.7150,
-      "longitude": 105.7150
+      "latitude": 29.715,
+      "longitude": 105.715
     },
     {
       "id": "cd_sxt",
@@ -442,8 +442,8 @@
       "address": "四川省成都市都江堰市建设路与宣化路交叉口",
       "operation_time": "全天开放",
       "description": "都江堰市区的标志性广场，常有市民休闲活动，周边商业繁华。",
-      "latitude": 30.9980,
-      "longitude": 103.6250
+      "latitude": 30.998,
+      "longitude": 103.625
     },
     {
       "id": "cd_zsg",
@@ -454,8 +454,8 @@
       "address": "四川省成都市都江堰市融创茂2层",
       "operation_time": "10:00 - 21:00",
       "description": "被誉为‘现实版霍格沃茨魔法书店’，利用巨型弧形书架和镜面天花板营造出魔幻空间感。",
-      "latitude": 30.9520,
-      "longitude": 103.6450
+      "latitude": 30.952,
+      "longitude": 103.645
     },
     {
       "id": "cd_gxgc",
@@ -466,8 +466,8 @@
       "address": "四川省成都市都江堰市古城路",
       "operation_time": "全天开放",
       "description": "与都江堰水利工程相连的古城，具有浓郁的川西民俗风情与茶文化氛围。",
-      "latitude": 30.9990,
-      "longitude": 103.6220
+      "latitude": 30.999,
+      "longitude": 103.622
     },
     {
       "id": "cd_nqlyn",
@@ -479,7 +479,7 @@
       "operation_time": "亮灯时间通常为每晚 19:30 - 21:30",
       "description": "都江堰南桥在夜间灯光与湍急江水的映衬下，呈现出如梦似幻的蓝色荧光效果，被称为‘南桥蓝眼泪’。",
       "latitude": 31.0005,
-      "longitude": 103.6190
+      "longitude": 103.619
     },
     {
       "id": "cd_whc",
@@ -504,8 +504,8 @@
       "operation_time": "08:00 - 17:00",
       "entrance_fee": "80元/人",
       "description": "中国道教发源地之一，世界文化遗产，以‘青城天下幽’著称，满山翠绿、古木参天。",
-      "latitude": 30.9080,
-      "longitude": 103.5930
+      "latitude": 30.908,
+      "longitude": 103.593
     },
     {
       "id": "cd_cxdmp",
@@ -517,8 +517,8 @@
       "operation_time": "07:30 - 18:00（17:00 停止入园）",
       "entrance_fee": "55元/人",
       "description": "世界著名的大熊猫繁育研究机构，可近距离观赏可爱的大熊猫和小熊猫（建议早晨前往）。",
-      "latitude": 30.7320,
-      "longitude": 104.1440
+      "latitude": 30.732,
+      "longitude": 104.144
     },
     {
       "id": "cd_xmg",
@@ -530,8 +530,8 @@
       "operation_time": "08:30 - 17:00（16:30 停止入园）",
       "entrance_fee": "55元/人",
       "description": "大熊猫野放研究基地，环境更加贴近自然山林，不仅能看大熊猫，还能看到小熊猫在林间散步。",
-      "latitude": 30.9150,
-      "longitude": 103.5520
+      "latitude": 30.915,
+      "longitude": 103.552
     },
     {
       "id": "cd_wlssgb",
@@ -543,8 +543,8 @@
       "operation_time": "09:00 - 17:00",
       "entrance_fee": "景区门票加观光车约90元",
       "description": "卧龙大熊猫自然保护区核心区域，空气清新、圈舍宽敞，大熊猫数量众多且非常活跃。",
-      "latitude": 31.0020,
-      "longitude": 103.1890
+      "latitude": 31.002,
+      "longitude": 103.189
     },
     {
       "id": "cd_kzhz",
@@ -567,8 +567,8 @@
       "address": "四川省成都市锦江区中纱帽街8号",
       "operation_time": "10:00 - 22:00（大慈寺 08:00 - 17:30）",
       "description": "开放式低密度的街区形态购物中心，与千年古刹大慈寺完美融合，时尚与传统交织。",
-      "latitude": 30.6550,
-      "longitude": 104.0830
+      "latitude": 30.655,
+      "longitude": 104.083
     },
     {
       "id": "cd_rmgy",
@@ -579,8 +579,8 @@
       "address": "四川省成都市青羊区祠堂街9号",
       "operation_time": "06:00 - 22:00",
       "description": "体验盖碗茶文化、掏耳朵、本地人‘摆龙门阵’和感受老成都市井慢生活的绝佳去处。",
-      "latitude": 30.6630,
-      "longitude": 104.0570
+      "latitude": 30.663,
+      "longitude": 104.057
     },
     {
       "id": "cd_wsy",
@@ -591,8 +591,8 @@
       "address": "四川省成都市青羊区文殊院街66号",
       "operation_time": "08:00 - 18:00",
       "description": "成都市内保存最完好的佛教寺庙，红墙竹影，古木参天，周边还聚集了众多地道小吃。",
-      "latitude": 30.6750,
-      "longitude": 104.0670
+      "latitude": 30.675,
+      "longitude": 104.067
     },
     {
       "id": "cd_jlgj",
@@ -603,7 +603,7 @@
       "address": "四川省成都市武侯区武侯祠大街231号附1号",
       "operation_time": "全天开放（建议傍晚至夜间游览）",
       "description": "以秦汉、三国时期文化为背景的仿古商业街，夜幕下红灯笼高挂，极具川西民俗特色。",
-      "latitude": 30.6420,
+      "latitude": 30.642,
       "longitude": 104.0485
     },
     {
@@ -616,8 +616,8 @@
       "operation_time": "08:00 - 18:00（17:00 停止入馆）",
       "entrance_fee": "50元/人",
       "description": "唐代伟大的现实主义诗人杜甫流寓成都时的故居，古典园林清幽雅致。",
-      "latitude": 30.6620,
-      "longitude": 104.0290
+      "latitude": 30.662,
+      "longitude": 104.029
     },
     {
       "id": "cd_scbwg",
@@ -629,8 +629,8 @@
       "operation_time": "09:00 - 17:00（16:00停止入馆，周一闭馆）",
       "entrance_fee": "免费（需提前预约）",
       "description": "西南地区最大的综合性博物馆之一，馆藏巴蜀青铜器、张大千书画等珍贵文物。",
-      "latitude": 30.6580,
-      "longitude": 104.0250
+      "latitude": 30.658,
+      "longitude": 104.025
     },
     {
       "id": "cd_zjs",
@@ -641,8 +641,8 @@
       "address": "四川省成都市成华区昭觉寺南路中段李家沱",
       "operation_time": "08:00 - 17:00",
       "description": "川西第一禅林，始建于唐代，寺内环境清幽庄严，历代高僧辈出。",
-      "latitude": 30.6980,
-      "longitude": 104.1050
+      "latitude": 30.698,
+      "longitude": 104.105
     },
     {
       "id": "cd_cdbwg",
@@ -666,8 +666,8 @@
       "address": "四川省成都市锦江区春熙路",
       "operation_time": "全天开放",
       "description": "成都最繁华、最具标志性的商业步行街，融合了购物, 美食与时尚潮流。",
-      "latitude": 30.6520,
-      "longitude": 104.0800
+      "latitude": 30.652,
+      "longitude": 104.08
     },
     {
       "id": "cd_jzdd",
@@ -678,8 +678,8 @@
       "address": "四川省成都市武侯区交子大道",
       "operation_time": "全天开放（双子塔灯光秀通常在 19:30 - 21:30）",
       "description": "成都现代金融城的标志性大道，标志性的‘天府双子塔’夜景灯光秀极为震撼。",
-      "latitude": 30.5820,
-      "longitude": 104.0660
+      "latitude": 30.582,
+      "longitude": 104.066
     },
     {
       "id": "cd_wsf",
@@ -690,8 +690,8 @@
       "address": "四川省成都市青羊区文殊院街",
       "operation_time": "全天开放",
       "description": "围绕文殊院形成的仿古文创与市井街区，集中了大量川西传统院落与非遗文化小店。",
-      "latitude": 30.6730,
-      "longitude": 104.0650
+      "latitude": 30.673,
+      "longitude": 104.065
     },
     {
       "id": "cd_yll",
@@ -702,8 +702,8 @@
       "address": "四川省成都市武侯区玉林街道",
       "operation_time": "全天开放",
       "description": "因歌曲《成都》而闻名，充满文艺气息、小酒馆和老成都市井烟火气。",
-      "latitude": 30.6280,
-      "longitude": 104.0620
+      "latitude": 30.628,
+      "longitude": 104.062
     },
     {
       "id": "cd_wjlgy",
@@ -715,367 +715,481 @@
       "operation_time": "公园 06:00 - 22:00，文物区 09:00 - 18:00",
       "entrance_fee": "公园免费，文物区 20元",
       "description": "纪念唐代女诗人薛涛的公园，园内生长着上百种竹子，并有标志性的崇丽阁（望江楼）。",
-      "latitude": 30.6380,
-      "longitude": 104.0950
+      "latitude": 30.638,
+      "longitude": 104.095
+    },
+    {
+      "id": "loc_zqro49x",
+      "name": "蜀宴赋",
+      "city": "成都",
+      "category": "美食",
+      "folder": "images/cd/syb",
+      "address": "成华区东郊记忆南大门",
+      "operation_time": "午宴： 12:30 – 14:10 晚宴： 18:30 – 20:1",
+      "entrance_fee": "",
+      "description": "《蜀宴赋》是成都市乃至全国现象级的全景沉浸式汉文化主题餐秀。\n享宴吉时（场次时间）：\n\n午宴： 12:30 – 14:10\n\n晚宴： 18:30 – 20:10\n\n体验时长： 全程约 100 分钟。\n\n大厅普通席（饗席）： 约 500 – 600 元/位。包含全套精致分餐制川味创意料理以及全场国风乐舞大秀。\n\n大厅 VIP 席（礼席）： 约 800 – 1,000 元/位。观演视野更核心，通常享有更尊崇的贵宾礼遇。\n\n主题包厢： 适合私密性要求高的家庭或朋友聚会（通常 6 人起订），根据不同的历史主题包厢档位（如唐风或宋风包厢），人均消费大约在 1,088 – 1,688 元/位 不等。\n\n汉服妆造与跟拍服务（可按需选购）：\n\n精致古风妆造（换装+发型+妆面）： 约 198 – 298 元/人。\n\n专业古风摄影套餐： 单人约 299 元（含底片及精修），双人约 499 元，家庭/团队（3–4人）约 699 元。\n\n预约提醒： 由于席位和优质妆造名额有限，必须提前通过各大旅游/票务平台（如携程、Trip.com等）进行实名预约，现场通常不接待未预约的散客",
+      "latitude": 29.55,
+      "longitude": 106.5
+    },
+    {
+      "id": "loc_cyr7jmv",
+      "name": "陶德砂锅",
+      "city": "成都",
+      "category": "美食",
+      "folder": "images/cd/tdsg",
+      "address": "春熙路，太古里",
+      "operation_time": "10:00 – 22:00",
+      "entrance_fee": "",
+      "description": "近年来在四川（尤其是成都和重庆）爆火、深受本地人和游客喜爱的超高人气川菜/家常菜品牌",
+      "latitude": 29.55,
+      "longitude": 0.0002
+    },
+    {
+      "id": "loc_37ndaj6",
+      "name": "丁眼镜火锅",
+      "city": "重庆",
+      "category": "美食",
+      "folder": "images/cq/dyj",
+      "address": "解放碑附近",
+      "operation_time": "10:30-22:00",
+      "entrance_fee": "",
+      "description": "丁眼镜火锅藏在渝中区民生路宏声巷的老居民楼里，靠近山城步道和十八梯，是一家典型的重庆社区老火锅。店面不起眼、烟火气十足，主打醇厚牛油锅底，招牌是超大根现炸酥肉、手工嫩牛肉和便宜解辣的眼镜凉虾\n\n耐心找路：这家店“难找但好吃”是出了名的，藏在居民楼巷子里，导航到附近后可能需要问一下路人。留意路边，别被附近其他火锅店的揽客人员带偏了。\n\n错峰前往：因为是热门社区老店，饭点排队可能比较厉害。可以考虑稍微早一点（比如17:30左右）或者晚一点去，避开最高峰。\n\n必点参考：手工嫩牛肉、现炸酥肉（很大一根）、眼镜凉虾（解辣神器）是大家提到最多的招牌。",
+      "latitude": 29.55,
+      "longitude": 106.5
+    },
+    {
+      "id": "loc_ed0f3y8",
+      "name": "⁠刘二娃江湖菜",
+      "city": "重庆",
+      "category": "美食",
+      "folder": "images/cq/lew",
+      "address": "解放碑附近",
+      "operation_time": "午市：11:00 – 14:00  晚市：17:00 – 22:00",
+      "entrance_fee": "",
+      "description": "地道的重庆社区江湖菜馆\n\n必点招牌\n\n歌乐山辣子鸡（68元/份）：镇店招牌，几乎每桌都点，干香酥嫩，越嚼越香。一个很有意思的隐藏吃法是：吃完可以喊服务员把辣椒打成粉带走，回家做菜或下面条用。\n\n烂海椒鲫鱼（35元/条）：店里的“第一桶金”菜品，鱼肉软嫩，一定要蘸着烧椒吃，非常开胃。\n\n高压锅粉蒸肉（68元/锅）：不能吃辣或想换口味时的好选择，满满一锅，香而不辣。",
+      "latitude": 29.55,
+      "longitude": 106.5
+    },
+    {
+      "id": "loc_wb3o7cq",
+      "name": "老甘家小龙虾",
+      "city": "重庆",
+      "category": "美食",
+      "folder": "images/cq/lgj",
+      "address": "洪崖洞附近",
+      "operation_time": "13:00 - 24:00",
+      "entrance_fee": "",
+      "description": "连续六年上榜大众点评“必吃榜”、拥有“重庆老字号”称号的招牌",
+      "latitude": 29.55,
+      "longitude": 106.5
+    },
+    {
+      "id": "loc_dwg0w2n",
+      "name": "阿福板凳面",
+      "city": "重庆",
+      "category": "美食",
+      "folder": "images/cq/afbdm",
+      "address": "解放碑，观音桥，十八梯",
+      "operation_time": "7:30 - 23:00",
+      "entrance_fee": "",
+      "description": "板凳面”是重庆独有的社区市井文化（把高板凳当桌子、矮板凳当椅子坐在路边吃面）。阿福板凳面作为重庆小面榜单常客",
+      "latitude": 29.55,
+      "longitude": 106.5
+    },
+    {
+      "id": "loc_ix7ze9e",
+      "name": "野人先生",
+      "city": "成都",
+      "category": "美食",
+      "folder": "images/cd/yrxs",
+      "address": "A lot palce, IFS国金中心负一层的美食广场“食通天”里面, 重庆also have",
+      "operation_time": "",
+      "entrance_fee": "",
+      "description": "招牌口味与价格：开心果 + 大米是标配\n“野人先生”主打新鲜现做、纯牛乳制作，口感绵密，甚至会有“拉丝”的效果。店员通常很乐意让你先试吃再买，可以尝过再决定。\n\n两个公认的招牌口味，最推荐直接点“双拼”：\n\n开心果：被很多人称为“Top1”和“断货王”。坚果香气非常浓郁，上面还会撒满开心果碎，咸香醇厚。\n\n五常大米：很有特色的一款，能吃到真实的米粒，口感像“冻米酪”，清甜不腻。",
+      "latitude": 29.55,
+      "longitude": 106.5
+    },
+    {
+      "id": "loc_82rt2xp",
+      "name": "CharlieTown红茶公司",
+      "city": "成都",
+      "category": "美食",
+      "folder": "images/cd/charlie",
+      "address": "成都IFS LG1层（LG112），靠近春熙路地铁口",
+      "operation_time": "",
+      "entrance_fee": "",
+      "description": "CharlieTown是一家主打高端红茶专门店的茶饮品牌，被一些食客形容为“奶茶界的贵族”\n\n核心特色：\n\n只做红茶：菜单很精简，从全球精选5款红茶茶底（如正山小种、云顶锡兰等），点单方式像选咖啡豆，先选茶底，再决定“手冲、手煮或手作”。\n\n英伦老钱风：门店是英伦航海俱乐部风格，杯身是标志性的克莱因蓝，被很多人评价“出片率极高”。\n\n“三无”健康牌：坚持无植脂末、无色素、无防腐剂，单杯价格在24–38元之间",
+      "latitude": 29.55,
+      "longitude": 106.5
+    },
+    {
+      "id": "loc_yawv2yg",
+      "name": "⁠一只酸奶牛成都",
+      "city": "成都",
+      "category": "美食",
+      "folder": "images/cd/snn",
+      "address": "A lot of place got",
+      "operation_time": "",
+      "entrance_fee": "",
+      "description": "主打现调活菌酸奶，和传统奶茶相比口感更清爽解腻，很适合在成都吃火锅或川菜之后来一杯",
+      "latitude": 29.55,
+      "longitude": 106.5
     }
   ],
   "itinerary": [
     {
       "day": 1,
-      "title": "Day 1 (11月7日): 抵达重庆 & 核心夜景初探",
+      "title": "Day 1: 洪崖洞民俗风貌区",
       "city": "重庆",
-      "steps": [
-        {
-          "time": "18:00",
-          "activity": "朝天门 / 重庆来福士",
-          "type": "POI",
-          "locationId": "cq_ctm",
-          "notes": "两江交汇壮观地标"
-        },
-        {
-          "time": "19:00",
-          "activity": "千厮门大桥",
-          "type": "POI",
-          "locationId": "cq_qsm",
-          "notes": "拍摄夜景最佳机位"
-        },
-        {
-          "time": "20:00",
-          "activity": "洪崖洞民俗风貌区",
-          "type": "POI",
-          "locationId": "cq_hyd",
-          "notes": "欣赏金碧辉煌的吊脚楼夜景"
-        }
-      ]
+      "steps": []
     },
     {
       "day": 2,
-      "title": "Day 2 (11月8日): 西部远郊动物与老街漫步",
+      "title": "Day 2: 解放碑步行街",
       "city": "重庆",
-      "steps": [
-        {
-          "time": "09:30",
-          "activity": "重庆动物园",
-          "type": "POI",
-          "locationId": "cq_cqdwy",
-          "notes": "看大熊猫"
-        },
-        {
-          "time": "14:00",
-          "activity": "磁器口古镇",
-          "type": "POI",
-          "locationId": "cq_cqk",
-          "notes": "漫步千年古镇品尝特产"
-        },
-        {
-          "time": "16:30",
-          "activity": "山城巷传统风貌区",
-          "type": "POI",
-          "locationId": "cq_scx",
-          "notes": "悬崖栈道与老街风情"
-        },
-        {
-          "time": "19:00",
-          "activity": "十八梯传统风貌区",
-          "type": "POI",
-          "locationId": "cq_sbt",
-          "notes": "体验夜幕下的老重庆市井"
-        }
-      ]
+      "steps": []
     },
     {
       "day": 3,
-      "title": "Day 3 (11月9日): 魔幻轻轨、高地文创与江北夜景",
+      "title": "Day 3: 重庆罗汉寺",
       "city": "重庆",
-      "steps": [
-        {
-          "time": "09:00",
-          "activity": "李子坝单轨穿楼",
-          "type": "POI",
-          "locationId": "cq_lzb",
-          "notes": "观赏轻轨穿墙奇观"
-        },
-        {
-          "time": "10:30",
-          "activity": "鹅岭公园",
-          "type": "POI",
-          "locationId": "cq_elgy",
-          "notes": "登瞰胜楼俯瞰全城"
-        },
-        {
-          "time": "11:30",
-          "activity": "鹅岭二厂",
-          "type": "POI",
-          "locationId": "cq_elec",
-          "notes": "文艺文创园拍照打卡"
-        },
-        {
-          "time": "14:30",
-          "activity": "观音桥步行街 & 好吃街",
-          "type": "Food",
-          "locationId": "cq_gyq",
-          "notes": "潮流商圈与地道小吃"
-        },
-        {
-          "time": "16:30",
-          "activity": "北仓文创街区",
-          "type": "POI",
-          "locationId": "cq_bcwc",
-          "notes": "旧仓库改造的文艺街区"
-        },
-        {
-          "time": "18:30",
-          "activity": "江北嘴江滩公园",
-          "type": "POI",
-          "locationId": "cq_jbjjt",
-          "notes": "隔江拍摄洪崖洞全景"
-        },
-        {
-          "time": "19:30",
-          "activity": "重庆大剧院 & 重庆科技馆",
-          "type": "POI",
-          "locationId": "cq_cqdjy",
-          "notes": "现代地标与夜景"
-        }
-      ]
+      "steps": []
     },
     {
       "day": 4,
-      "title": "Day 4 (11月10日): 母城人文、空中巴士与南山夜景收官",
+      "title": "Day 4: 李子坝单轨穿楼观景平台",
       "city": "重庆",
-      "steps": [
-        {
-          "time": "09:30",
-          "activity": "解放碑步行街",
-          "type": "POI",
-          "locationId": "cq_jfb",
-          "notes": "重庆精神地标"
-        },
-        {
-          "time": "10:30",
-          "activity": "重庆罗汉寺",
-          "type": "POI",
-          "locationId": "cq_lhs",
-          "notes": "闹市中的千年古刹"
-        },
-        {
-          "time": "11:30",
-          "activity": "熊熊有礼",
-          "type": "Shopping",
-          "locationId": "cq_xxyl",
-          "notes": "伴手礼打卡"
-        },
-        {
-          "time": "12:00",
-          "activity": "鲁祖庙传统风貌区",
-          "type": "POI",
-          "locationId": "cq_lzm",
-          "notes": "市井老街"
-        },
-        {
-          "time": "14:00",
-          "activity": "白象居",
-          "type": "POI",
-          "locationId": "cq_bxj",
-          "notes": "拍摄长江索道穿楼机位"
-        },
-        {
-          "time": "15:30",
-          "activity": "长江索道景区",
-          "type": "Experience",
-          "locationId": "cq_cjsd",
-          "notes": "体验空中巴士过江"
-        },
-        {
-          "time": "16:30",
-          "activity": "下浩里 & 龙门浩老街",
-          "type": "POI",
-          "locationId": "cq_xhl",
-          "notes": "南岸滨江文艺漫步"
-        },
-        {
-          "time": "19:00",
-          "activity": "南山一棵树观景台",
-          "type": "POI",
-          "locationId": "cq_nsyks",
-          "notes": "俯瞰重庆璀璨灯海夜景"
-        }
-      ]
+      "steps": []
     },
     {
       "day": 5,
-      "title": "Day 5 (11月11日): 重庆出发 ➔ 抵达成都（中午）+ 市区经典漫游",
-      "city": "成都",
-      "steps": [
-        {
-          "time": "11:00",
-          "activity": "抵达成都市区",
-          "type": "Experience",
-          "locationId": "cd_kzhz",
-          "notes": "从重庆乘坐高铁前往成都（约 1.5 - 2 小时），抵达后前往酒店办理入住或寄存行李"
-        },
-        {
-          "time": "14:00",
-          "activity": "成都武侯祠",
-          "type": "POI",
-          "locationId": "cd_whc",
-          "notes": "感受三国文化与红墙竹影"
-        },
-        {
-          "time": "15:30",
-          "activity": "宽窄巷子",
-          "type": "POI",
-          "locationId": "cd_kzhz",
-          "notes": "漫步老街，体验老成都民俗"
-        },
-        {
-          "time": "18:30",
-          "activity": "成都远洋太古里 & 大慈寺",
-          "type": "Shopping",
-          "locationId": "cd_tkl",
-          "notes": "体验太古里夜景并享用晚餐"
-        }
-      ]
+      "title": "Day 5: 长江索道景区",
+      "city": "重庆",
+      "steps": []
     },
     {
       "day": 6,
-      "title": "Day 6 (11月12日): 国宝大熊猫与市井慢生活",
-      "city": "成都",
-      "steps": [
-        {
-          "time": "08:30",
-          "activity": "成都大熊猫繁育研究基地",
-          "type": "POI",
-          "locationId": "cd_cxdmp",
-          "notes": "早起看大熊猫吃竹子与萌态幼崽"
-        },
-        {
-          "time": "14:00",
-          "activity": "成都市人民公园（鹤鸣茶社）",
-          "type": "POI",
-          "locationId": "cd_rmgy",
-          "notes": "喝盖碗茶、体验掏耳朵，深度感受老成都的慢生活"
-        },
-        {
-          "time": "16:30",
-          "activity": "文殊院",
-          "type": "POI",
-          "locationId": "cd_wsy",
-          "notes": "祈福参拜，顺便品尝文殊院的甜水面、素包子等经典小吃"
-        }
-      ]
+      "title": "Day 6: 磁器口古镇",
+      "city": "重庆",
+      "steps": []
     },
     {
       "day": 7,
-      "title": "Day 7 (11月13日): 古蜀文明秘境 ➔ 千年水利奇观 ➔ 都江堰夜宿",
-      "city": "成都",
-      "steps": [
-        {
-          "time": "08:30",
-          "activity": "三星堆博物馆",
-          "type": "POI",
-          "locationId": "cd_sxt",
-          "notes": "探秘青铜神树与古蜀文明，预留3-4小时"
-        },
-        {
-          "time": "14:00",
-          "activity": "都江堰景区",
-          "type": "POI",
-          "locationId": "cd_djy",
-          "notes": "实地领略宝瓶口、飞沙堰、鱼嘴等无坝引水工程的宏大智慧"
-        },
-        {
-          "time": "19:30",
-          "activity": "南桥蓝眼泪",
-          "type": "POI",
-          "locationId": "cd_nqlyn",
-          "notes": "入住都江堰市区的酒店，在夜幕下欣赏炫彩迷人的“蓝眼泪”夜景"
-        }
-      ]
+      "title": "Day 7: 山城巷传统风貌区（山城步道）",
+      "city": "重庆",
+      "steps": []
     },
     {
       "day": 8,
-      "title": "Day 8 (11月14日): 熊猫野放探秘 ➔ 周边休闲漫步 ➔ 返回成都",
-      "city": "成都",
-      "steps": [
-        {
-          "time": "09:00",
-          "activity": "都江堰熊猫谷",
-          "type": "POI",
-          "locationId": "cd_xmg",
-          "notes": "在半山竹海的自然环境中近距离看大熊猫和小熊猫"
-        },
-        {
-          "time": "13:30",
-          "activity": "钟书阁（都江堰店）",
-          "type": "POI",
-          "locationId": "cd_zsg",
-          "notes": "探索都江堰周边区域（如灌县古城、仰天广场或钟书阁拍照打卡）"
-        },
-        {
-          "time": "16:00",
-          "activity": "返回成都市区",
-          "type": "Experience",
-          "locationId": "cd_cxlj",
-          "notes": "收拾行李，乘坐高铁或包车返回成都市区，入住酒店办理入住并稍作休整"
-        }
-      ]
+      "title": "Day 8: 鹅岭二厂",
+      "city": "重庆",
+      "steps": []
     },
     {
       "day": 9,
-      "title": "Day 9 (11月15日): 伴手礼采购与玉林路文艺慢生活",
-      "city": "成都",
-      "steps": [
-        {
-          "time": "10:00",
-          "activity": "春熙路步行街",
-          "type": "Shopping",
-          "locationId": "cd_cxlj",
-          "notes": "选购火锅底料、川茶、熊猫文创等伴手礼纪念品"
-        },
-        {
-          "time": "14:30",
-          "activity": "玉林路",
-          "type": "POI",
-          "locationId": "cd_yll",
-          "notes": "感受成都文艺慢生活、小酒馆与市井烟火气"
-        },
-        {
-          "time": "18:30",
-          "activity": "交子大道",
-          "type": "POI",
-          "locationId": "cd_jzdd",
-          "notes": "观看天府双子塔璀璨夜景灯光秀，享用告别晚餐"
-        }
-      ]
+      "title": "Day 9: 白象居",
+      "city": "重庆",
+      "steps": []
     },
     {
       "day": 10,
-      "title": "Day 10 (11月16日): 告别蓉城 ➔ 返回温暖的家",
+      "title": "Day 10: 重庆中国三峡博物馆",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 11,
+      "title": "Day 11: 十八梯传统风貌区",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 12,
+      "title": "Day 12: 观音桥步行街 / 观音桥商圈",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 13,
+      "title": "Day 13: 观音桥好吃街",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 14,
+      "title": "Day 14: 朝天门 / 重庆来福士",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 15,
+      "title": "Day 15: 千厮门大桥",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 16,
+      "title": "Day 16: 下浩里",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 17,
+      "title": "Day 17: 龙门浩老街",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 18,
+      "title": "Day 18: 北仓文创街区",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 19,
+      "title": "Day 19: 鲁祖庙传统风貌区",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 20,
+      "title": "Day 20: 江北嘴江滩公园",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 21,
+      "title": "Day 21: 鹅岭公园",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 22,
+      "title": "Day 22: 鸿恩寺森林公园",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 23,
+      "title": "Day 23: 重庆动物园",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 24,
+      "title": "Day 24: 熊熊有礼",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 25,
+      "title": "Day 25: 重庆自然博物馆",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 26,
+      "title": "Day 26: 长嘉汇购物公园（弹子石老街）",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 27,
+      "title": "Day 27: 南山一棵树观景台",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 28,
+      "title": "Day 28: 黄桷坪（涂鸦艺术街 / 四川美术学院）",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 29,
+      "title": "Day 29: 重庆大剧院",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 30,
+      "title": "Day 30: 重庆科技馆",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 31,
+      "title": "Day 31: 万盛奥陶纪主题公园",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 32,
+      "title": "Day 32: 武隆天生三桥",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 33,
+      "title": "Day 33: 大足石刻",
+      "city": "重庆",
+      "steps": []
+    },
+    {
+      "day": 34,
+      "title": "Day 34: 三星堆博物馆",
       "city": "成都",
-      "steps": [
-        {
-          "time": "09:30",
-          "activity": "酒店退房与行李整理",
-          "type": "Experience",
-          "locationId": "cd_whc",
-          "notes": "检查随身物品，办理酒店退房手续"
-        },
-        {
-          "time": "11:00",
-          "activity": "前往机场 / 高铁站",
-          "type": "Experience",
-          "locationId": "cd_cxlj",
-          "notes": "乘坐轨道交通或网约车前往成都双流/天府机场或高铁站"
-        },
-        {
-          "time": "14:00",
-          "activity": "搭乘航班或高铁返回",
-          "type": "Experience",
-          "locationId": "cd_whc",
-          "notes": "结束愉快的重庆成都之旅，安全返回温暖的家"
-        }
-      ]
+      "steps": []
+    },
+    {
+      "day": 35,
+      "title": "Day 35: 都江堰景区",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 36,
+      "title": "Day 36: 仰天广场",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 37,
+      "title": "Day 37: 钟书阁（都江堰店）",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 38,
+      "title": "Day 38: 灌县古城",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 39,
+      "title": "Day 39: 南桥蓝眼泪",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 40,
+      "title": "Day 40: 成都武侯祠",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 41,
+      "title": "Day 41: 青城山（前山）",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 42,
+      "title": "Day 42: 成都大熊猫繁育研究基地",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 43,
+      "title": "Day 43: 都江堰熊猫谷",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 44,
+      "title": "Day 44: 中国保护大熊猫研究中心卧龙神树坪基地",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 45,
+      "title": "Day 45: 宽窄巷子",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 46,
+      "title": "Day 46: 成都远洋太古里 & 大慈寺",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 47,
+      "title": "Day 47: 成都市人民公园（鹤鸣茶社）",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 48,
+      "title": "Day 48: 文殊院",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 49,
+      "title": "Day 49: 锦里古街",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 50,
+      "title": "Day 50: 杜甫草堂博物馆",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 51,
+      "title": "Day 51: 四川博物院",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 52,
+      "title": "Day 52: 昭觉寺",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 53,
+      "title": "Day 53: 成都博物馆",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 54,
+      "title": "Day 54: 春熙路步行街",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 55,
+      "title": "Day 55: 交子大道",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 56,
+      "title": "Day 56: 文殊坊",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 57,
+      "title": "Day 57: 玉林路",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 58,
+      "title": "Day 58: 望江楼公园",
+      "city": "成都",
+      "steps": []
+    },
+    {
+      "day": 59,
+      "title": "Day 59: 蜀宴赋",
+      "city": "cd",
+      "steps": []
     }
   ]
 }
